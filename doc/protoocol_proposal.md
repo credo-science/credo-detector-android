@@ -120,7 +120,14 @@ Możliwe komunikaty błędów:
   "detection_start": 0,
   "battery": 80,
   "temperature": 40,
-  "charging": true
+  "charging": true,
+  "average": 0,
+  "max": 0,
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "altitude": 0.0,
+  "accuracy": 0.0,
+  "provider": ""
 }
 ```
 
@@ -130,6 +137,12 @@ Ping wysyłany podczas trwania detekcji aby poinformować serwer, że detekcja n
 * **battery** - poziom naładowania baterii
 * **temperature** - temperatura odczytana z termometru w urządzeniu
 * **charging** - telefon jest ładowany
+* **average** - uśrednione `average` z kamery od ostatniego `ping`,
+będziemy wiedzieć dlaczego nie wykrywa bo np. za słabo zasłonił kamerę
+* **max** - uśrednione `max` z kamery od ostatniego `ping`, jeżeli dobrze zasłonił kamerę,
+to może nie wykrywa bo `max` jest ustawiona na złą wartość
+* **latitude** itd. - sprawa dyskusyjna, może niech to potwierdzi w ustawieniach, bo to oznacza
+śledzenie gościa
 
 Możliwe komunikaty błędów:
 * `invalid_token` - token stracił ważność (wylogowano urządzenie)
@@ -236,7 +249,23 @@ Serwer wyśle na podany adres e-mail link do resetowania hasła do konta.
 {
   "token": "token",
   "state": "start",
-  "timestamp": 0
+  "timestamp": 0,
+  "latitude": 0.0,
+  "longitude": 0.0,
+  "altitude": 0.0,
+  "accuracy": 0.0,
+  "provider": "",
+  "width": 0,
+  "height": 0,
+  "device_info": {
+    "deviceId": "",
+    "androidVersion": "",
+    "deviceModel": "",
+    "settings": {
+      "average": 30,
+      "max": 120    
+    }
+  }
 }
 ```
 
@@ -245,3 +274,6 @@ Poinformowanie serwera o zmianie stanu na temat detekcji:
 w czasie detekcji aplikacja wysyła co jakiś czas komunikaty `ping` więc w przypadku
 braku komunikatu `stop` serwer może przyjąć ostatni `ping` za `stop`
 * **timestamp** - czas (UNIX ms) w którym nastąpiła zmiana stanu na temat detekcji
+
+Przesyłamy też wszystkie informacje o urządzeniu jak w `detection`, bo brak detekcji
+to też ważna informacja dlaczego.
