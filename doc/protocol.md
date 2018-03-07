@@ -90,7 +90,7 @@ Message template:
     "time_stamp": 1506606884264
     },
   "body": {
-    /*[...]*/
+    
   }
 }
 ```
@@ -104,11 +104,11 @@ Message template:
 
 ## Login
 
-### Request
-
 **Operation name:** `login`
 
-**Body:**
+### Request body
+
+
 ```json
 {
   "user_info": {
@@ -126,7 +126,7 @@ Message template:
   * **key**: login key given on registration
   * **team**: team of device
   
-### Response
+### Response body
 
 ```json
 {
@@ -143,8 +143,106 @@ Message template:
   
 ## Register
 
+**Operation name:** `register`
+
+### Request body
+
+
+```json
+{
+  "user_info": {
+    "email": "john@mail.com",
+    "name": "John",
+    "key": "QWERTY",
+    "team": "Avengers"
+  },
+  "device_info": {
+    "deviceId": "",
+    "androidVersion": "",
+    "deviceModel": ""
+  }
+}
+```
+
+* **user_info** - see `login`
+* **device_info** - device information 
+  * **deviceId** - device ID from `Settings.Secure.ANDROID_ID`
+  * **androidVersion** - android Version as `${Build.VERSION.SDK_INT}-${Build.VERSION.RELEASE}`
+  * **deviceModel** - device model from `Build.MODEL`
+
+### Response body
+
+Application checks HTTP return code. When HTTP return code is 200 then ignore the body content.
+When HTTP return code is between 400 and 500 then response body is:
+
+```json
+{
+  "error": "",
+  "message": ""
+}
+```
+
+Otherwise application shows *toast* with network problem message.
+
 ## Ping
+
+**Operation name:** `ping`
+
+Response message have the same content with *register* message.
+
+No response checked.
 
 ## UserInfo
 
+**Operation name:** `user_data`
+
+Response message have the same content with *register* message.
+
+Never used.
+
 ## Detection
+
+**Operation name:** `detection`
+
+### Request body
+
+```json
+{
+  "detection": {
+    "id": 0,
+    "frame_content": "",
+    "timestamp": 0,
+    "latitude": 0.0,
+    "longitude": 0.0,
+    "altitude": 0.0,
+    "accuracy": 0.0,
+    "provider": "",
+    "width": 0,
+    "height": 0
+  },
+  "user_info": {
+    "email": "john@mail.com",
+    "name": "John",
+    "key": "QWERTY",
+    "team": "Avengers"
+  },
+  "device_info": {
+    "deviceId": "",
+    "androidVersion": "",
+    "deviceModel": ""
+  }
+}
+```
+
+* **detection** - detection hit values
+  * **id** - autoincremental value,
+  * **frame_content** - cropped PNG encoded as BASE64 with detected hit,
+  * **timestamp** - UNIX miliseconds timestamp of hit detection,
+  * **latitude**, **longitude**, **altitude**, **accuracy** and **provider** - GPS status,
+  * **width** - height of camera frame in pixels,
+  * **height** - height of camera frame in pixels
+  
+### Response body
+
+Application checks only HTTP return code. When is not 200 then store hit in storage
+and try send again later.
