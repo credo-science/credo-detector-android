@@ -128,24 +128,18 @@ Message template:
   
 ### Response
 
+```json
 {
-    "header": {
-        "server": "1.00",
-        "frame_type": "login",
-        "protocol": "1.0",
-        "time_stamp": 1520419085
-    },
-    "body": {
-        "user_info": {
-            "email": "john@mail.com",
-            "name": "John",
-            "key": null,
-            "team": "Avengers"
-        }
-    }
+  "user_info": {
+    "email": "john@mail.com",
+    "name": "John",
+    "key": null,
+    "team": "Avengers"
+  }
 }
+```
 
-* **user_info** - the same structure
+* **user_info** - see: request
   
 ## Register
 
