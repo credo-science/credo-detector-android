@@ -1,0 +1,16 @@
+{
+  "header": {
+    "server": "0.90",
+    "frame_type": "login",
+    "protocol": "1.0",
+    "time_stamp": 1506606884264
+  },
+  "body": {
+    "user_info": {
+    "email": "test@email.com ",
+    "name": "John",
+    "key": "QWERTY",
+    "team": "Avengers"
+    }
+  }
+}
