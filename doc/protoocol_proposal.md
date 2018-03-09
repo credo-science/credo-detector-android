@@ -23,10 +23,8 @@
   * **email**: adres e-mail, który trakujemy jako login
   * **password**: hasło do swojego konta
   * **team**: jeśli podana to użyje jej jako nazwę drużyny, jeżeli nie to pobierze ze serwera
-* **device_info**: dane urządzenia
-  * **androidVersion**: tylko numer wersji SDK, on mówi wszystko o wersji Androida,
-  * **deviceId**: unikalny identyfikator urządzenia,
-  * **deviceModel**: model urządzenia.
+* **device_info**: patrz struktura `device_info`, ale tutaj tylko te wymienione wartości mogą nas
+interesować jeżeli w ogóle, liczy się `device_info` przy starcie detekcji
   
 **Response body:**
 
@@ -37,7 +35,8 @@
   "team": "Avengers",
   "settings": {
     "average": 30,
-    "max": 120
+    "max": 120,
+    "etc.": "..."
   }
 }
 ```
@@ -49,25 +48,11 @@
 * **team**: jeśli w request podana to taka sama jak w request,
  a jak nie podana to nazwa drużyny jaką ma obecnie przydzieloną na portalu CREDO.
 * **settings**: można by przesłać tu jakieś ustawieni np. `max` i `average` specyficzne dla
-logującego się modelu urządzenia
-  
-**Error:**
+logującego się modelu urządzenia oraz dowolną ilość parametrów zapisanych na serwerze
+(chodzi o to, żeby była dowolność definiowania tych parametrów, żeby się dało dostroić
+algorytm detekcji dla konkretnego urządzenia)
 
-```json
-{
-  "error": "invalid_credentials",
-  "message": "Invalid credentials"
-}
-```
-
-* **error**: tag błędu,
-* **message**: komunikat błędu po angielsku.
-
-Jeżeli aplikacja ma taki tag błędu w bazie wielojęzyczności to
-wyświetli komunikat z tej bazy na podstawie tego tagu, jeżeli nie
-to wyświetli komunikat po angielsku z `message`.
-
-Możliwe komunikaty błędów:
+Możliwe komunikaty błędów (patrz: komunikat `error`):
 * `invalid_credentials` - zły login lub hasło.
 
 ## Register
@@ -94,7 +79,7 @@ Możliwe komunikaty błędów:
 ```
 
 * **user_info** - znaczenie pól jak w operacji `login`
-* **device_info** - przy rejestracji również wysyłamy informację o urządzeniu
+* **device_info** - jak w operacji `login`
 
 **Response body:**
 
@@ -118,31 +103,41 @@ Możliwe komunikaty błędów:
 {
   "token": "token",
   "detection_start": 0,
-  "battery": 80,
-  "temperature": 40,
-  "charging": true,
   "average": 0,
   "max": 0,
-  "latitude": 0.0,
-  "longitude": 0.0,
-  "altitude": 0.0,
-  "accuracy": 0.0,
-  "provider": ""
+  "device_stats": {
+    "battery": 80,
+    "temperature": 40,
+    "charging": true,
+    "gps": {
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "altitude": 0.0,
+      "accuracy": 0.0,
+      "provider": ""      
+    },
+    "accelerometer": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyroscope": {
+      "x": 0,
+      "y": 0,
+      "z": 0        
+    }
+  }
 }
 ```
 
 Ping wysyłany podczas trwania detekcji aby poinformować serwer, że detekcja nadal trwa.
 * **token** - token otrzymany przy logowaniu
 * **detection_start** - timestamp (UNIX ms) kiedy rozpoczęto detekcję
-* **battery** - poziom naładowania baterii
-* **temperature** - temperatura odczytana z termometru w urządzeniu
-* **charging** - telefon jest ładowany
 * **average** - uśrednione `average` z kamery od ostatniego `ping`,
 będziemy wiedzieć dlaczego nie wykrywa bo np. za słabo zasłonił kamerę
 * **max** - uśrednione `max` z kamery od ostatniego `ping`, jeżeli dobrze zasłonił kamerę,
 to może nie wykrywa bo `max` jest ustawiona na złą wartość
-* **latitude** itd. - sprawa dyskusyjna, może niech to potwierdzi w ustawieniach, bo to oznacza
-śledzenie gościa
+* **device_stats** - patrz struktura `device_stats`
 
 Możliwe komunikaty błędów:
 * `invalid_token` - token stracił ważność (wylogowano urządzenie)
@@ -155,50 +150,55 @@ Możliwe komunikaty błędów:
 
 ```json
 {
+  "token": "token",
+  "team": "Avengers",
   "detection": {
     "id": 0,
-    "frame_content": "",
     "timestamp": 0,
-    "latitude": 0.0,
-    "longitude": 0.0,
-    "altitude": 0.0,
-    "accuracy": 0.0,
-    "provider": "",
-    "width": 0,
-    "height": 0
+    "hit": [
+      {
+        "frame_content": "",
+        "x": 0,
+        "y": 0    
+      }
+    ]
   },
-  "user_info": {
-    "token": "token",
-    "team": "Avengers"
-  },
-  "device_info": {
-    "deviceId": "",
-    "androidVersion": "",
-    "deviceModel": "",
-    "settings": {
-      "average": 30,
-      "max": 120    
+  "device_stats": {
+    "battery": 80,
+    "temperature": 40,
+    "charging": true,
+    "gps": {
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "altitude": 0.0,
+      "accuracy": 0.0,
+      "provider": ""      
+    },
+    "accelerometer": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyroscope": {
+      "x": 0,
+      "y": 0,
+      "z": 0        
     }
   }
 }
 ```
 
+* **token** - token otrzymany przy logowaniu
+* **team** - na wypadek jak by w czasie detekcji zmienił drużynę, dlatego `team` przesyłamy
+  razem z pomiarem,
 * **detection** - detection hit values
   * **id** - autoincremental value,
-  * **frame_content** - cropped PNG encoded as BASE64 with detected hit,
   * **timestamp** - UNIX miliseconds timestamp of hit detection,
-  * **latitude**, **longitude**, **altitude**, **accuracy** and **provider** - GPS status,
-  * **width** - height of camera frame in pixels,
-  * **height** - height of camera frame in pixels
-* **user_info** - informacje o zalogowanym
-  * **team** - na wypadek jak by w czasie detekcji zmienił drużynę, dlatego `team` przesyłamy
-  razem z pomiarem,
-* **device_info** - najważniejsze są `settings`, które użytkownik sobie może zmienić sam,
-teoretycznie jeszcze tylko `androidVersion` może się zmienić jeżeli
-użytkownik zaktualizuje Androida, ale może też być tak, że użytkownik sparuje telefon i
-potem kupi sobie nowy, zrobi backup ustawień aplikacji i przeniesie na ten backup na nowy,
-wtedy może być tak, że aplikacja będzie zalogowana bo będzie `token` ale już z innymi `deviceId` i
-`deviceModel`
+  * **hit** - lista wykrytych hit'ów
+    * **frame_content** - cropped PNG encoded as BASE64 with detected hit,
+    * **x** i **y** - miejsce na matrycy zarejestrowania hit 
+* **device_stats** - patrz struktura `device_stats`
+
 
 **Response body:**
 
@@ -250,20 +250,37 @@ Serwer wyśle na podany adres e-mail link do resetowania hasła do konta.
   "token": "token",
   "state": "start",
   "timestamp": 0,
-  "latitude": 0.0,
-  "longitude": 0.0,
-  "altitude": 0.0,
-  "accuracy": 0.0,
-  "provider": "",
-  "width": 0,
-  "height": 0,
   "device_info": {
     "deviceId": "",
     "androidVersion": "",
     "deviceModel": "",
+    "width": 0,
+    "height": 0,
     "settings": {
       "average": 30,
       "max": 120    
+    }
+  },
+  "device_stats": {
+    "battery": 80,
+    "temperature": 40,
+    "charging": true,
+    "gps": {
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "altitude": 0.0,
+      "accuracy": 0.0,
+      "provider": ""      
+    },
+    "accelerometer": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyroscope": {
+      "x": 0,
+      "y": 0,
+      "z": 0        
     }
   }
 }
@@ -274,6 +291,100 @@ Poinformowanie serwera o zmianie stanu na temat detekcji:
 w czasie detekcji aplikacja wysyła co jakiś czas komunikaty `ping` więc w przypadku
 braku komunikatu `stop` serwer może przyjąć ostatni `ping` za `stop`
 * **timestamp** - czas (UNIX ms) w którym nastąpiła zmiana stanu na temat detekcji
+* **device_info** - patrz struktura `device_stats`
+* **device_stats** - patrz struktura `device_stats`
 
 Przesyłamy też wszystkie informacje o urządzeniu jak w `detection`, bo brak detekcji
 to też ważna informacja dlaczego.
+
+## Struktura `device_info`
+
+Struktura zawiera informacje stałe na temat urządzenia, tj. takie które nie powinny się zmienić w
+czasie trwania detekcji, czyli 
+
+```json
+{
+  "device_info": {
+    "deviceId": "",
+    "androidVersion": "",
+    "deviceModel": "",
+    "width": 0,
+    "height": 0,
+    "settings": {
+      "average": 30,
+      "max": 120,    
+      "etc.": "..."
+    }
+  }
+}
+```
+
+* **androidVersion**: tylko numer wersji SDK, on mówi wszystko o wersji Androida,
+* **deviceId**: unikalny identyfikator urządzenia,
+* **deviceModel**: model urządzenia,
+* **width** i **height**: wymiary klatki z kamery,
+* **settings**: ustawienia parametrów algorytmu detektora
+
+Najważniejsze są `settings`, które użytkownik sobie może zmienić sam,
+teoretycznie jeszcze tylko `androidVersion` może się zmienić jeżeli
+użytkownik zaktualizuje Androida, ale może też być tak, że użytkownik sparuje telefon i
+potem kupi sobie nowy, zrobi backup ustawień aplikacji i przeniesie na ten backup na nowy,
+wtedy może być tak, że aplikacja będzie zalogowana bo będzie `token` ale już z innymi `deviceId` i
+`deviceModel`
+
+## Struktura `device_stats`
+
+Struktura zawiera informacje zmienne na temat urządzenia, tj. statystyki na temat stanu urządzenia w
+czasie detekcji.
+
+```json
+{
+  "device_stats": {
+    "battery": 80,
+    "temperature": 40,
+    "charging": true,
+    "gps": {
+      "latitude": 0.0,
+      "longitude": 0.0,
+      "altitude": 0.0,
+      "accuracy": 0.0,
+      "provider": ""      
+    },
+    "accelerometer": {
+      "x": 0,
+      "y": 0,
+      "z": 0
+    },
+    "gyroscope": {
+      "x": 0,
+      "y": 0,
+      "z": 0        
+    }
+  }
+}
+```
+
+* **battery** - poziom naładowania baterii
+* **temperature** - temperatura odczytana z termometru w urządzeniu
+* **charging** - telefon jest ładowany
+* **gps** - dane z modułu GPS urządzenia (współrzędne GPS, dokładność i skąd je odczytano)
+* **accelerometer** - odczyt z akcelerometru pozwoli określić orientację urządzenia względen Ziemii
+* **gyroscope** - chyba nam się nie przyda, co najwyżej do określenia czy urządzenie leży spokojnie
+czy się rusza
+
+
+## Komunikat `error`
+
+```json
+{
+  "error": "invalid_credentials",
+  "message": "Invalid credentials"
+}
+```
+
+* **error**: tag błędu,
+* **message**: komunikat błędu po angielsku.
+
+Jeżeli aplikacja ma taki tag błędu w bazie wielojęzyczności to
+wyświetli komunikat z tej bazy na podstawie tego tagu, jeżeli nie
+to wyświetli komunikat po angielsku z `message`.
