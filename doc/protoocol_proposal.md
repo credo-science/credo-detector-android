@@ -106,26 +106,7 @@ Możliwe komunikaty błędów:
   "average": 0,
   "max": 0,
   "device_stats": {
-    "battery": 80,
-    "temperature": 40,
-    "charging": true,
-    "gps": {
-      "latitude": 0.0,
-      "longitude": 0.0,
-      "altitude": 0.0,
-      "accuracy": 0.0,
-      "provider": ""      
-    },
-    "accelerometer": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "gyroscope": {
-      "x": 0,
-      "y": 0,
-      "z": 0        
-    }
+    "...": "..."
   }
 }
 ```
@@ -164,26 +145,7 @@ Możliwe komunikaty błędów:
     ]
   },
   "device_stats": {
-    "battery": 80,
-    "temperature": 40,
-    "charging": true,
-    "gps": {
-      "latitude": 0.0,
-      "longitude": 0.0,
-      "altitude": 0.0,
-      "accuracy": 0.0,
-      "provider": ""      
-    },
-    "accelerometer": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "gyroscope": {
-      "x": 0,
-      "y": 0,
-      "z": 0        
-    }
+    "...": "..."
   }
 }
 ```
@@ -262,26 +224,7 @@ Serwer wyśle na podany adres e-mail link do resetowania hasła do konta.
     }
   },
   "device_stats": {
-    "battery": 80,
-    "temperature": 40,
-    "charging": true,
-    "gps": {
-      "latitude": 0.0,
-      "longitude": 0.0,
-      "altitude": 0.0,
-      "accuracy": 0.0,
-      "provider": ""      
-    },
-    "accelerometer": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "gyroscope": {
-      "x": 0,
-      "y": 0,
-      "z": 0        
-    }
+    "...": "..."
   }
 }
 ```
@@ -350,16 +293,12 @@ czasie detekcji.
       "accuracy": 0.0,
       "provider": ""      
     },
-    "accelerometer": {
-      "x": 0,
-      "y": 0,
-      "z": 0
-    },
-    "gyroscope": {
-      "x": 0,
-      "y": 0,
-      "z": 0        
-    }
+    "sensors": [
+      {
+        "sensor": "accelerometer",
+        "values": [3.4, 4.2, 5.7]
+      }
+    ]
   }
 }
 ```
@@ -368,9 +307,9 @@ czasie detekcji.
 * **temperature** - temperatura odczytana z termometru w urządzeniu
 * **charging** - telefon jest ładowany
 * **gps** - dane z modułu GPS urządzenia (współrzędne GPS, dokładność i skąd je odczytano)
-* **accelerometer** - odczyt z akcelerometru pozwoli określić orientację urządzenia względen Ziemii
-* **gyroscope** - chyba nam się nie przyda, co najwyżej do określenia czy urządzenie leży spokojnie
-czy się rusza
+* **sensors** - lista danych z sensorów
+  * **sensor** - nazwa sensora wg https://developer.android.com/guide/topics/sensors/sensors_motion.html
+  * **values** - lista odczytanych wartości typu float
 
 
 ## Komunikat `error`
