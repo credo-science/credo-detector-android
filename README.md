@@ -36,3 +36,14 @@ Welcome to import project to Android Studio and contribute in development.
 
 Public contribution rules is not defined yet. If you want to make changes now you can fork project
 and make pull request.
+
+#### Contribution rules for team
+
+When you get issue to resolve you should:
+
+1. Create new branch from master called `I{issue number}` i.e. `I5`.
+2. Make modifications (new feature or fix) on this branch.
+3. Call to maintainer when modifications is done.
+4. Rebase branch to master.
+5. Respond to the recommendations from maintainer and push to branch and call to him when finish.
+6. When maintainers fully accept then merge to master.
