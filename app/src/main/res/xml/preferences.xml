@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="detection_category"
+        android:title="@string/settings_detection_name">
+
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="process_charging_only"
+            android:summary="@string/settings_detecion_summary"
+            android:title="@string/settings_detection_title" />
+
+        <EditTextPreference
+            android:key="temperature"
+            android:title="@string/pref_register_temperature_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_temperature_summary"/>
+
+        <EditTextPreference
+            android:key="level"
+            android:title="@string/pref_register_level_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_level_summary"/>
+
+        <EditTextPreference
+            android:key="stop_after"
+            android:title="@string/pref_register_stop_after_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_stop_after_summary"/>
+
+        <EditTextPreference
+            android:key="pause_time"
+            android:title="@string/pref_register_pause_time_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_pause_time_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="detection_factors"
+        android:title="@string/settings_factors_name">
+
+        <EditTextPreference
+            android:key="crop"
+            android:title="@string/pref_register_crop_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_crop_summary"
+            android:id="@android:id/edit"/>
+
+        <EditTextPreference
+            android:key="max"
+            android:title="@string/pref_register_max_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_max_summary"/>
+
+        <EditTextPreference
+            android:key="average"
+            android:title="@string/pref_register_average_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_average_summary"/>
+
+        <EditTextPreference
+            android:key="black"
+            android:title="@string/pref_register_black_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_black_summary"/>
+
+        <EditTextPreference
+            android:key="count"
+            android:title="@string/pref_register_count_title"
+            android:numeric="integer"
+            android:summary="@string/pref_register_count_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="sync_category"
+        android:title="@string/settings_upload_name">
+
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="upload_wifi_only"
+            android:summary="@string/settings_upload_summary"
+            android:title="@string/settings_upload_title" />
+
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

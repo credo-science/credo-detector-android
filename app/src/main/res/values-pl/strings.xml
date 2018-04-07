@@ -1,0 +1,155 @@
+<resources>
+    <string name="app_name">CREDO Detektor</string>
+    <string name="app_name_short">Detektor</string>
+    <string name="app_title">Ekstremalnie rozproszone obserwatorium promieniowania kosmicznego (CREDO)</string>
+    <string name="app_description">
+        Projekt CREDO ma na celu poszukiwanie kaskad cząstek kosmicznych w odpowiedzi na najbardziej
+        fundamentalne pytania o Wszechświat. Możecie Państwo wprost dołączyć do projektu, na
+        przykład poprzez użycie naszej aplikacji na telefon komórkowy. Dzięki zainstalowaniu
+        aplikacji na smartfonie, Państwa osobisty detektor cząstek będzie dostarczał informacje
+        bezpośrednio dla pionierskiego projektu naukowego. Możecie Państwo również wziąć udział
+        w analizie pozyskanych danych na stronach Dark Universe Welcome.
+    </string>
+    <string name="app_homepage">Więcej informacji o projekcie CREDO znajduje się pod adresem:</string>
+
+    <string name="navigation_drawer_open">Otwórz panel nawigacyjny</string>
+    <string name="navigation_drawer_close">Zamknij panel nawigacyjny</string>
+
+    <string name="action_settings">Ustawienia</string>
+    <string name="credo_name">CREDO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_status">Stan</string>
+    <string name="title_statistics">Odkrycia</string>
+    <string name="title_login">Login</string>
+    <string name="title_settings">Ustawienia</string>
+    <string name="title_information">credo.science</string>
+    <string name="title_activity_settings">Ustawienia</string>
+    <string name="title_activity_register">Rejestracja</string>
+
+    <string name="title_register">Rejestracja</string>
+    <string name="msg_no_network_connection">brak połączenia z internetem</string>
+    <string name="msg_network_connection_problem">problem z połączeniem ze serwerem, spróbuj ponownie później</string>
+    <string name="action_login">Rejestruj</string>
+    <string name="login_button_text">Zaloguj</string>
+    <string name="register_button_text">Zarejestruj</string>
+
+    <string name="settings_detection_name">Detektor</string>
+    <string name="settings_detection_title">Włączaj detektor tylko podczas ładowania</string>
+    <string name="settings_detecion_summary">
+        Powoduje uruchamianie detektora tylko podczas ładowania telefonu i wyłączanie detektora
+        gdy telefon zostaje odłączony od ładowarki.
+        Zalecamy pozostawienie tej opcji zaznaczonej ponieważ detektor podczas pracy powoduje
+        szybkie rozładowanie baterii.
+    </string>
+
+    <string name="settings_upload_name">Wysyłanie danych</string>
+    <string name="settings_upload_title">Wysyłaj tylko przez WiFi</string>
+    <string name="settings_upload_summary">
+        Informacje o obserwacjach zapisywane są w pamięci telefonu i wysyłane na serwer dopiero
+        gdy telefon jest w zasięgu sieci WiFi.
+    </string>
+
+    <string name="stats_generate">Generate</string>
+    <string name="stats_upload">Upload</string>
+    <string name="stats_clear_db">Clear DB</string>
+    <string name="stats_clear_cache_db">Clear Cache DB</string>
+
+    <string name="pref_cat_login">Logowanie za pomocą User Key</string>
+
+    <string name="pref_login_title">User Key</string>
+    <string name="pref_login_summary">User Key jest generowany podczas rejestracji i wysyłany na podany adres e-mail</string>
+    <string name="pref_cat_register">Rejestracja nowego użytkownika</string>
+
+    <string name="pref_register_name_title">Nick</string>
+    <string name="pref_register_name_summary">Twój nickname</string>
+
+    <string name="pref_register_email_title">E-mail</string>
+    <string name="pref_register_email_summary">Twój e-mail</string>
+
+    <string name="pref_register_team_title">Drużyna</string>
+    <string name="pref_register_team_summary">Drużyna do której należysz</string>
+
+    <string name="hit_make_details">Details about Item:</string>
+    <string name="hit_make_details_foot">More details information here.</string>
+    <string name="debug_upload_hits">number of hits to upload:</string>
+    <string name="debug_cached_hits">number of cached hits:</string>
+    <string name="debug_to_upload_hits">number of hits to upload:</string>
+
+    <string name="status_fragment_detection">Detektor</string>
+    <string name="status_fragment_switched_off">OFF</string>
+    <string name="status_fragment_running">ON: DZIAŁA</string>
+    <string name="status_fragment_hold">ON: ZATRZYMANY</string>
+
+    <string name="status_fragment_name">Nick:</string>
+    <string name="status_fragment_email">E-mail:</string>
+    <string name="status_fragment_team">Drużyna:</string>
+
+    <string name="status_fragment_no_team">brak drużyny</string>
+    <string name="status_fragment_detections">Wykrycia w ciągu ostatnich %1$d dni:</string>
+    <string name="status_fragment_toggle">Włącz/wyłącz detektor</string>
+
+    <string name="error_camera">Błąd kamery: %1$s</string>
+    <string name="error_emulator">Detektor nie będzie działał na emulatorze</string>
+    <string name="warning_condition_charging">
+        Zatrzymany ponieważ telefon nie jest w tej chwili podłączony do ładowania, a w ustawieniach jest zaznaczone, że ma być.
+    </string>
+    <string name="warning_condition_low_battery">
+        Zatrzymany ponieważ stan baterii jest niższy niż ten ustawiony w ustawieniach.
+    </string>
+    <string name="warning_condition_too_heat">
+        Zatrzymany ponieważ telefon jest zbyt gorący, temperatura jest wyższa niż ta ustawiona w ustawieniach.
+    </string>
+
+    <string name="credo_logo_alt">Logo CREDO</string>
+    <string name="button_go_to_experiment">Uruchom eksperyment</string>
+    <string name="status_fragment_start">Start:</string>
+    <string name="status_fragment_latest">Działa:</string>
+    <string name="status_fragment_size">Obraz:</string>
+    <string name="status_fragment_count">Klatki:</string>
+    <string name="status_fragment_bright">Jasność:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Ładowanie:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">tak</string>
+    <string name="status_fragment_battery_nocharge">nie</string>
+    <string name="status_fragment_level">Bateria:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Wykrycie:</string>
+    <string name="status_fragment_black">Czarne:</string>
+
+
+    <string name="detections_item_size">Rozmiar wycinka obrazu: %1$dx%2$d</string>
+
+    <string name="settings_factors_name">Parametry algorytmu detekcji</string>
+
+    <string name="pref_register_crop_title">Crop size [px]</string>
+    <string name="pref_register_crop_summary">Rozmiar wycinka obrazu, który zawiera wykryte zderzenie, domyślnie: 20</string>
+
+    <string name="pref_register_max_title">Max factor [0–255]</string>
+    <string name="pref_register_max_summary">Ignoruj klatki obrazu, których najjaśniejszy piksel jest ciemniejszy niż max factor, domyślnie: 120</string>
+
+    <string name="pref_register_average_title">Average factor [0–255]</string>
+    <string name="pref_register_average_summary">Ignoruj klatki obrazu, których średnia jasność pikseli jest większa niż average factor, domyślnie: 30</string>
+
+    <string name="pref_register_black_title">Black factor [0–255]</string>
+    <string name="pref_register_black_summary">Piksele ciemniejsze niż black factor zostaną uznane za czarne, domyślnie: 0</string>
+
+    <string name="pref_register_count_title">Black count [0–1000&#8240;]</string>
+    <string name="pref_register_count_summary">Ignoruj klatki gdzie &#8240; czarnych pikseli jest mniejsza niż black count, domyślnie: 0&#8240;</string>
+
+    <string name="pref_register_temperature_title">Max temperature [°C]</string>
+    <string name="pref_register_temperature_summary">Zatrzymaj detektor gdy temperatura telefonu wzrośnie powyżej max temperature, domyślnie: 60°C</string>
+
+    <string name="pref_register_level_title">Battery level [0–100%]</string>
+    <string name="pref_register_level_summary">Zatrzymaj detektor gdy poziom naładowania baterii będzie niższy niż battery level, domyślnie: 60%</string>
+
+    <string name="pref_register_stop_after_title">Max camera on time [min]</string>
+    <string name="pref_register_stop_after_summary">Gdy detektor działa dłużej niż max camera on time to zatrzyma detektor po tym czasie, domyślnie: 0min</string>
+
+    <string name="pref_register_pause_time_title">Pause camera time [min]</string>
+    <string name="pref_register_pause_time_summary">Po zatrzymaniu detektora odczeka pause camera time czasu i włączy detektor ponownie, domyślnie: 0min</string>
+
+</resources>

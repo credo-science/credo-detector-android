@@ -1,0 +1,151 @@
+<resources>
+    <string name="app_name">CREDO Detektor</string>
+    <string name="app_name_short">Detektor</string>
+    <string name="app_title">Ekstremalno rasprostranjena opservatorija kosmičke zrake (CREDO)</string>
+    <string name="app_description">
+        CREDO projekt istraživa kaskade elementarna čestica dajući odgovor na najviše temeljna pitanja o Svemir.
+        Je moguće da se dodate u projekat, na primjer ako uživate ovu aplikacju na svojem mobitelju. Zahvaljujući
+        instaliranje aplikacji u smartphone, Vaš osoban detektor čestica bude dostavljao informaciju direktno
+        za ovaj začetničkan znanstven projekt. Možete također sudjelovati u analizu stečenih podataka na Dark Universe Welcome.
+    </string>
+    <string name="app_homepage">Više informacji o CREDO projektu je na stranici:</string>
+
+    <string name="navigation_drawer_open">Otvorite navigacijsku ploču</string>
+    <string name="navigation_drawer_close">Zatvorite navigacijsku ploču</string>
+
+    <string name="action_settings">Postavke</string>
+    <string name="credo_name">CREDO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_status">Stanje</string>
+    <string name="title_statistics">Otkrića</string>
+    <string name="title_login">Login</string>
+    <string name="title_settings">Postavke</string>
+    <string name="title_information">credo.science</string>
+    <string name="title_activity_settings">Postavke</string>
+    <string name="title_activity_register">Registracija</string>
+
+    <string name="title_register">Registracija</string>
+    <string name="msg_no_network_connection">nema internetske veze</string>
+    <string name="msg_network_connection_problem">problem povezivanja s poslužiteljem, pokušajte ponovo kasnje</string>
+    <string name="action_login">Registriraj</string>
+    <string name="login_button_text">Prijavi se</string>
+    <string name="register_button_text">Registracija</string>
+
+    <string name="settings_detection_name">Detektor</string>
+    <string name="settings_detection_title">Ukljući detektor samo za vrijeme tovaranja</string>
+    <string name="settings_detecion_summary">
+        Prouzrokovuje uključenje detektora samo tjekom tovaranja mobitelja i izključenje detektora
+        kad mobitelj je izključen od tovaritelja.
+        Preporučujemo ostavjenje označenoj ovoj opcji, jer detektor tjekom rada izaziva brze pražnjenje baterji
+    </string>
+
+    <string name="settings_upload_name">Prijenos podataka</string>
+    <string name="settings_upload_title">Prijenosi samo kroz WiFi</string>
+    <string name="settings_upload_summary">
+        Informacije o opservacijah su upisane u pameti mobitelja i poslan na poslužitelj samo kad mobitelj stiže u WiFi.
+    </string>
+
+    <string name="stats_generate">Generate</string>
+    <string name="stats_upload">Upload</string>
+    <string name="stats_clear_db">Clear DB</string>
+    <string name="stats_clear_cache_db">Clear Cache DB</string>
+
+    <string name="pref_cat_login">Logiranje uz pomoć User Key</string>
+
+    <string name="pref_login_title">User Key</string>
+    <string name="pref_login_summary">User Key je generirana tijekom registracije i poslana na navedenu e-mail adresu</string>
+    <string name="pref_cat_register">Registracija novog korisnika</string>
+
+    <string name="pref_register_name_title">Nick</string>
+    <string name="pref_register_name_summary">Tvoj nickname</string>
+
+    <string name="pref_register_email_title">E-mail</string>
+    <string name="pref_register_email_summary">Tvoj e-mail</string>
+
+    <string name="pref_register_team_title">Tim</string>
+    <string name="pref_register_team_summary">Tim kojem pripadate</string>
+
+    <string name="hit_make_details">Details about Item:</string>
+    <string name="hit_make_details_foot">More details information here.</string>
+    <string name="debug_upload_hits">number of hits to upload:</string>
+    <string name="debug_cached_hits">number of cached hits:</string>
+    <string name="debug_to_upload_hits">number of hits to upload:</string>
+
+    <string name="status_fragment_detection">Detektor</string>
+    <string name="status_fragment_switched_off">OFF</string>
+    <string name="status_fragment_running">ON: RADI</string>
+    <string name="status_fragment_hold">ON: NERADI</string>
+
+    <string name="status_fragment_name">Nick:</string>
+    <string name="status_fragment_email">E-mail:</string>
+    <string name="status_fragment_team">Tim:</string>
+
+    <string name="status_fragment_no_team">Nema tim</string>
+    <string name="status_fragment_detections">Detekcje tijekom posljednih %1$d dana:</string>
+    <string name="status_fragment_toggle">Ukljući/izkljući detektor</string>
+
+    <string name="error_camera">Pogreška u kameri: %1$s</string>
+    <string name="error_emulator">Detektor ne bude radio na imitatoru</string>
+    <string name="warning_condition_charging">
+        Zaustavljeno jer telefon trenutačno nije povezan za punjenje, au postavkama je označen da treba biti.
+    </string>
+    <string name="warning_condition_low_battery">
+        Zaustavljeno jer je status baterije niži od onog koji je postavljen u postavkama.
+    </string>
+    <string name="warning_condition_too_heat">
+        Zaustavljeno jer je telefon prevruć, temperatura je veća od onog postavljenog u postavkama.
+    </string>
+
+    <string name="credo_logo_alt">Logo CREDO</string>
+    <string name="button_go_to_experiment">Pokrenite eksperiment</string>
+    <string name="status_fragment_start">Početak:</string>
+    <string name="status_fragment_latest">Radi:</string>
+    <string name="status_fragment_size">Slika:</string>
+    <string name="status_fragment_count">Kavezi:</string>
+    <string name="status_fragment_bright">Jasnoća:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Tovaranje:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">da</string>
+    <string name="status_fragment_battery_nocharge">ne</string>
+    <string name="status_fragment_level">Baterija:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_acc">Senzor ubrzanja.:</string>
+    <string name="status_fragment_hit">Otkrivanje:</string>
+    <string name="status_fragment_black">Crno:</string>
+
+
+    <string name="detections_item_size">Veličina sloja slike: %1$dx%2$d</string>
+
+    <string name="settings_factors_name">Parametri algoritma detekcije</string>
+
+    <string name="pref_register_crop_title">Crop size [px]</string>
+    <string name="pref_register_crop_summary">Veličina sloja slike koji prema zadanim postavkama sadrži otkriveni učinak: 20</string>
+
+    <string name="pref_register_max_title">Max factor [0–255]</string>
+    <string name="pref_register_max_summary">Zanemari okviri za slike čija je najsvjetlija piksela je tamnija od maks. faktora, dosjetlivo: 120</string>
+
+    <string name="pref_register_average_title">Average factor [0–255]</string>
+    <string name="pref_register_average_summary">Zanemari okviri za slike čija je prosječna svjetlina piksela veća od average factor, dosjetlivo: 30</string>
+
+    <string name="pref_register_black_title">Black factor [0–255]</string>
+    <string name="pref_register_black_summary">Piksele tamnje nego black factor bit ću prepznat crnjim, dosjetlivo: 0</string>
+
+    <string name="pref_register_count_title">Black count [0–1000&#8240;]</string>
+    <string name="pref_register_count_summary">Zanemari kavezi gdje &#8240; crnih je manja nego black count, dosjetlivo: 0&#8240;</string>
+
+    <string name="pref_register_temperature_title">Max temperature [°C]</string>
+    <string name="pref_register_temperature_summary">Stopiraj detektor kad temperatura mobitelja  povećava se više nego max temperature, dosjetlivo: 60°C</string>
+
+    <string name="pref_register_level_title">Battery level [0–100%]</string>
+    <string name="pref_register_level_summary">Stopiraj detektor kad razinu baterije bude niži nego baterry level, dosjetlivo: 60%</string>
+
+    <string name="pref_register_stop_after_title">Max camera on time [min]</string>
+    <string name="pref_register_stop_after_summary">Kad detektor radi działa više nego max camera on time stopirat će detektor nakon ovog vremena, dosjetlivo: 0min</string>
+
+    <string name="pref_register_pause_time_title">Pause camera time [min]</string>
+    <string name="pref_register_pause_time_summary">Nakon stopiranja detektora čekat ću pasue camera time czasu i ukljući ponovo detektor, dosjetlivo: 0min</string>
+
+</resources>

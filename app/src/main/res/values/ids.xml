@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="status_text_detection" type="id" />
+    <item name="status_text_name" type="id" />
+    <item name="status_text_email" type="id" />
+    <item name="status_text_team" type="id" />
+    <item name="status_text_number_of_detections" type="id" />
+    <item name="status_button_onoff" type="id" />
+</resources>

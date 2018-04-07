@@ -1,0 +1,129 @@
+<resources>
+    <string name="app_name">Rivelatore CREDO</string>
+    <string name="app_name_short">Rivelatore</string>
+    <string name="app_title">Cosmic-Ray Extremely Distributed Observatory (CREDO)</string>
+    <string name="app_description">Il progetto CREDO si basa sulla ricerca di cascate di particelle provenienti dallo spazio profondo, nel tentativo di rispondere ad alcune delle domande fondamentali sul nostro Universo. Le tue rilevazioni sosterranno direttamente questo nuovo, pionieristico settore della ricerca scientifica. Potrai anche prendere parte all\'analisi delle rivelazioni che tu, i tuoi concittadini scienziati e osservatori da tutto il mondo state raccogliendo attraverso l\'esperimento  Dark Universe Welcome.</string>
+    <string name="app_homepage">per saperne di più visita il sito di CREDO:</string>
+
+    <string name="navigation_drawer_open">Apri il menu di navigazione</string>
+    <string name="navigation_drawer_close">Chiudi il menu di navigazione</string>
+
+    <string name="action_settings">Impostazioni</string>
+    <string name="credo_name">CREDO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello_blank_fragment</string>
+    <string name="title_status">Stato</string>
+    <string name="title_statistics">Rilevazioni</string>
+    <string name="title_login">Accedi</string>
+    <string name="title_settings">Impostazioni</string>
+    <string name="title_information">credo.science</string>
+    <string name="title_activity_settings">Impostazioni</string>
+    <string name="title_activity_register">Registrati</string>
+
+
+    <string name="title_register">Registrati</string>
+    <string name="msg_no_network_connection">Nessuna connessione internet</string>
+    <string name="msg_network_connection_problem">Problemi di connessione, ti preghiamo di riprovare più tardi</string>
+    <string name="action_login">Registrati</string>
+    <string name="login_button_text">Accedi</string>
+    <string name="register_button_text">Registrati</string>
+
+    <string name="stats_generate">Genera dati</string>
+    <string name="stats_upload">Invia</string>
+    <string name="stats_clear_db">Cancella DB</string>
+    <string name="stats_clear_cache_db">Cancella Cache DB</string>
+
+    <string name="settings_detection_name">Rilevazione</string>
+    <string name="settings_detection_title">Rileva solo quando in carica</string>
+    <string name="settings_detecion_summary">Attiva la rilevazione di particelle solo quando è in carica. Poichè la rilevazione richiede intensive capacità di calcolo e può esaurire la batteria rapidamente, raccomandiamo di non cambiare questa opzione.</string>
+
+    <string name="settings_upload_name">Trasferimento dati</string>
+    <string name="settings_upload_title">Invia dati solo via wi-fi</string>
+    <string name="settings_upload_summary">Invia i dati solo quando connesso ad una rete wi-fi.</string>
+    <string name="pref_cat_login">Login utente e User Id</string>
+    <string name="pref_login_title">Codice utente</string>
+    <string name="pref_login_summary">Codice di identificazione utente, generato (ed inviato via mail) dopo che la registrazione è stata effettuata</string>
+    <string name="pref_cat_register">Login Utente e Registrazione di Appartenenza al Gruppo</string>
+    <string name="pref_register_name_summary">Nome utente o pseudonimo</string>
+    <string name="pref_register_name_title">Nome</string>
+    <string name="pref_register_email_title">E-mail</string>
+    <string name="pref_register_email_summary">Indirizzo e-mail utente</string>
+    <string name="pref_register_team_title">Gruppo</string>
+    <string name="pref_register_team_summary">Nome del gruppo a cui l\'utente appartiene</string>
+    <string name="hit_make_details">Dettagli Voce:</string>
+    <string name="hit_make_details_foot">Ulteriori informazioni.</string>
+    <string name="debug_upload_hits">Numero di rilevazioni valide da inviare:</string>
+    <string name="debug_cached_hits">Numero di rilevazioni valide archiviate:</string>
+    <string name="debug_to_upload_hits">Numero di rilevazioni valide da inviare::</string>
+    <string name="status_fragment_detection">Rilevazione</string>
+    <string name="status_fragment_name">Nome</string>
+    <string name="status_fragment_email">email</string>
+    <string name="status_fragment_team">Gruppo</string>
+    <string name="status_fragment_no_team">nessun gruppo</string>
+    <string name="status_fragment_detections">Rilevazioni negli ultimi %1$d giorni</string>
+    <string name="status_fragment_toggle">Toggle Detection</string>
+    <string name="status_fragment_switched_off">SPENTO</string>
+    <string name="status_fragment_running">ACCESO: OPERATIVO</string>
+    <string name="status_fragment_hold">ACCESO: IN PAUSA</string>
+
+    <!-- Need to translate! -->
+    <string name="error_camera">Camera error: %1$s</string>
+    <string name="error_emulator">Detection is not working on emulator</string>
+    <string name="warning_condition_charging">Hold on because you set detection only when charging but currently no charging</string>
+    <string name="warning_condition_low_battery">Hold on because battery is lower than you set</string>
+    <string name="warning_condition_too_heat">Hold on because phone is too heat</string>
+
+    <string name="credo_logo_alt">CREDO logo</string>
+    <string name="button_go_to_experiment">Go to experiment</string>
+    <string name="status_fragment_start">Start:</string>
+    <string name="status_fragment_latest">Working:</string>
+    <string name="status_fragment_size">Size:</string>
+    <string name="status_fragment_count">Frames:</string>
+    <string name="status_fragment_bright">Bright:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Charging:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">yes</string>
+    <string name="status_fragment_battery_nocharge">no</string>
+    <string name="status_fragment_level">Battery:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Hit:</string>
+    <string name="status_fragment_black">Blacks:</string>
+
+
+    <string name="detections_item_size">Crop size: %1$dx%2$d</string>
+
+    <string name="settings_factors_name">Algorithm factors</string>
+
+    <string name="pref_register_crop_title">Crop size [px]</string>
+    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 20</string>
+
+    <string name="pref_register_max_title">Max factor [0–255]</string>
+    <string name="pref_register_max_summary">Ignore frame when any pixel is more bright than max factor, default: 120</string>
+
+    <string name="pref_register_average_title">Average factor [0–255]</string>
+    <string name="pref_register_average_summary">Ignore frame when average of pixel bright is less than average factor, default: 30</string>
+
+    <string name="pref_register_black_title">Black factor [0–255]</string>
+    <string name="pref_register_black_summary">Pixels darkness than black factor is black pixels, default: 0</string>
+
+    <string name="pref_register_count_title">Black count [0–1000&#8240;]</string>
+    <string name="pref_register_count_summary">Ignore frame when &#8240; of black pixel is less than black count, default: 0&#8240;</string>
+
+    <string name="pref_register_temperature_title">Max temperature [°C]</string>
+    <string name="pref_register_temperature_summary">Stop detection when temperature is greater than max temperature, default: 60°C</string>
+
+    <string name="pref_register_level_title">Battery level [0–100%]</string>
+    <string name="pref_register_level_summary">Stop detection when temperature is lesser than battery level, default: 60%</string>
+
+    <string name="pref_register_stop_after_title">Max camera on time [min]</string>
+    <string name="pref_register_stop_after_summary">When camera works longer than max camera on time then turn off and wait pause camera time, default: 0min</string>
+
+    <string name="pref_register_pause_time_title">Pause camera time [min]</string>
+    <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
+
+
+</resources>
+

@@ -1,0 +1,130 @@
+<resources>
+    <string name="app_name">CREDO detektor</string>
+    <string name="app_name_short">Detektor</string>
+    <string name="app_title">Extrém nagy területre szétosztott kozmikus sugárzás obszervatórium (CREDO)</string>
+    <string name="app_description"> A CREDO projekt részecskekaszkádokra vadászik, annak érdekében, hogy választ találjon univerzumunk néhany alapvető kérdésére. A részecske detektálásaid közvetlenül ehhez az úttörő, merőben új megközelítésű tudományos kutatáshoz adnak bemenő adatokat. Arra is megvan a lehetőséged, hogy részt vegyél az általad és szerte a világon más hasonlóan lelkes önkéntes kutatók és tudományos obszervatóriumok által létrehozott adatok elemzésében, hozzájárulva ezzel a "Dark Universe Welcome" kísérlet sikeréhez.</string>
+    <string name="app_homepage">
+Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
+
+    <string name="navigation_drawer_open">Navigációs fiók megnyitása</string>
+    <string name="navigation_drawer_close">Navigációs fiók bezárása</string>
+
+    <string name="action_settings">Beállítások</string>
+    <string name="credo_name">CREDO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hiányzó részek</string>
+    <string name="title_status">Státusz</string>
+    <string name="title_statistics">Detektálások</string>
+    <string name="title_login">Login</string>
+    <string name="title_settings">Beállítások</string>
+    <string name="title_information">credo.science</string>
+    <string name="title_activity_settings">Beállítások</string>
+    <string name="title_activity_register">Regisztráció</string>
+
+
+    <string name="title_register">Register</string>
+    <string name="msg_no_network_connection">nincs hálózati kapcsolat</string>
+    <string name="msg_network_connection_problem">hálózati csatlakozási hiba, próbálja meg később</string>
+    <string name="action_login">Regisztráció</string>
+    <string name="login_button_text">belépés</string>
+    <string name="register_button_text">regisztrálás</string>
+
+    <string name="stats_generate">Létrehozás</string>
+    <string name="stats_upload">Feltöltés</string>
+    <string name="stats_clear_db">Adatbázis törlése</string>
+    <string name="stats_clear_cache_db">Adatbázis gyorsítótárának törlése</string>
+
+    <string name="settings_detection_name">Detektálás</string>
+    <string name="settings_detection_title">Csak töltés közbeni detektálás</string>
+    <string name="settings_detecion_summary">A készülék csak akkor végez detektálást, ha éppen csatlakoztatva van a töltőhöz. Mivel a detektálás erőforrás igenyes folyamat, a készülék akkumulátora gyorsan lemerülhet, javasolt ezt a beállítást bekapcsolva hagyni.</string>
+
+    <string name="settings_upload_name">Adatátvitel</string>
+    <string name="settings_upload_title">Adatátvitel csak WiFi használatával</string>
+    <string name="settings_upload_summary">Adatátvitel csak abban az esetben történik, ha a készülék valamely WiFi hálózatra csatlakozik.</string>
+    <string name="pref_cat_login">Belépés felhasználói azonosítóval</string>
+    <string name="pref_login_title">Felhasználói kulcs</string>
+    <string name="pref_login_summary">A felhasználói azonosítót a regisztrációt követően hozzuk létre (és küldjük el email-ben).</string>
+    <string name="pref_cat_register">Felhasználói belépés és csapat tagság regisztráció</string>
+    <string name="pref_register_name_summary">Felhasználói név vagy becenév</string>
+    <string name="pref_register_name_title">Név</string>
+    <string name="pref_register_email_title">E-mail</string>
+    <string name="pref_register_email_summary">Felhasználói e-mail cím</string>
+    <string name="pref_register_team_title">Csapat</string>
+    <string name="pref_register_team_summary">A csapat neve, amelyhez a felhasználó tartozik</string>
+    <string name="hit_make_details">Az adott tétel részletei:</string>
+    <string name="hit_make_details_foot">További részletek itt.</string>
+    <string name="debug_upload_hits">feltöltendő beütések száma:</string>
+    <string name="debug_cached_hits">eltárolt beütések száma:</string>
+    <string name="debug_to_upload_hits">feltöltendő beütések száma:</string>
+    <string name="status_fragment_detection">Detektálás</string>
+    <string name="status_fragment_name">Név</string>
+    <string name="status_fragment_email">email</string>
+    <string name="status_fragment_team">csapat</string>
+    <string name="status_fragment_no_team">csapat nélkül</string>
+    <string name="status_fragment_detections">A detektálás időtartama %1$d nap</string>
+    <string name="status_fragment_toggle">Detektálás ki-/bekapcsolása </string>
+    <string name="status_fragment_switched_off">KIKAPCSOLVA</string>
+    <string name="status_fragment_running">BE: FUTTATÁS</string>
+    <string name="status_fragment_hold">BE: SZÜNETETLTETÉS</string>
+
+    <!-- Need to translate! -->
+    <string name="error_camera">Camera error: %1$s</string>
+    <string name="error_emulator">Detection is not working on emulator</string>
+    <string name="warning_condition_charging">Hold on because you set detection only when charging but currently no charging</string>
+    <string name="warning_condition_low_battery">Hold on because battery is lower than you set</string>
+    <string name="warning_condition_too_heat">Hold on because phone is too heat</string>
+
+    <string name="credo_logo_alt">CREDO logo</string>
+    <string name="button_go_to_experiment">Go to experiment</string>
+    <string name="status_fragment_start">Start:</string>
+    <string name="status_fragment_latest">Working:</string>
+    <string name="status_fragment_size">Size:</string>
+    <string name="status_fragment_count">Frames:</string>
+    <string name="status_fragment_bright">Bright:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Charging:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">yes</string>
+    <string name="status_fragment_battery_nocharge">no</string>
+    <string name="status_fragment_level">Battery:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Hit:</string>
+    <string name="status_fragment_black">Blacks:</string>
+
+
+    <string name="detections_item_size">Crop size: %1$dx%2$d</string>
+
+    <string name="settings_factors_name">Algorithm factors</string>
+
+    <string name="pref_register_crop_title">Crop size [px]</string>
+    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 20</string>
+
+    <string name="pref_register_max_title">Max factor [0–255]</string>
+    <string name="pref_register_max_summary">Ignore frame when any pixel is more bright than max factor, default: 120</string>
+
+    <string name="pref_register_average_title">Average factor [0–255]</string>
+    <string name="pref_register_average_summary">Ignore frame when average of pixel bright is less than average factor, default: 30</string>
+
+    <string name="pref_register_black_title">Black factor [0–255]</string>
+    <string name="pref_register_black_summary">Pixels darkness than black factor is black pixels, default: 0</string>
+
+    <string name="pref_register_count_title">Black count [0–1000&#8240;]</string>
+    <string name="pref_register_count_summary">Ignore frame when &#8240; of black pixel is less than black count, default: 0&#8240;</string>
+
+    <string name="pref_register_temperature_title">Max temperature [°C]</string>
+    <string name="pref_register_temperature_summary">Stop detection when temperature is greater than max temperature, default: 60°C</string>
+
+    <string name="pref_register_level_title">Battery level [0–100%]</string>
+    <string name="pref_register_level_summary">Stop detection when temperature is lesser than battery level, default: 60%</string>
+
+    <string name="pref_register_stop_after_title">Max camera on time [min]</string>
+    <string name="pref_register_stop_after_summary">When camera works longer than max camera on time then turn off and wait pause camera time, default: 0min</string>
+
+    <string name="pref_register_pause_time_title">Pause camera time [min]</string>
+    <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
+
+
+</resources>
+
