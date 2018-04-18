@@ -55,55 +55,68 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         val height = parameters.previewSize.height
         val analysisData = LongArray(aDataSize)
 
-        calcHistogram(data, analysisData, width, height, config.blackFactor)
+        var multiHit = false
+        var multiHitEnd = true
 
-        val max = analysisData[aDataSize-1]
-        val maxIndex = analysisData[aDataSize-2]
-        val sum = analysisData[aDataSize-3]
-        val zeroes = analysisData[aDataSize-4]
-        val average: Double = sum.toDouble() / (width*height).toDouble()
+        do {
 
-        statAverage += average
-        zerosAverage += zeroes
-        stateMax = kotlin.math.max(stateMax, max)
+            calcHistogram(data, analysisData, width, height, config.blackFactor)
+
+            val max = analysisData[aDataSize - 1]
+            val maxIndex = analysisData[aDataSize - 2]
+            val sum = analysisData[aDataSize - 3]
+            val zeroes = analysisData[aDataSize - 4]
+            val average: Double = sum.toDouble() / (width * height).toDouble()
+
+            statAverage += average
+            zerosAverage += zeroes
+            stateMax = kotlin.math.max(stateMax, max)
 
 //        Log.d(TAG, analysisData.joinToString())
 
-        if (max > config.maxFactor && average < config.averageFactor && (zeroes * 1000 / (width * height)) >= config.blackCount) {
-            doAsync {
-//                Log.d(TAG, analysisData.joinToString())
+            if (max > config.maxFactor && average < config.averageFactor && (zeroes * 1000 / (width * height)) >= config.blackCount) {
+                val bitmap = yuv2bitmap(data, width, height)
+                fillHited(data,width, height, maxIndex.toInt(), config.cropSize)
+                doAsync {
+                    //                Log.d(TAG, analysisData.joinToString())
 //                Log.d(TAG, "max: $max, maxIndex: $maxIndex (${maxIndex.toInt()}), sum: $sum, zeroes: $zeroes, averge: $average")
 
+                    state.lastHit = timestamp
+                    val cropBitmap = cropBitmap(bitmap, width, height, maxIndex.toInt(), config.cropSize)
+                    val cropDataPNG = bitmap2png(cropBitmap)
+                    val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
-                state.lastHit = timestamp
-                val bitmap = yuv2bitmap(data, width, height)
-                val cropBitmap = cropBitmap(bitmap, width, height, maxIndex.toInt(), config.cropSize)
-                val cropDataPNG = bitmap2png(cropBitmap)
-                val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
+                    val location = mLocationInfo.getLocationData()
 
-                val location = mLocationInfo.getLocationData()
+                    val hit = Hit(
+                            dataString,
+                            timestamp,
+                            location.latitude,
+                            location.longitude,
+                            location.altitude,
+                            location.accuracy,
+                            location.provider,
+                            width,
+                            height
 
-                val hit = Hit(
-                        dataString,
-                        timestamp,
-                        location.latitude,
-                        location.longitude,
-                        location.altitude,
-                        location.accuracy,
-                        location.provider,
-                        width,
-                        height
+                    )
+                    mDataManager.storeHit(hit)
 
-                )
-                mDataManager.storeHit(hit)
+                    Log.d(TAG, "Image detected and stored in DB")
 
-                Log.d(TAG, "Image detected and stored in DB")
-
-                val size = width * height + width * height / 2
-                val callbackBuffer = ByteArray(size)
-                hCamera.addCallbackBuffer(callbackBuffer)
+                }
+                multiHit=true
+            } else {
+                multiHitEnd = false
             }
-        } else {
+
+        }while(multiHitEnd)
+
+        if(multiHit){
+            val size = width * height + width * height / 2
+            val callbackBuffer = ByteArray(size)
+            hCamera.addCallbackBuffer(callbackBuffer)
+        }else{
             hCamera.addCallbackBuffer(data)
         }
 
@@ -157,6 +170,29 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         return Bitmap.createBitmap(bitmap, x, y, sideLength, sideLength)
+    }
+
+    fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
+
+        val maxX = maxPosition.rem(width)
+        val maxY = maxPosition/width
+
+        var x = maxX - sideLength/2
+        var y = maxY - sideLength/2
+
+        when {
+            x < 0 -> x = 0
+            y < 0 -> y = 0
+            x >= width -> x=width
+            y >= height -> y=height
+        }
+
+        for(i in y..y+sideLength){
+            for(j in x..x+sideLength){
+                data[i*width+j]=0
+            }
+        }
+
     }
 
 }
