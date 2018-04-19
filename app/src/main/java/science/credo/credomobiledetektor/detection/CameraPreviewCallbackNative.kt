@@ -183,8 +183,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         when {
             x < 0 -> x = 0
             y < 0 -> y = 0
-            x >= width -> x=width
-            y >= height -> y=height
+            x >= width - sideLength -> x = width - sideLength
+            y >= height - sideLength -> y = height - sideLength
         }
 
         for(i in y..y+sideLength){
