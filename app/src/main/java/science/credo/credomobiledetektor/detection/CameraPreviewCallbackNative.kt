@@ -174,19 +174,24 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
     fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
 
+        //Point (maxX,maxY) is center(brightest pixel) of hit
         val maxX = maxPosition.rem(width)
         val maxY = maxPosition/width
 
+        //Point (x,y) is upper-left corner of square with we want to fill
         var x = maxX - sideLength/2
         var y = maxY - sideLength/2
+
 
         when {
             x < 0 -> x = 0
             y < 0 -> y = 0
+            //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
             x >= width - sideLength -> x = width - sideLength
             y >= height - sideLength -> y = height - sideLength
         }
 
+        //Loops iterates from upper-left point sideLength times
         for(i in y..y+sideLength){
             for(j in x..x+sideLength){
                 data[i*width+j]=0
