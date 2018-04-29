@@ -85,6 +85,8 @@
     <string name="status_fragment_latest">Working:</string>
     <string name="status_fragment_size">Size:</string>
     <string name="status_fragment_count">Frames:</string>
+    <string name="status_fragment_performed">Good:</string>
+    <string name="status_fragment_ontime">On time:</string>
     <string name="status_fragment_bright">Bright:</string>
     <string name="status_fragment_max">Max:</string>
     <string name="status_fragment_battery">Charging:</string>

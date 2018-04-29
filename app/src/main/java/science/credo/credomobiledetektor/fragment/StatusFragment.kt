@@ -27,7 +27,7 @@ import science.credo.credomobiledetektor.R
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.events.BatteryEvent
 import science.credo.credomobiledetektor.events.DetectorStateEvent
-import science.credo.credomobiledetektor.events.FrameEvent
+import science.credo.credomobiledetektor.events.StatsEvent
 import science.credo.credomobiledetektor.info.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -37,7 +37,7 @@ class StatusFragment : Fragment() {
 
     private val mReceiver = PowerConnectionReceiver()
     private var detectorState: DetectorStateEvent = DetectorStateEvent()
-    private var frameEvent = FrameEvent()
+    private var statsEvent = StatsEvent()
     private var batteryState = BatteryEvent()
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -65,26 +65,31 @@ class StatusFragment : Fragment() {
         val dm = DataManager.getInstance(context!!)
         detections_text.text = (dm.getCachedHitsNumber() + dm.getHitsNumber()).toString()
 
-        start_text.text = if (frameEvent.startDetection > 0)
-            dateFormat.format(frameEvent.startDetection)
+        start_text.text = if (statsEvent.startDetectionTimestamp > 0)
+            dateFormat.format(statsEvent.startDetectionTimestamp)
         else
             ""
 
-        latest_text.text = if (frameEvent.lastUpdate > 0)
-            dateFormat.format(frameEvent.lastUpdate)
+        latest_text.text = if (statsEvent.lastFrameAchievedTimestamp > 0)
+            dateFormat.format(statsEvent.lastFrameAchievedTimestamp)
         else
             ""
 
-        hit_text.text = if (frameEvent.lastHit > 0)
-            dateFormat.format(frameEvent.lastHit)
+        hit_text.text = if (statsEvent.lastHitTimestamp > 0)
+            dateFormat.format(statsEvent.lastHitTimestamp)
         else
             ""
 
-        frame_size_text.text = "${frameEvent.width}x${frameEvent.height}"
-        frame_count_text.text = frameEvent.frames.toString()
+        frame_size_text.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
 
-        bright_text.text = "%.2f".format(frameEvent.average)
-        max_text.text = frameEvent.max.toString()
+        frame_count_text.text = statsEvent.allFrames.toString()
+        frame_performed_text.text = statsEvent.performedFrames.toString()
+
+        ontime_text.text = timePeriodFormat(statsEvent.onTime, false)
+        black_text.text = "%.0f‰".format(statsEvent.blacksStats.average)
+
+        bright_text.text = "%.2f".format(statsEvent.averageStats.average)
+        max_text.text = statsEvent.maxStats.max.toString()
 
         if (detectorState.type > DetectorStateEvent.StateType.Normal) {
             error_text.visibility = View.VISIBLE
@@ -104,8 +109,6 @@ class StatusFragment : Fragment() {
         level_text.text = "%d%%".format(batteryState.batteryPct)
         temperature_text.text = "%d °C".format(detectorState.temperature)
         acc_text.text = "X:%d Y:%d Z:%d".format(detectorState.accX, detectorState.accY, detectorState.accZ)
-
-        black_text.text = "%.0f‰".format(frameEvent.zeros)
     }
 
     override fun onResume() {
@@ -166,8 +169,8 @@ class StatusFragment : Fragment() {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onFrameEvent(frameEvent: FrameEvent) {
-        this.frameEvent = frameEvent
+    fun onFrameEvent(statsEvent: StatsEvent) {
+        this.statsEvent = statsEvent
         fillInValuesOnPage()
     }
 
@@ -191,6 +194,19 @@ class StatusFragment : Fragment() {
         fun newInstance(): StatusFragment {
             val fragment = StatusFragment()
             return fragment
+        }
+
+        fun timePeriodFormat(period : Long, microSeconds : Boolean): String {
+            val hours = period / (60L * 60L * 1000L)
+            val minutes = (period % (60L * 60L * 1000L)) / (60L * 1000L)
+            val seconds = (period % (60L * 1000L)) / (1000L)
+            val ms = period % 1000L
+
+            if (microSeconds) {
+                return "%d:%02d:%02d.%03d".format(hours, minutes, seconds, ms)
+            } else {
+                return "%d:%02d:%02d".format(hours, minutes, seconds)
+            }
         }
     }
 }
