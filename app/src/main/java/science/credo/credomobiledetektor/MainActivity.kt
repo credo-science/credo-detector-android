@@ -23,6 +23,7 @@ import science.credo.credomobiledetektor.fragment.*
 import science.credo.credomobiledetektor.fragment.detections.DetectionContent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
+import science.credo.credomobiledetektor.info.VersionInfo
 
 class MainActivity : AppCompatActivity(),
         StatusFragment.OnFragmentInteractionListener,
@@ -198,6 +199,10 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG,"onResume")
         super.onResume()
         mSettingsFlag = false;
+
+        // Check for new version
+        var versionInfo = VersionInfo(this);
+        versionInfo.execute()
     }
 
     override fun onPause() {
