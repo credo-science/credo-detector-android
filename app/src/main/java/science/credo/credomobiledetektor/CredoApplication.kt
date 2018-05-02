@@ -1,8 +1,13 @@
 package science.credo.credomobiledetektor
 
 import android.app.Application
+import android.content.Context
 import android.content.Intent
 import android.os.Build
+import org.acra.ACRA
+import org.acra.annotation.AcraCore
+import org.acra.annotation.AcraHttpSender
+import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -10,10 +15,25 @@ import science.credo.credomobiledetektor.events.DetectorStateEvent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import java.util.concurrent.atomic.AtomicBoolean
 
+@AcraCore(buildConfigClass = BuildConfig::class)
+//ToDO Change URL !
+@AcraHttpSender(uri = "http://my.server.de/acra/acra.php",
+        basicAuthLogin = "login", // optional
+        basicAuthPassword = "password", // optional
+        httpMethod = HttpSender.Method.POST)
+
+
 class CredoApplication : Application() {
 
     val detectorRunning = AtomicBoolean(false)
     var detectorState: DetectorStateEvent = DetectorStateEvent(false)
+
+    protected override fun attachBaseContext(base: Context) {
+        super.attachBaseContext(base)
+
+        // The following line triggers the initialization of ACRA
+        ACRA.init(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
