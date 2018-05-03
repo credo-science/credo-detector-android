@@ -17,9 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @AcraCore(buildConfigClass = BuildConfig::class)
 //ToDO Change URL !
-@AcraHttpSender(uri = "http://my.server.de/acra/acra.php",
-        basicAuthLogin = "login", // optional
-        basicAuthPassword = "password", // optional
+@AcraHttpSender(uri = "http://mars.iti.pk.edu.pl/~nkg/acra/dump.php",
         httpMethod = HttpSender.Method.POST)
 
 
