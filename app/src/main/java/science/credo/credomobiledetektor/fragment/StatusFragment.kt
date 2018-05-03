@@ -55,7 +55,7 @@ class StatusFragment : Fragment() {
     private fun fillInValuesOnPage() {
         val ui = UserInfo.getNewInstance(context!!)
 
-        name_text.text = ui.name
+        name_text.text = ui.username
         email_text.text = ui.email
         team_text.text = ui.team
 

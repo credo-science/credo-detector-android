@@ -5,19 +5,17 @@ import android.os.Build
 import android.provider.Settings
 import android.provider.Settings.Secure.getString
 
-/**
- * Created by poznan on 24/08/2017.
- */
-
 class IdentityInfo (mContext: Context?){
 
-    data class IdentityData (val deviceId: String, val androidVersion: String, val deviceModel: String){}
+    data class IdentityData (val device_id: String, val device_type: String, val device_model: String, val system_version: String, val app_version: String)
 
-    val deviceId: String = getString(mContext?.getContentResolver(), Settings.Secure.ANDROID_ID);
-    val androidVersion: String = "${Build.VERSION.SDK_INT}-${Build.VERSION.RELEASE}"
-    val deviceModel: String = Build.MODEL
+    val device_id:      String = getString(mContext?.getContentResolver(), Settings.Secure.ANDROID_ID)
+    val device_type:    String = Build.DEVICE
+    val device_model:   String = Build.MODEL
+    val system_version: String = "${Build.VERSION.SDK_INT}-${Build.VERSION.RELEASE}"
+    val app_version:    String = ""
 
-    fun getIdentityData(): IdentityData = IdentityData(deviceId, androidVersion, deviceModel)
+    fun getIdentityData(): IdentityData = IdentityData(device_id, device_type, device_model, system_version, app_version)
     fun getIdentityString(): String = getIdentityData().toString()
 
     companion object {

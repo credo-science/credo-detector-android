@@ -89,7 +89,7 @@ class RegisterActivity : EnchPreferenceActivity(), SharedPreferences.OnSharedPre
     fun registerAction() {
         if (mConfiguration!!.isConnected) {
             val userInfo = UserInfo.getNewInstance(applicationContext)
-            if (userInfo.email != "" && userInfo.name != "") {
+            if (userInfo.email != "" && userInfo.username != "") {
                 doAsync {
                     val result = NetworkInterface.getInstance(applicationContext).sendRegister()
                     when {

@@ -7,24 +7,20 @@ import okhttp3.RequestBody
 import okhttp3.MediaType
 import java.io.IOException
 
-
-/**
- * Created by poznan on 26/08/2017.
- */
-
 object NetworkCommunication {
 
     val TAG = "NetworkCommunication"
-    val mServiceUrl = "https://api.credo.science/"
+//    val mServiceUrl = "https://api.credo.science/"
+    val mServiceUrl = "http://192.168.0.50:8000/api/v2"
 
     data class Response(val code: Int, val message: String) {}
 
     val client: OkHttpClient = OkHttpClient()
 
-    fun get(path : String): Response {
+    fun get(endpoint : String): Response {
         try {
             val request = Request.Builder()
-                    .url(mServiceUrl+path)
+                    .url(mServiceUrl + endpoint)
                     .build();
 
             val response = client.newCall(request).execute();
@@ -37,14 +33,14 @@ object NetworkCommunication {
 
     val JSON = MediaType.parse("application/json; charset=utf-8")
 
-    fun post(json: String): Response {
+    fun post(endpoint: String, json: String): Response {
         try {
             Log.d(TAG, "post: (${json.length}) $json")
 
             val body = RequestBody.create(JSON, json)
             //Log.d("BODY",body.contentType())
             val request = Request.Builder()
-                    .url(mServiceUrl)
+                    .url(mServiceUrl + endpoint)
                     .post(body)
                     .build()
             val response = client.newCall(request).execute()
@@ -57,5 +53,3 @@ object NetworkCommunication {
         }
     }
 }
-
-//TODO zamykanie sokectów
