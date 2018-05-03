@@ -154,6 +154,12 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             state.cameraOn = false
             mCamera = Camera.open()
             state.cameraOn = true
+
+           // stopAfter
+            if(mConfigurationInfo!!.stopAfter > 0){
+                stopAfter()
+            }
+
         } catch (e: RuntimeException) {
             if (CredoApplication.isEmulator()) {
                 Toast.makeText(this, R.string.error_emulator, Toast.LENGTH_LONG).show()
@@ -213,6 +219,10 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         mWindowManager?.removeView(mSurfaceView)
         mCamera?.release()
         emitStateChange()
+
+        if(mConfigurationInfo!!.pauseTime > 0){
+            pauseTime()
+        }
     }
 
     val scheduler = Executors.newSingleThreadScheduledExecutor()
@@ -264,4 +274,22 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         batteryState = batteryEvent
         startStopOnConditionChange()
     }
+
+    fun stopAfter(){
+        Thread(Runnable {
+            val time = mConfigurationInfo!!.stopAfter
+            Thread.sleep(time.toLong())
+            stopCamera()
+        }).start()
+    }
+
+    fun pauseTime(){
+        Thread(Runnable {
+            val time = mConfigurationInfo!!.pauseTime
+            Thread.sleep(time.toLong())
+            startCamera()
+        }).start()
+    }
+
+
 }

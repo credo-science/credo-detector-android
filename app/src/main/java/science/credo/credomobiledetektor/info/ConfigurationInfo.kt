@@ -51,10 +51,10 @@ class ConfigurationInfo (context: Context) {
         get() = parseIntPref(mContext, "level", 60)
 
     val stopAfter: Int
-        get() = parseIntPref(mContext, "stop_after", 0)
+        get() = parseIntPref(mContext, "stop_after", 0) * 60000 // minute
 
     val pauseTime: Int
-        get() = parseIntPref(mContext, "pause_time", 0)
+        get() = parseIntPref(mContext, "pause_time", 0) * 60000 // minute
 
 
     val isCharging: Boolean
