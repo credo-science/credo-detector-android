@@ -1,14 +1,19 @@
 package science.credo.credomobiledetektor
 
+import android.Manifest
 import android.app.ActivityManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -23,6 +28,9 @@ import science.credo.credomobiledetektor.fragment.*
 import science.credo.credomobiledetektor.fragment.detections.DetectionContent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
+
+const val PERMISSION_REQUEST = 1
+const val OVERLAY_PERMISSION_REQUEST = 2
 
 class MainActivity : AppCompatActivity(),
         StatusFragment.OnFragmentInteractionListener,
@@ -52,6 +60,18 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         val TAG = "MainActivity"
+        val PERMISSIONS = arrayOf(
+                Manifest.permission.WAKE_LOCK,
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.INTERNET,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.CAMERA,
+                //Manifest.permission.SYSTEM_ALERT_WINDOW,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE
+        )
+
         init {
             System.loadLibrary("native-lib")
         }
@@ -82,6 +102,7 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         Log.d(TAG,"onCreate")
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_main)
@@ -100,7 +121,7 @@ class MainActivity : AppCompatActivity(),
             val id = it.itemId
             switchFragment(id)
             drawer.closeDrawer(GravityCompat.START)
-             true
+            true
         }
 
         if (credoApplication().detectorRunning.get()) {
@@ -110,6 +131,10 @@ class MainActivity : AppCompatActivity(),
         }
 
         toggle.syncState()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            checkPermissions()
+        }
     }
 
     override fun onBackPressed() {
@@ -145,6 +170,24 @@ class MainActivity : AppCompatActivity(),
         }
     }
 
+    private fun checkPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            val permissionIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()))
+            startActivityForResult(permissionIntent, OVERLAY_PERMISSION_REQUEST)
+        }
+
+        for (p in PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, p) !=
+                    PackageManager.PERMISSION_GRANTED) {
+                requestPermissions()
+                break
+            }
+        }
+    }
+
+    private fun requestPermissions() {
+        ActivityCompat.requestPermissions(this, PERMISSIONS, PERMISSION_REQUEST)
+    }
 
     fun switchFragment(id: Int): Boolean {
 
