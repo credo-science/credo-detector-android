@@ -21,7 +21,7 @@
 	<string name="title_register">Registrar</string>
 	<string name="msg_no_network_connection">sem conexão de rede</string>
 	<string name="msg_network_connection_problem">problemas com a conexão de rede, tente novamente mais tarde</string>
-	<string name="action_login">Registrar</string>
+	<string name="action_logout">Registrar</string>
 	<string name="login_button_text">login</string>
 	<string name="register_button_text">registrar</string>
 	<string name="stats_generate">Gerar</string>

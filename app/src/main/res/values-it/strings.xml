@@ -25,7 +25,7 @@
     <string name="title_register">Registrati</string>
     <string name="msg_no_network_connection">Nessuna connessione internet</string>
     <string name="msg_network_connection_problem">Problemi di connessione, ti preghiamo di riprovare più tardi</string>
-    <string name="action_login">Registrati</string>
+    <string name="action_logout">Registrati</string>
     <string name="login_button_text">Accedi</string>
     <string name="register_button_text">Registrati</string>
 

@@ -24,7 +24,8 @@
     android:theme="@style/AppTheme">
         <activity
             android:name=".LauncherActivity"
-            android:theme="@android:style/Theme.NoDisplay">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -45,7 +46,6 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".SignupActivity"
@@ -65,7 +65,7 @@
     </receiver>
         -->
 
-        <activity android:name=".ResetPasswordActivity"></activity>
+        <activity android:name=".ResetPasswordActivity" />
     </application>
 
 </manifest>

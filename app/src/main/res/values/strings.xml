@@ -131,7 +131,8 @@
 
     <string name="title_activity_login">Sign in</string>
     <string name="input_email">Email</string>
-    <string name="action_login">Login</string>
+    <string name="action_logoin">Login</string>
+    <string name="action_logout">Logout</string>
     <string name="action_reset_password">Forgot Password</string>
     <string name="link_signup">No account yet? Create one</string>
 
