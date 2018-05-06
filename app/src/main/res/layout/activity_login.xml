@@ -54,14 +54,14 @@
             android:text="@string/action_login"/>
 
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/forgot_password_button"
+            android:id="@+id/singup_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
             android:text="@string/link_signup"/>
 
-        <TextView android:id="@+id/link_signup"
+        <TextView android:id="@+id/remember_password_link"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
