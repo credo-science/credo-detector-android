@@ -41,7 +41,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         var loop = -1
         detectionStatsManager.frameAchieved(width, height)
 
-        while(true) {
+        while (true) {
             loop++
             calcHistogram(data, analysisData, width, height, config.blackFactor)
 
@@ -78,12 +78,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
                         val hit = Hit(
-                                //@TODO add missing data
-                                HitInfo.FrameData(dataString, width, height, 0,0,0,0,0),
-                                mLocationInfo.getLocationData(),
-                                HitInfo.FactorData(0,0,0,0),
-                                System.currentTimeMillis(),
-                                false
+                            //@TODO add missing data
+                            HitInfo.FrameData(dataString, width, height, 0, 0, 0, 0, 0),
+                            mLocationInfo.getLocationData(),
+                            HitInfo.FactorData(0, 0, 0, 0),
+                            System.currentTimeMillis(),
+                            false
                         )
                         mDataManager.storeHit(hit)
 
@@ -104,20 +104,26 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         detectionStatsManager.flush(false)
     }
 
-    external fun calcHistogram (data: ByteArray, analysisData: LongArray, width: Int, height: Int, black: Int)
+    external fun calcHistogram(
+        data: ByteArray,
+        analysisData: LongArray,
+        width: Int,
+        height: Int,
+        black: Int
+    )
 
-    fun yuv2bitmap (data: ByteArray, width: Int, height: Int) : Bitmap {
-        return Nv21Image.nv21ToBitmap(rs, data, width,height)
+    fun yuv2bitmap(data: ByteArray, width: Int, height: Int): Bitmap {
+        return Nv21Image.nv21ToBitmap(rs, data, width, height)
     }
 
-    fun bitmap2png (bitmap: Bitmap) : ByteArray {
+    fun bitmap2png(bitmap: Bitmap): ByteArray {
         val pngData = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngData)
         return pngData.toByteArray()
     }
 
-    fun yuv2png (data: ByteArray, width: Int, height: Int) : ByteArray {
-        val bitmap = Nv21Image.nv21ToBitmap(rs, data, width,height)
+    fun yuv2png(data: ByteArray, width: Int, height: Int): ByteArray {
+        val bitmap = Nv21Image.nv21ToBitmap(rs, data, width, height)
         val pngData = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngData)
         return pngData.toByteArray()
@@ -126,10 +132,10 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
     fun cropBitmap(bitmap: Bitmap, maxPosition: Int, sideLength: Int): Bitmap {
         // position of max bright pixel
         val maxX = maxPosition.rem(bitmap.width)
-        val maxY = maxPosition/bitmap.width
+        val maxY = maxPosition / bitmap.width
 
-        var x = maxX - sideLength/2
-        var y = maxY - sideLength/2
+        var x = maxX - sideLength / 2
+        var y = maxY - sideLength / 2
 
         when {
             x < 0 -> x = 0
@@ -144,15 +150,15 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         return Bitmap.createBitmap(bitmap, x, y, sideLength, sideLength)
     }
 
-    fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
+    fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int) {
 
         //Point (maxX,maxY) is center(brightest pixel) of hit
         val maxX = maxPosition.rem(width)
-        val maxY = maxPosition/width
+        val maxY = maxPosition / width
 
         //Point (x,y) is upper-left corner of square with we want to fill
-        var x = maxX - sideLength/2
-        var y = maxY - sideLength/2
+        var x = maxX - sideLength / 2
+        var y = maxY - sideLength / 2
 
 
         when {
@@ -161,15 +167,15 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         when {
-            //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
+        //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
             y < 0 -> y = 0
             y >= height - sideLength -> y = height - sideLength
         }
 
         //Loops iterates from upper-left point sideLength times
-        for(i in y..y+sideLength){
-            for(j in x..x+sideLength){
-                data[i*width+j]=0
+        for (i in y..y + sideLength) {
+            for (j in x..x + sideLength) {
+                data[i * width + j] = 0
             }
         }
 

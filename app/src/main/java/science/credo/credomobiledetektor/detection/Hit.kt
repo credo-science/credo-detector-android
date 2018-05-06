@@ -11,62 +11,67 @@ import science.credo.credomobiledetektor.info.LocationInfo
  * Created by poznan on 27/08/2017.
  */
 
-@JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY, getterVisibility = JsonAutoDetect.Visibility.NONE, setterVisibility = JsonAutoDetect.Visibility.NONE)
+@JsonAutoDetect(
+    fieldVisibility = JsonAutoDetect.Visibility.ANY,
+    getterVisibility = JsonAutoDetect.Visibility.NONE,
+    setterVisibility = JsonAutoDetect.Visibility.NONE
+)
 
-class Hit (frameInfo: HitInfo.FrameData,
-           locationInfo: LocationInfo.LocationData,
-           factorInfo: HitInfo.FactorData,
-           timestamp: Long,
-           isUploaded: Boolean
-           ){
+class Hit(
+    frameInfo: HitInfo.FrameData,
+    locationInfo: LocationInfo.LocationData,
+    factorInfo: HitInfo.FactorData,
+    timestamp: Long,
+    isUploaded: Boolean
+) {
     @PrimaryKey
     @AutoIncrement
     @JsonProperty("id")
     var id: Int = 0
     @JsonProperty("timestamp")
-    val mTimestamp: Long        = timestamp
+    val mTimestamp: Long = timestamp
     @JsonProperty("is_uploaded")
-    var mIsUploaded: Boolean    = isUploaded
+    var mIsUploaded: Boolean = isUploaded
 
     // Location information
     @JsonProperty("latitude")
-    val mLatitude: Double       = locationInfo.latitude
+    val mLatitude: Double = locationInfo.latitude
     @JsonProperty("longitude")
-    val mLongitude: Double      = locationInfo.longitude
+    val mLongitude: Double = locationInfo.longitude
     @JsonProperty("altitude")
-    val mAltitude: Double       = locationInfo.altitude
+    val mAltitude: Double = locationInfo.altitude
     @JsonProperty("accuracy")
-    val mAccuracy: Float        = locationInfo.accuracy
+    val mAccuracy: Float = locationInfo.accuracy
     @JsonProperty("provider")
-    val mProvider: String       = locationInfo.provider
+    val mProvider: String = locationInfo.provider
 
     // Frame information
     @JsonProperty("frame_content")
-    val mFrameContent: String   = frameInfo.frameContent
+    val mFrameContent: String = frameInfo.frameContent
     @JsonProperty("frame_width")
-    val mFrameWidth: Int        = frameInfo.width
+    val mFrameWidth: Int = frameInfo.width
     @JsonProperty("frame_height")
-    val mFrameHeight: Int       = frameInfo.height
+    val mFrameHeight: Int = frameInfo.height
     @JsonProperty("frame_max")
-    val mFrameMax: Int          = frameInfo.max
+    val mFrameMax: Int = frameInfo.max
     @JsonProperty("frame_average")
-    val mFrameAverage: Int      = frameInfo.average
+    val mFrameAverage: Int = frameInfo.average
     @JsonProperty("frame_x")
-    val mFrameX: Int            = frameInfo.x
+    val mFrameX: Int = frameInfo.x
     @JsonProperty("frame_y")
-    val mFrameY: Int            = frameInfo.y
+    val mFrameY: Int = frameInfo.y
     @JsonProperty("frame_black_count")
-    val mFrameBlackCount: Int   = frameInfo.blackCount
+    val mFrameBlackCount: Int = frameInfo.blackCount
 
     // Factor information
     @JsonProperty("factor_max")
-    val mFactorMax: Int         = factorInfo.max
+    val mFactorMax: Int = factorInfo.max
     @JsonProperty("factor_average")
-    val mFactorAverage: Int     = factorInfo.average
+    val mFactorAverage: Int = factorInfo.average
     @JsonProperty("factor_black")
-    val mFactorBlack: Int       = factorInfo.black
+    val mFactorBlack: Int = factorInfo.black
     @JsonProperty("factor_black_count")
-    val mFactorBlackCount: Int  = factorInfo.blackCount
+    val mFactorBlackCount: Int = factorInfo.blackCount
 
     // Battery information
     @JsonProperty("working_time")
@@ -77,10 +82,11 @@ class Hit (frameInfo: HitInfo.FrameData,
     val mIsBatteryCharging: Boolean = false
 
     constructor() : this(
-        HitInfo.FrameData("", 0, 0, 0,0,0,0,0),
+        HitInfo.FrameData("", 0, 0, 0, 0, 0, 0, 0),
         LocationInfo.LocationData(0.0, 0.0, 0.0, 0f, "", 0),
         HitInfo.FactorData(0, 0, 0, 0),
         0,
         false
-    ) {}
+    ) {
+    }
 }

@@ -41,8 +41,13 @@ object DetectionContent {
     private fun convertDate(dateInMilliseconds: Long): String {
         return DateFormat.format(dateInMilliseconds)
     }
+
     private fun createHitItem(hit: Hit, number: Int): HitItem {
-        return HitItem("$number (${hit.mTimestamp})", convertDate(hit.mTimestamp), hit.mFrameContent)
+        return HitItem(
+            "$number (${hit.mTimestamp})",
+            convertDate(hit.mTimestamp),
+            hit.mFrameContent
+        )
     }
 
     private fun makeDetails(context: Context, position: Int): String {
