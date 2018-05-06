@@ -30,12 +30,20 @@ class UserInfo (context: Context){
 
     data class UserData (val username: String, val email: String, val key: String, val team: String, val language: String){}
     data class UserDataRegister (val username: String, val displayName: String, val password: String, val email: String, val team: String, val language: String){}
+    data class UserDataLogin (val email: String, val password: String){}
+    data class UserDataInfo (val displayName: String, val team: String, val language: String){}
 
     fun getUserData(): UserData {
         return UserData (username!!, email!!, key!!, team!!, language!!)
     }
     fun getUserDataRegister(): UserDataRegister {
         return UserDataRegister(username!!, displayName!!, password!!, email!!, team!!, language!!)
+    }
+    fun getUserDataLogin(): UserDataLogin {
+        return UserDataLogin (email!!, password!!)
+    }
+    fun getUserDataInfo(): UserDataInfo {
+        return UserDataInfo (displayName!!, team!!, language!!)
     }
     companion object {
         private var mUserInfo: UserInfo? = null;

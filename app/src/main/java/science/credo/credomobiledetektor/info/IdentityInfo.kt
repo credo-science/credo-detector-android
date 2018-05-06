@@ -13,7 +13,7 @@ class IdentityInfo (mContext: Context?){
     val device_type:    String = Build.DEVICE
     val device_model:   String = Build.MODEL
     val system_version: String = "${Build.VERSION.SDK_INT}-${Build.VERSION.RELEASE}"
-    val app_version:    String = ""
+    val app_version:    String = "1.0"
 
     fun getIdentityData(): IdentityData = IdentityData(device_id, device_type, device_model, system_version, app_version)
     fun getIdentityString(): String = getIdentityData().toString()

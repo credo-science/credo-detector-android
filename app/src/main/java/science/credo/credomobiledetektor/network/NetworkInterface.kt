@@ -23,14 +23,15 @@ class NetworkInterface (context: Context){
     }
 
     fun sendPing() : Boolean {
-//        val userData = UserInfo.getNewInstance(mContext).getUserData()
         val deviceData = mIdentityInfo.getIdentityData()
-        val result = send("/ping", PingFrame(deviceData))
-        return result.code == ok
+        //@TODO finish
+        //@TODO pass StatsEvent instance
+//        val result = send("/ping", PingFrame(deviceData, stats))
+        return false
     }
 
     fun sendUserInfo(): Boolean {
-        val userData = UserInfo.getNewInstance(mContext).getUserData()
+        val userData = UserInfo.getNewInstance(mContext).getUserDataInfo()
         val deviceData = mIdentityInfo.getIdentityData()
         val result = send("/user/info", UserInfoFrame(userData, deviceData))
         return result.code == ok
@@ -44,9 +45,9 @@ class NetworkInterface (context: Context){
     }
 
     fun sendLogin(): NetworkCommunication.Response {
-        val userData = UserInfo.getNewInstance(mContext).getUserData()
+        val userData = UserInfo.getNewInstance(mContext).getUserDataLogin()
         val deviceData = mIdentityInfo.getIdentityData()
-        val result = send("/user/login", LoginFrame(userData.key, deviceData))
+        val result = send("/user/login", LoginFrame(userData, deviceData))
         return result
     }
 
@@ -57,7 +58,6 @@ class NetworkInterface (context: Context){
     fun sendHitsToNetwork(): Boolean {
         if (mConfigurationManager.canUpload) {
             val hits = mDataManager.getHits()
-//            val userData = UserInfo.getNewInstance(mContext).getUserData()
             val deviceData = mIdentityInfo.getIdentityData()
             val result = send("/detection", DetectionsFrame(hits, deviceData))
             Log.d("upload.message",result.message)
