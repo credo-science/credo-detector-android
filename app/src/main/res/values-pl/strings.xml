@@ -31,7 +31,8 @@
     <string name="title_register">Rejestracja</string>
     <string name="msg_no_network_connection">brak połączenia z internetem</string>
     <string name="msg_network_connection_problem">problem z połączeniem ze serwerem, spróbuj ponownie później</string>
-    <string name="action_login">Zaloguj</string>
+    <string name="action_logoin">Zaloguj</string>
+    <string name="action_logout">Wyloguj</string>
     <string name="login_button_text">Zaloguj</string>
     <string name="register_button_text">Zarejestruj</string>
 

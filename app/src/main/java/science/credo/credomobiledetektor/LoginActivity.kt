@@ -12,13 +12,30 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.android.UI
+import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.doAsyncResult
+import science.credo.credomobiledetektor.database.UserInfoWrapper
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.exceptions.ServerException
+import science.credo.credomobiledetektor.network.messages.LoginByEmailRequest
+import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
+import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
+
+    private var loginTask: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        if (!UserInfoWrapper(this).token.isEmpty()) {
+            setResult(Activity.RESULT_OK)
+            finish()
+            return
+        }
 
         // Login
         login_button.setOnClickListener { login() }
@@ -36,11 +53,16 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        loginTask?.cancel()
+        super.onDestroy()
+    }
+
     fun login() {
         Log.d(TAG, "Login")
 
         if (!validate()) {
-            onLoginFailed()
+            onLoginFailed("Validation failed")
             return
         }
 
@@ -52,15 +74,57 @@ class LoginActivity : AppCompatActivity() {
         progressDialog.setMessage("Authenticating...")
         progressDialog.show()
 
-        // TODO: Implement your own authentication logic here.
+        val inputText = input_email.text.toString()
 
-        android.os.Handler().postDelayed(
-                {
-                    // On complete call either onLoginSuccess or onLoginFailed
-                    onLoginSuccess()
-                    // onLoginFailed();
-                    progressDialog.dismiss()
-                }, 3000)
+        val loginRequest = if ('@' in inputText) {
+            LoginByEmailRequest(
+                    inputText,
+                    input_password.text.toString(),
+                    // TODO: acquire from mobile
+                    "todo",
+                    "todo",
+                    "todo",
+                    "todo",
+                    "todo"
+            )
+        } else {
+            LoginByUsernameRequest(
+                    inputText,
+                    input_password.text.toString(),
+                    // TODO: acquire from mobile
+                    "todo",
+                    "todo",
+                    "todo",
+                    "todo",
+                    "todo"
+            )
+        }
+
+        val pref = UserInfoWrapper(this)
+
+        loginTask = launch(UI) {
+            try {
+                val response = doAsyncResult{
+                    ServerInterface.getDefault().login(loginRequest)
+                }.get(60, TimeUnit.SECONDS)!!
+
+                pref.login = response.username
+                pref.email = response.email
+                pref.token = response.token
+                pref.team = response.team
+
+                progressDialog.dismiss()
+                onLoginSuccess()
+            } catch (e: ServerException) {
+                // TODO: support response from server i.e. login/email already exists, no connection etc.
+                progressDialog.dismiss()
+                onLoginFailed(e.error)
+            } catch (e :Exception) {
+                progressDialog.dismiss()
+                onLoginFailed(e.message)
+            }
+            loginTask = null
+        }
     }
 
 
@@ -70,6 +134,7 @@ class LoginActivity : AppCompatActivity() {
 
                 // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
+                setResult(Activity.RESULT_OK)
                 this.finish()
             }
         }
@@ -81,7 +146,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun onLoginSuccess() {
-        login_button.isEnabled = true
+        /*login_button.isEnabled = true
 
         // Set Token to not null
         val check = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -96,12 +161,15 @@ class LoginActivity : AppCompatActivity() {
             activityIntent =  Intent(this, LoginActivity::class.java)
         }
         startActivity(activityIntent);
+        finish()*/
+        setResult(Activity.RESULT_OK)
         finish()
     }
 
-    fun onLoginFailed() {
-        Toast.makeText(baseContext, "Login failed", Toast.LENGTH_LONG).show()
+    fun onLoginFailed(message: String?) {
+        Toast.makeText(baseContext, "Login failed: $message", Toast.LENGTH_LONG).show()
         login_button.isEnabled = true
+        input_email.error = message
     }
 
     fun validate(): Boolean {
@@ -111,8 +179,12 @@ class LoginActivity : AppCompatActivity() {
         val passwordStr = input_password.text.toString()
 
         if (emailStr.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            input_email.error = "enter a valid email address"
-            valid = false
+            if (emailStr.isEmpty() || input_email.length() < 3) {
+                input_email.setError("at least 3 characters or enter a valid email address")
+                valid = false
+            } else {
+                input_email.setError(null)
+            }
         } else {
             input_email.error = null
         }
