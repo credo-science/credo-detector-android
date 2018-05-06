@@ -21,6 +21,11 @@ class ConfigurationInfo (context: Context) {
     val mContext: Context = context
     val mConnectManager = mContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
+   /* // If not null -> user logged
+    val isLogged: String
+        get() = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getString("LOGIN_TOKEN", null);
+*/
     val isChargerOnly: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getBoolean("process_charging_only",true)
