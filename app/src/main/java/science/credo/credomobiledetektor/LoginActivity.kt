@@ -28,12 +28,12 @@ class LoginActivity : AppCompatActivity() {
 
         // Go to SignupActivity
         btn_link_singup!!.setOnClickListener {
-            val intent = Intent(applicationContext, SignupActivity::class.java)
+            val intent = Intent(applicationContext, ResetPasswordActivity::class.java)
             startActivityForResult(intent, REQUEST_SIGNUP)
         }
 
         btn_forgot!!.setOnClickListener{
-            val intent = Intent(applicationContext, ResetPasswordActivity::class.java)
+            val intent = Intent(applicationContext, SignupActivity::class.java)
             startActivityForResult(intent, REQUEST_SIGNUP)
         }
     }

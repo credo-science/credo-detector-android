@@ -59,13 +59,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="10dp"
-            android:text="@string/action_reset_password"/>
+            android:text="@string/link_signup"/>
 
         <TextView android:id="@+id/link_signup"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="@string/link_signup"
+            android:text="@string/action_reset_password"
             android:gravity="center"
             android:textSize="16dip"/>
 
