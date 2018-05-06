@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
 
@@ -19,21 +20,18 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
 
-        val btn_login = findViewById<Button>(R.id.login_button)
-        val btn_link_singup = findViewById<TextView>(R.id.link_signup)
-        val btn_forgot = findViewById<Button>(R.id.forgot_password_button)
-
         // Login
-        btn_login!!.setOnClickListener { login() }
+        login_button.setOnClickListener { login() }
 
-        // Go to SignupActivity
-        btn_link_singup!!.setOnClickListener {
-            val intent = Intent(applicationContext, SignupActivity::class.java)
+        // Go to Forgot password Activity
+        remember_password_link.setOnClickListener {
+            val intent = Intent(applicationContext, ResetPasswordActivity::class.java)
             startActivityForResult(intent, REQUEST_SIGNUP)
         }
 
-        btn_forgot!!.setOnClickListener{
-            val intent = Intent(applicationContext, ResetPasswordActivity::class.java)
+        // Go to SignupActivity
+        singup_button.setOnClickListener{
+            val intent = Intent(applicationContext, SignupActivity::class.java)
             startActivityForResult(intent, REQUEST_SIGNUP)
         }
     }
@@ -46,8 +44,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        val btn_login = findViewById<Button>(R.id.login_button)
-        btn_login!!.isEnabled = false
+        login_button.isEnabled = false
 
         val progressDialog = ProgressDialog(this@LoginActivity,
                 R.style.Theme_AppCompat_DayNight_Dialog)
@@ -67,7 +64,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == Activity.RESULT_OK) {
 
@@ -84,8 +81,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     fun onLoginSuccess() {
-        val btn_login = findViewById<Button>(R.id.login_button)
-        btn_login!!.isEnabled = true
+        login_button.isEnabled = true
 
         // Set Token to not null
         val check = PreferenceManager.getDefaultSharedPreferences(applicationContext)
@@ -105,31 +101,27 @@ class LoginActivity : AppCompatActivity() {
 
     fun onLoginFailed() {
         Toast.makeText(baseContext, "Login failed", Toast.LENGTH_LONG).show()
-        val btn_login = findViewById<Button>(R.id.login_button)
-        btn_login!!.isEnabled = true
+        login_button.isEnabled = true
     }
 
     fun validate(): Boolean {
         var valid = true
 
-        val email = findViewById<EditText>(R.id.input_email)
-        val password = findViewById<EditText>(R.id.input_password)
-
-        val emailStr = email!!.text.toString()
-        val passwordStr = password!!.text.toString()
+        val emailStr = input_email.text.toString()
+        val passwordStr = input_password.text.toString()
 
         if (emailStr.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            email!!.error = "enter a valid email address"
+            input_email.error = "enter a valid email address"
             valid = false
         } else {
-            email!!.error = null
+            input_email.error = null
         }
 
-        if (passwordStr.isEmpty() || password.length() < 4 || password.length() > 10) {
-            password!!.error = "between 4 and 10 alphanumeric characters"
+        if (passwordStr.isEmpty() || input_password.length() < 4 || input_password.length() > 10) {
+            input_password.error = "between 4 and 10 alphanumeric characters"
             valid = false
         } else {
-            password!!.error = null
+            input_password.error = null
         }
 
         return valid
