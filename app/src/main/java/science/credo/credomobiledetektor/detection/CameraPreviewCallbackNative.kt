@@ -10,6 +10,7 @@ import io.github.silvaren.easyrs.tools.Nv21Image
 import org.jetbrains.anko.doAsync
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
+import science.credo.credomobiledetektor.info.HitInfo
 import science.credo.credomobiledetektor.info.LocationInfo
 import java.io.ByteArrayOutputStream
 
@@ -76,19 +77,13 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
-                        val location = mLocationInfo.getLocationData()
-
                         val hit = Hit(
-                                dataString,
+                                //@TODO add missing data
+                                HitInfo.FrameData(dataString, width, height, 0,0,0,0,0),
+                                mLocationInfo.getLocationData(),
+                                HitInfo.FactorData(0,0,0,0),
                                 System.currentTimeMillis(),
-                                location.latitude,
-                                location.longitude,
-                                location.altitude,
-                                location.accuracy,
-                                location.provider,
-                                width,
-                                height
-
+                                false
                         )
                         mDataManager.storeHit(hit)
 

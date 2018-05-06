@@ -15,14 +15,19 @@ import science.credo.credomobiledetektor.detection.Hit
 
 class DataManager private constructor (context: Context){
     val mContext = context
-    var mHitDb: PultusORM? = null
-    var mCachedHitDb: PultusORM? = null
+
+    var mHitsDb: PultusORM? = null
     var mKeyValueDb: PultusORM? = null
     var mAppPath: String = context.getFilesDir().getAbsolutePath()
 
-    val mCachedHitDBFileName = "cached.hit.db"
-    val mHitDBFileName = "hit.db"
+    val mHitsDBFileName = "hits.db"
     val mKeyValueFileName = "keyvalue.db"
+
+//    @deprecated tables
+//    var mHitDb: PultusORM? = null
+//    var mCachedHitDb: PultusORM? = null
+//    val mCachedHitDBFileName = "cached.hit.db"
+//    val mHitDBFileName = "hit.db"
 
 
 
@@ -43,8 +48,9 @@ class DataManager private constructor (context: Context){
 
     init{
         if (!SI) {
-            openHitDb()
-            openCachedHitDb()
+//            openHitDb()
+//            openCachedHitDb()
+            openHitsDb()
             openKeyValueDb()
         }
         checkAndUpdateDbSchema()
@@ -52,17 +58,20 @@ class DataManager private constructor (context: Context){
 
     fun closeDb() {
         if (!SI) {
-            closeHitDb()
-            closeCachedHitDb()
+//            closeHitDb()
+//            closeCachedHitDb()
+            closeHitsDb()
             closeKeyValueDb()
         }
     }
 
-    private fun openHitDb() {mHitDb = PultusORM(mHitDBFileName, mAppPath)}
-    private fun openCachedHitDb() {mCachedHitDb = PultusORM(mCachedHitDBFileName, mAppPath)}
+//    private fun openHitDb() {mHitDb = PultusORM(mHitDBFileName, mAppPath)}
+//    private fun openCachedHitDb() {mCachedHitDb = PultusORM(mCachedHitDBFileName, mAppPath)}
+    private fun openHitsDb() {mHitsDb = PultusORM(mHitsDBFileName, mAppPath)}
     private fun openKeyValueDb() {mKeyValueDb = PultusORM(mKeyValueFileName, mAppPath)}
-    private fun closeHitDb() {mHitDb?.close()}
-    private fun closeCachedHitDb() {mCachedHitDb?.close()}
+//    private fun closeHitDb() {mHitDb?.close()}
+//    private fun closeCachedHitDb() {mCachedHitDb?.close()}
+    private fun closeHitsDb() {mHitsDb?.close()}
     private fun closeKeyValueDb() {mKeyValueDb?.close()}
 
     fun checkAndUpdateDbSchema(): DataManager {
@@ -73,14 +82,11 @@ class DataManager private constructor (context: Context){
         if (storedDbSchema != "0.1") {
             Log.d(TAG, "resetting schema")
             if (SI) {
-                openHitDb()
-                openCachedHitDb()
+                openHitsDb()
             }
-            mHitDb!!.drop(Hit())
-            mCachedHitDb!!.drop(Hit())
+            mHitsDb!!.drop(Hit())
             if (SI) {
-                closeHitDb()
-                closeCachedHitDb()
+                closeHitsDb()
             }
             put(schema_key, "0.1")
         }
@@ -89,8 +95,6 @@ class DataManager private constructor (context: Context){
     }
 
     // Key Value DB
-
-
     class KeyValue () {
         @PrimaryKey
         @AutoIncrement
@@ -126,8 +130,8 @@ class DataManager private constructor (context: Context){
 
     // HitDb
     fun storeHit(hit: Hit) {
-        if (SI) openHitDb()
-        mHitDb!!.save(hit)
+        if (SI) openHitsDb()
+        mHitsDb!!.save(hit)
         if (SI) closeDb()
     }
 
@@ -135,72 +139,66 @@ class DataManager private constructor (context: Context){
     //fun storeHit
 
     fun removeHit(hit: Hit) {
-        if (SI) openHitDb()
-        mHitDb!!.delete(hit)
+        if (SI) openHitsDb()
+        mHitsDb!!.delete(hit)
         if (SI) closeDb()
     }
 
     fun getHits() : MutableList<Hit> {
-        if (SI) openHitDb()
-        val hits = mHitDb!!.find(Hit()) as MutableList<Hit>
+        if (SI) openHitsDb()
+        val hits = mHitsDb!!.find(Hit(), isUploaded(false)) as MutableList<Hit>
         if (SI) closeDb()
         return hits
     }
 
+    // @TODO fix
     fun getHitsNumber() : Long {
-        if (SI) openHitDb()
-        val number = mHitDb!!.count(Hit())
-        if (SI) closeDb()
-        return number
+        return 0
+//        if (SI) openHitsDb()
+//        val number = mHitsDb!!.count(Hit())
+//        if (SI) closeDb()
+//        return number
     }
 
-    // Cached HitDb
     fun storeCachedHit(hit: Hit){
-        if (SI) openCachedHitDb()
-        mCachedHitDb!!.save(hit)
-        if (SI) closeCachedHitDb()
+        hit.mIsUploaded = true
+        storeHit(hit)
     }
 
     fun removeCachedHit(hit: Hit) {
-        if (SI) openCachedHitDb()
-        mCachedHitDb!!.delete(hit)
-        if (SI) closeCachedHitDb()
+        removeHit(hit)
     }
 
     fun getCachedHits() : MutableList<Hit> {
-        if (SI) openCachedHitDb()
-        val hits = mCachedHitDb!!.find(Hit()) as MutableList<Hit>
-        if (SI) closeCachedHitDb()
+        if (SI) openHitsDb()
+        val condition : PultusORMCondition = PultusORMCondition.Builder().eq("is_uploaded", true).build()
+        val hits = mHitsDb!!.find(Hit(), isUploaded(true)) as MutableList<Hit>
+        if (SI) closeDb()
         return hits
     }
 
+    // @TODO fix
     fun getCachedHitsNumber() : Long {
-        if (SI) openCachedHitDb()
-        val number = mCachedHitDb!!.count(Hit())
-        if (SI) closeCachedHitDb()
-        return number
+        return 0
+//        if (SI) openCachedHitDb()
+//        val number = mCachedHitDb!!.count(Hit())
+//        if (SI) closeCachedHitDb()
+//        return number
     }
 
-    fun trimCachedHitDb() {
-        if (SI) openCachedHitDb()
+    fun trimHitsDb() {
+        if (SI) openHitsDb()
         val treshhold = System.currentTimeMillis() - TRIMPERIOD_HITS
-        val hits = mCachedHitDb!!.find(Hit()) as MutableList<Hit>
+        val hits = mHitsDb!!.find(Hit()) as MutableList<Hit>
         for (hit in hits) {
             if (hit.mTimestamp < treshhold) {
-                mCachedHitDb!!.delete(hit)
+                mHitsDb!!.delete(hit)
             }
         }
-        if (SI) closeCachedHitDb()
+        if (SI) closeHitsDb()
     }
-    fun trimHitDb() {
-        if (SI) openHitDb()
-        val treshhold = System.currentTimeMillis() - TRIMPERIOD_HITS
-        val hits = mHitDb!!.find(Hit()) as MutableList<Hit>
-        for (hit in hits) {
-            if (hit.mTimestamp < treshhold) {
-                mHitDb!!.delete(hit)
-            }
-        }
-        if (SI) closeHitDb()
+
+    fun isUploaded(state: Boolean): PultusORMCondition {
+        return PultusORMCondition.Builder().eq("is_uploaded", state).build()
     }
 }

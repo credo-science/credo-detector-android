@@ -226,8 +226,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         }, 0, 10, TimeUnit.MINUTES)
         scheduler.scheduleAtFixedRate({
             val dm = DataManager.getInstance(this)
-            dm.trimHitDb()
-            dm.trimCachedHitDb()
+            dm.trimHitsDb()
         }, 0, 24, TimeUnit.HOURS)
     }
     private fun stopPing() {
