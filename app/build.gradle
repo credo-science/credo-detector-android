@@ -15,6 +15,10 @@ android {
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
         multiDexEnabled = true
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
     }
     buildTypes {
         release {
@@ -72,4 +76,5 @@ dependencies {
     implementation 'io.github.silvaren:easyrs:0.5.3'
     implementation 'org.greenrobot:eventbus:3.1.1'
     testImplementation 'junit:junit:4.12'
+    implementation "ch.acra:acra-http:$acraVersion"
 }
