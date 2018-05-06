@@ -18,6 +18,7 @@ import science.credo.credomobiledetektor.info.LocationInfo
 import science.credo.credomobiledetektor.R
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.detection.Hit
+import science.credo.credomobiledetektor.info.HitInfo
 import science.credo.credomobiledetektor.network.NetworkInterface
 
 
@@ -46,9 +47,17 @@ class DebugFragment : Fragment() {
         }
     }
 
-    data class Test (val locationInfo: LocationInfo.LocationData, val identityInfo: IdentityInfo.IdentityData, val configurationInfo: ConfigurationInfo.ConfigurationData)
+    data class Test(
+        val locationInfo: LocationInfo.LocationData,
+        val identityInfo: IdentityInfo.IdentityData,
+        val configurationInfo: ConfigurationInfo.ConfigurationData
+    )
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         Log.i(TAG, activity.toString())
         Log.i(TAG, "onCreateView")
@@ -72,8 +81,13 @@ class DebugFragment : Fragment() {
 
         butgen.setOnClickListener {
             Log.d(TAG, "generate button pressed")
-            ///val hit = Hit((++hitCounter).toString(), "PICTURE$hitCounter")
-            val hit = Hit("FRAME_CONTENT", System.currentTimeMillis(),12344.0,13444.0,3242134.0,1234.0f,"GSM",100,100)
+            //@TODO fill missing data
+            val hit = Hit(
+                HitInfo.FrameData("FRAME_CONTENT", 0, 0, 0, 0, 0, 0, 0),
+                LocationInfo.LocationData(12344.0, 13444.0, 3242134.0, 1234.0f, "GSM", 0),
+                HitInfo.FactorData(0, 0, 0, 0),
+                false
+            )
             dataManager.storeHit(hit)
             postUpdate(tv, dataManager)
         }
@@ -81,41 +95,43 @@ class DebugFragment : Fragment() {
             Log.d(TAG, "upload button pressed")
             doAsync {
                 networkInterface.sendHitsToNetwork()
-                uiThread{
+                uiThread {
                     postUpdate(tv, dataManager)
                 }
             }
 
 
         }
-        butclr.setOnClickListener{
+        butclr.setOnClickListener {
             Log.d(TAG, "clear db pressed")
-            val hits = dataManager.getHits()
+            val hits = dataManager.getHits(false)
             for (hit in hits) {
                 dataManager.removeHit(hit)
             }
             postUpdate(tv, dataManager)
         }
-        butcclr.setOnClickListener{
+        butcclr.setOnClickListener {
             Log.d(TAG, "clear cached db pressed")
-            val hits = dataManager.getCachedHits()
+            val hits = dataManager.getHits(true)
             for (hit in hits) {
-                dataManager.removeCachedHit(hit)
+                dataManager.removeHit(hit)
             }
             postUpdate(tv, dataManager)
         }
 
 
         tv.text = getString(R.string.debug_upload_hits) + dataManager.getHitsNumber() +
-                " \n" + getString(R.string.debug_cached_hits) + " " + dataManager.getCachedHitsNumber()
+                " \n" + getString(R.string.debug_cached_hits) + " " +
+                dataManager.getCachedHitsNumber()
         tv.postInvalidate()
 
         return v
-   }
+    }
 
-    fun postUpdate (tv: TextView, dataManager: DataManager) {
+    fun postUpdate(tv: TextView, dataManager: DataManager) {
         tv.text = getString(R.string.debug_to_upload_hits) + dataManager.getHitsNumber() +
-                " \n" + getString(R.string.debug_cached_hits) + " " + dataManager.getCachedHitsNumber()
+                " \n" + getString(R.string.debug_cached_hits) + " " +
+                dataManager.getCachedHitsNumber()
         tv.postInvalidate()
 
     }

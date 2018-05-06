@@ -6,13 +6,15 @@ import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
-import science.credo.credomobiledetektor.R
 import science.credo.credomobiledetektor.detection.Hit
 
 /**
- * Created by poznan on 28/08/2017.
+ * Database management class.
+ *
+ * This class is used to store both recently detected and already server-synchronized hits. It's trimmed after certain period of time.
+ *
+ * @property context Android context object.
  */
-
 class DataManager private constructor(context: Context) {
     val mContext = context
 
@@ -22,13 +24,6 @@ class DataManager private constructor(context: Context) {
 
     val mHitsDBFileName = "hits.db"
     val mKeyValueFileName = "keyvalue.db"
-
-//    @deprecated tables
-//    var mHitDb: PultusORM? = null
-//    var mCachedHitDb: PultusORM? = null
-//    val mCachedHitDBFileName = "cached.hit.db"
-//    val mHitDBFileName = "hit.db"
-
 
     companion object {
         val TAG = "DataManager"
@@ -46,43 +41,55 @@ class DataManager private constructor(context: Context) {
 
     init {
         if (!SI) {
-//            openHitDb()
-//            openCachedHitDb()
             openHitsDb()
             openKeyValueDb()
         }
         checkAndUpdateDbSchema()
     }
 
+    /**
+     * Opens hits database.
+     */
+    private fun openHitsDb() {
+        mHitsDb = PultusORM(mHitsDBFileName, mAppPath)
+    }
+
+    /**
+     * Opens Key-Value database.
+     */
+    private fun openKeyValueDb() {
+        mKeyValueDb = PultusORM(mKeyValueFileName, mAppPath)
+    }
+
+    /**
+     * Closes hits database.
+     */
+    private fun closeHitsDb() {
+        mHitsDb?.close()
+    }
+
+    /**
+     * Closes Key-Value databse.
+     */
+    private fun closeKeyValueDb() {
+        mKeyValueDb?.close()
+    }
+
+    /**
+     * Closes both databases.
+     */
     fun closeDb() {
         if (!SI) {
-//            closeHitDb()
-//            closeCachedHitDb()
             closeHitsDb()
             closeKeyValueDb()
         }
     }
 
-    //    private fun openHitDb() {mHitDb = PultusORM(mHitDBFileName, mAppPath)}
-//    private fun openCachedHitDb() {mCachedHitDb = PultusORM(mCachedHitDBFileName, mAppPath)}
-    private fun openHitsDb() {
-        mHitsDb = PultusORM(mHitsDBFileName, mAppPath)
-    }
-
-    private fun openKeyValueDb() {
-        mKeyValueDb = PultusORM(mKeyValueFileName, mAppPath)
-    }
-
-    //    private fun closeHitDb() {mHitDb?.close()}
-//    private fun closeCachedHitDb() {mCachedHitDb?.close()}
-    private fun closeHitsDb() {
-        mHitsDb?.close()
-    }
-
-    private fun closeKeyValueDb() {
-        mKeyValueDb?.close()
-    }
-
+    /**
+     * Checks schema version, if version differs it also updates hits database.
+     *
+     * @return DataManager object (this).
+     */
     fun checkAndUpdateDbSchema(): DataManager {
         val schema_key = "database_schema_version"
         if (SI) openKeyValueDb()
@@ -103,7 +110,9 @@ class DataManager private constructor(context: Context) {
         return this
     }
 
-    // Key Value DB
+    /**
+     *  Model for KeyValue database.
+     */
     class KeyValue() {
         @PrimaryKey
         @AutoIncrement
@@ -116,6 +125,11 @@ class DataManager private constructor(context: Context) {
         }
     }
 
+    /**
+     * Retrieve value from KeyValue database based on passed key.
+     *
+     * @param key an unique key that is used in search query.
+     */
     fun get(key: String): String? {
         if (SI) openKeyValueDb()
         val condition: PultusORMCondition = PultusORMCondition.Builder()
@@ -130,6 +144,12 @@ class DataManager private constructor(context: Context) {
         return null
     }
 
+    /**
+     * Stores value in KeyValue database.
+     *
+     * @param key an unique key.
+     * @param value data to store.
+     */
     fun put(key: String, value: String) {
         if (SI) openKeyValueDb()
         val condition: PultusORMCondition = PultusORMCondition.Builder()
@@ -140,26 +160,44 @@ class DataManager private constructor(context: Context) {
         if (SI) closeKeyValueDb()
     }
 
-    // HitDb
+    /**
+     * Stores hit in Hits database.
+     *
+     * @param hit Hit object which will be saved.
+     */
     fun storeHit(hit: Hit) {
         if (SI) openHitsDb()
         mHitsDb!!.save(hit)
         if (SI) closeDb()
     }
 
+    /**
+     * Removes hit from Hits database.
+     *
+     * @param hit Hit object which will be deleted.
+     */
     fun removeHit(hit: Hit) {
         if (SI) openHitsDb()
         mHitsDb!!.delete(hit)
         if (SI) closeDb()
     }
 
-    fun getHits(): MutableList<Hit> {
+    /**
+     * Retrieves detected or cached hits from the database.
+     *
+     * @param uploaded determines what to returns - if true - returns cached (already synchronized) results, if false - returns detections to be synchronized.
+     * @return MutableList<Hit> list containing found Hit objects.
+     */
+    fun getHits(uploaded: Boolean): MutableList<Hit> {
         if (SI) openHitsDb()
-        val hits = mHitsDb!!.find(Hit(), isUploaded(false)) as MutableList<Hit>
-        if (SI) closeDb()
+        val hits = mHitsDb!!.find(Hit(), isUploaded(uploaded)) as MutableList<Hit>
+        if (SI) closeHitsDb()
         return hits
     }
 
+    /**
+     * Returns count of detected hits.
+     */
     // @TODO fix
     fun getHitsNumber(): Long {
         return 0
@@ -169,22 +207,14 @@ class DataManager private constructor(context: Context) {
 //        return number
     }
 
+    /**
+     * Stores already uploaded hit.
+     *
+     * @param hit Hit object to be stored.
+     */
     fun storeCachedHit(hit: Hit) {
         hit.mIsUploaded = true
         storeHit(hit)
-    }
-
-    fun removeCachedHit(hit: Hit) {
-        removeHit(hit)
-    }
-
-    fun getCachedHits(): MutableList<Hit> {
-        if (SI) openHitsDb()
-        val condition: PultusORMCondition =
-            PultusORMCondition.Builder().eq("is_uploaded", true).build()
-        val hits = mHitsDb!!.find(Hit(), isUploaded(true)) as MutableList<Hit>
-        if (SI) closeDb()
-        return hits
     }
 
     // @TODO fix
@@ -196,6 +226,9 @@ class DataManager private constructor(context: Context) {
 //        return number
     }
 
+    /**
+     * Trims hits that are older than pre-defined live period.
+     */
     fun trimHitsDb() {
         if (SI) openHitsDb()
         val treshhold = System.currentTimeMillis() - TRIMPERIOD_HITS
@@ -208,6 +241,12 @@ class DataManager private constructor(context: Context) {
         if (SI) closeHitsDb()
     }
 
+    /**
+     * Helper function.
+     *
+     * @param state which upload state to look for.
+     * @return PultusORMCondition object used to narrow results based on is_uploaded column (determines if hit needs to be synchronized or if is already cached).
+     */
     fun isUploaded(state: Boolean): PultusORMCondition {
         return PultusORMCondition.Builder().eq("is_uploaded", state).build()
     }

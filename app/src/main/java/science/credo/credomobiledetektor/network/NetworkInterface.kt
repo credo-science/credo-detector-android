@@ -57,7 +57,7 @@ class NetworkInterface (context: Context){
 
     fun sendHitsToNetwork(): Boolean {
         if (mConfigurationManager.canUpload) {
-            val hits = mDataManager.getHits()
+            val hits = mDataManager.getHits(false)
             val deviceData = mIdentityInfo.getIdentityData()
             val result = send("/detection", DetectionsFrame(hits, deviceData))
             Log.d("upload.message",result.message)

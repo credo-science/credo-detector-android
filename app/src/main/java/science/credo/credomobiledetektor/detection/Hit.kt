@@ -21,7 +21,6 @@ class Hit(
     frameInfo: HitInfo.FrameData,
     locationInfo: LocationInfo.LocationData,
     factorInfo: HitInfo.FactorData,
-    timestamp: Long,
     isUploaded: Boolean
 ) {
     @PrimaryKey
@@ -29,7 +28,7 @@ class Hit(
     @JsonProperty("id")
     var id: Int = 0
     @JsonProperty("timestamp")
-    val mTimestamp: Long = timestamp
+    val mTimestamp: Long = locationInfo.timestamp
     @JsonProperty("is_uploaded")
     var mIsUploaded: Boolean = isUploaded
 
@@ -85,7 +84,6 @@ class Hit(
         HitInfo.FrameData("", 0, 0, 0, 0, 0, 0, 0),
         LocationInfo.LocationData(0.0, 0.0, 0.0, 0f, "", 0),
         HitInfo.FactorData(0, 0, 0, 0),
-        0,
         false
     ) {
     }
