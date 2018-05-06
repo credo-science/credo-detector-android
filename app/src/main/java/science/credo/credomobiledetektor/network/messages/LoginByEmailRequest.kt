@@ -1,5 +1,11 @@
 package science.credo.credomobiledetektor.network.messages
 
+/**
+ * Login using email address.
+ *
+ * @property email
+ * @property password
+ */
 class LoginByEmailRequest(
         val email: String,
         password: String,

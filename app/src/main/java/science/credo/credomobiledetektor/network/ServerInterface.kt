@@ -16,7 +16,7 @@ class ServerInterface {
     /**
      * Sends request and converts response to object or handles errors based on status code.
      *
-     * @param endpoint Endpoint that handles the request.
+     * @param endpoint Endpoint that receives the request.
      * @param outFrame outFrame object, contains request data.
      */
     private inline fun <reified T: Any> sendAndGetResponse(endpoint: String, outFrame: Any): T {
@@ -30,7 +30,7 @@ class ServerInterface {
     /**
      * Sends request without returning response object.
      *
-     * @param endpoint Endpoint that handles the request.
+     * @param endpoint Endpoint that receives the request.
      * @param outFrame outFrame object, contains request data.
      * @throws Exception corresponding to error code.
      */

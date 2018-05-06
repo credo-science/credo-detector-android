@@ -1,5 +1,10 @@
 package science.credo.credomobiledetektor.network.messages
 
+/**
+ * Base login class, contains fields required by all login methods.
+ *
+ * @property password
+ */
 abstract class BaseLoginRequest (
         val password: String,
 

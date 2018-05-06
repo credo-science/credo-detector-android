@@ -1,5 +1,11 @@
 package science.credo.credomobiledetektor.network.messages
 
+/**
+ * Login using username.
+ *
+ * @property username
+ * @property password
+ */
 class LoginByUsernameRequest(
         val username: String,
         password: String,
