@@ -28,7 +28,7 @@ object NetworkCommunication {
     private fun prepareRequest(endpoint : String, token: String? = "") : Request.Builder {
         val builder = Request.Builder().url(mServiceUrl + endpoint)
 
-        if(token != "") builder.header("Authorization", "Token {$token}")
+        if(token != "") builder.header("Authorization", "Token $token")
 
         return builder
     }
