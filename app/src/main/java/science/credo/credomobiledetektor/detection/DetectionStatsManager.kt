@@ -2,6 +2,9 @@ package science.credo.credomobiledetektor.detection
 
 import org.greenrobot.eventbus.EventBus
 import science.credo.credomobiledetektor.events.StatsEvent
+import science.credo.credomobiledetektor.info.IdentityInfo
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.messages.PingRequest
 
 class DetectionStatsManager {
     private val statsForScreen = DetectionStats()
@@ -46,7 +49,9 @@ class DetectionStatsManager {
         if (force || serverCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForServer.flush(statsEvent,  true)
-            TODO("send ping to server")
+            TODO("send ping request")
+//            val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getInstance(context).getIdentityData()
+//            ServerInterface.getDefault().ping(PingRequest(statsEvent.lastHitTimestamp, System.currentTimeMillis(), deviceInfo))
         }
     }
 

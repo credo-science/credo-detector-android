@@ -9,7 +9,7 @@ import science.credo.credomobiledetektor.info.IdentityInfo
  * @property timestamp UNIX timestamp of ping time.
  */
 class PingRequest(
-    val delta_time: Int,
-    val timestamp: Int,
+    val delta_time: Long,
+    val timestamp: Long,
     deviceInfo: IdentityInfo.IdentityData
 ) : BaseRequest (deviceInfo)

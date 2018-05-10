@@ -1,5 +1,7 @@
 package science.credo.credomobiledetektor.network.messages
 
+import science.credo.credomobiledetektor.info.IdentityInfo
+
 /**
  * Contains registration fields used to create new user account.
  *
@@ -18,9 +20,5 @@ class RegisterRequest (
         val team: String,
         // ISO 639-1 language code representation
         val language: String,
-        val device_id: String,
-        val device_type: String,
-        val device_model: String,
-        val system_version: String,
-        val app_version: String
-)
+        deviceInfo: IdentityInfo.IdentityData
+) : BaseRequest(deviceInfo)

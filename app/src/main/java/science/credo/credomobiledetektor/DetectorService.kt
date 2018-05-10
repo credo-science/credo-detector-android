@@ -21,11 +21,16 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.detection.CameraSurfaceHolder
+import science.credo.credomobiledetektor.detection.Hit
 import science.credo.credomobiledetektor.events.BatteryEvent
 import science.credo.credomobiledetektor.events.DetectorStateEvent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
+import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
 import science.credo.credomobiledetektor.network.NetworkInterface
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.messages.DetectionRequest
+import science.credo.credomobiledetektor.network.messages.PingRequest
 import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
@@ -218,12 +223,26 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     val scheduler = Executors.newSingleThreadScheduledExecutor()
 
     private fun startPing() {
+        /**
+         * Ping scheduler.
+         */
         scheduler.scheduleAtFixedRate({
-            NetworkInterface.getInstance(this).sendPing()
+            //@TODO send ping
+//            NetworkInterface.getInstance(this).sendPing()
+//            ServerInterface.getDefault().ping(PingRequest(0, System.currentTimeMillis()))
         }, 0, 60, TimeUnit.MINUTES)
+        /**
+         * Detection synchronization scheduler.
+         */
         scheduler.scheduleAtFixedRate({
-            NetworkInterface.getInstance(this).sendHitsToNetwork()
+//            NetworkInterface.getInstance(this).sendHitsToNetwork()
+            val hits: MutableList<Hit> = DataManager.getInstance(this).getHits()
+            val deviceInfo = IdentityInfo.getInstance(this).getIdentityData()
+            ServerInterface.getDefault().sendDetections(DetectionRequest(hits, deviceInfo))
         }, 0, 10, TimeUnit.MINUTES)
+        /**
+         * Database cleanup scheduler
+         */
         scheduler.scheduleAtFixedRate({
             val dm = DataManager.getInstance(this)
             dm.trimHitDb()
