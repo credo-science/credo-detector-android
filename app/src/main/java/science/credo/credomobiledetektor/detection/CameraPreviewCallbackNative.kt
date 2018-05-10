@@ -8,6 +8,7 @@ import android.util.Base64
 import android.util.Log
 import io.github.silvaren.easyrs.tools.Nv21Image
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.IdentityInfo
@@ -41,81 +42,84 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
         val config = ConfigurationInfo(mContext)
 
-        val parameters = hCamera.parameters
-        val width = parameters.previewSize.width
-        val height = parameters.previewSize.height
-        val analysisData = LongArray(aDataSize)
+        doAsync {
 
-        var loop = -1
-        detectionStatsManager!!.frameAchieved(width, height)
+            val parameters = hCamera.parameters
+            val width = parameters.previewSize.width
+            val height = parameters.previewSize.height
+            val analysisData = LongArray(aDataSize)
 
-        val hits = LinkedList<Hit>()
+            var loop = -1
+            detectionStatsManager!!.frameAchieved(width, height)
 
-
-        while(true) {
-            loop++
-            calcHistogram(data, analysisData, width, height, config.blackFactor)
-
-            val max = analysisData[aDataSize - 1]
-            val maxIndex = analysisData[aDataSize - 2]
-            val sum = analysisData[aDataSize - 3]
-            val zeroes = analysisData[aDataSize - 4]
-            val average: Double = sum.toDouble() / (width * height).toDouble()
-            val blacks: Double = zeroes * 1000 / (width * height).toDouble()
-
-            if (loop == 0) {
-                detectionStatsManager!!.updateStats(max, average, blacks)
-            }
-
-            // frames not rejected conditions
-            val averageBrightCondition = average < config.averageFactor
-            val blackPixelsCondition = blacks >= config.blackCount
-
-            // found Hit condition
-            val brightestPixelCondition = max > config.maxFactor
+            val hits = LinkedList<Hit>()
 
 
-            if (averageBrightCondition && blackPixelsCondition) {
+            while (true) {
+                loop++
+                calcHistogram(data, analysisData, width, height, config.blackFactor)
+
+                val max = analysisData[aDataSize - 1]
+                val maxIndex = analysisData[aDataSize - 2]
+                val sum = analysisData[aDataSize - 3]
+                val zeroes = analysisData[aDataSize - 4]
+                val average: Double = sum.toDouble() / (width * height).toDouble()
+                val blacks: Double = zeroes * 1000 / (width * height).toDouble()
+
                 if (loop == 0) {
-                    detectionStatsManager!!.framePerformed()
+                    detectionStatsManager!!.updateStats(max, average, blacks)
                 }
 
-                if (brightestPixelCondition) {
-                    val bitmap = yuv2bitmap(data, width, height)
-                    val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
-                    detectionStatsManager!!.hitRegistered()
-                    val cropDataPNG = bitmap2png(cropBitmap)
-                    val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
-                    val location = mLocationInfo.getLocationData()
+                // frames not rejected conditions
+                val averageBrightCondition = average < config.averageFactor
+                val blackPixelsCondition = blacks >= config.blackCount
 
-                    val hit = Hit(
-                            dataString,
-                            System.currentTimeMillis(),
-                            location.latitude,
-                            location.longitude,
-                            location.altitude,
-                            location.accuracy,
-                            location.provider,
-                            width,
-                            height
+                // found Hit condition
+                val brightestPixelCondition = max > config.maxFactor
 
-                    )
-                    hits.add(hit)
 
-                    fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
+                if (averageBrightCondition && blackPixelsCondition) {
+                    if (loop == 0) {
+                        detectionStatsManager!!.framePerformed()
+                    }
+
+                    if (brightestPixelCondition) {
+                        val bitmap = yuv2bitmap(data, width, height)
+                        val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
+                        detectionStatsManager!!.hitRegistered()
+                        val cropDataPNG = bitmap2png(cropBitmap)
+                        val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
+                        val location = mLocationInfo.getLocationData()
+
+                        val hit = Hit(
+                                dataString,
+                                System.currentTimeMillis(),
+                                location.latitude,
+                                location.longitude,
+                                location.altitude,
+                                location.accuracy,
+                                location.provider,
+                                width,
+                                height
+
+                        )
+                        hits.add(hit)
+
+                        fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
+                    } else {
+                        break
+                    }
                 } else {
                     break
                 }
-            } else {
-                break
             }
-        }
 
-        hCamera.addCallbackBuffer(data)
-        detectionStatsManager!!.flush(mContext, false)
+            uiThread {
+                hCamera.addCallbackBuffer(data)
+            }
+            detectionStatsManager!!.flush(mContext, false)
 
-        if (hits.size > 0) {
-            doAsync {
+            if (hits.size > 0) {
                 val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
                 for (hit in hits) {
                     mDataManager.storeHit(hit)

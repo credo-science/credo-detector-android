@@ -17,11 +17,13 @@ class DetectionStatsManager {
     private var height = 0
     private var startDetectionTimestamp = System.currentTimeMillis()
 
+    @Synchronized
     fun updateStats(max: Long, average: Double, zeroes: Double) {
         statsForScreen.updateStats(max, average, zeroes)
         statsForServer.updateStats(max, average, zeroes)
     }
 
+    @Synchronized
     fun frameAchieved(width : Int, height : Int) {
         this.width = width
         this.height = height
@@ -29,16 +31,19 @@ class DetectionStatsManager {
         statsForServer.frameAchieved()
     }
 
+    @Synchronized
     fun framePerformed() {
         statsForScreen.framePerformed()
         statsForServer.framePerformed()
     }
 
+    @Synchronized
     fun hitRegistered() {
         statsForScreen.hitRegistered()
         statsForServer.hitRegistered()
     }
 
+    @Synchronized
     fun flush(context: Context, force : Boolean) {
         val screenCondition = checkNextTimePeriod(statsForScreen.lastFlushTimestamp, 1000L)
         val serverCondition = checkNextTimePeriod(statsForServer.lastFlushTimestamp, 600000L)
@@ -52,6 +57,7 @@ class DetectionStatsManager {
         if (force || serverCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForServer.flush(statsEvent,  true)
+
             val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getInstance(context).getIdentityData()
             doAsync {
                 ServerInterface.getDefault(context).ping(PingRequest.build(System.currentTimeMillis(), deviceInfo, statsEvent))
