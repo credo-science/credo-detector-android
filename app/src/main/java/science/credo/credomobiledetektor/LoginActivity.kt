@@ -12,21 +12,25 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.coroutines.experimental.Job
+import kotlinx.coroutines.experimental.*
 import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.launch
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByEmailRequest
 import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
 
-    private var loginTask: Job? = null
+    private var loginTask: Future<Unit>? = null
+    private var isClosed = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +59,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        loginTask?.cancel()
+        loginTask?.cancel(true)
+        isClosed = true
         super.onDestroy()
     }
 
@@ -69,9 +74,11 @@ class LoginActivity : AppCompatActivity() {
 
         login_button.isEnabled = false
 
+        // TODO: https://stackoverflow.com/questions/45373007/progressdialog-is-deprecated-what-is-the-alternate-one-to-use
         val progressDialog = ProgressDialog(this@LoginActivity,
                 R.style.Theme_AppCompat_DayNight_Dialog)
         progressDialog.isIndeterminate = true
+        progressDialog.setCancelable(false)
         progressDialog.setMessage("Authenticating...")
         progressDialog.show()
 
@@ -93,31 +100,40 @@ class LoginActivity : AppCompatActivity() {
 
         val pref = UserInfoWrapper(this)
 
-        loginTask = launch(UI) {
+        loginTask = doAsync{
             try {
-                val response = doAsyncResult{
-                    ServerInterface.getDefault(baseContext).login(loginRequest)
-                }.get(60, TimeUnit.SECONDS)!!
 
-                pref.login = response.username
-                pref.email = response.email
-                pref.token = response.token
-                pref.team = response.team
+                val response = ServerInterface.getDefault(baseContext).login(loginRequest)
+                loginTask = null
+                uiThread {
+                    if (!isClosed) {
+                        pref.login = response.username
+                        pref.email = response.email
+                        pref.token = response.token
+                        pref.team = response.team
 
-                progressDialog.dismiss()
-                onLoginSuccess()
+                        progressDialog.dismiss()
+                        onLoginSuccess()
+                    }
+                }
             } catch (e: ServerException) {
                 // TODO: support response from server i.e. login/email already exists, no connection etc.
-                progressDialog.dismiss()
-                onLoginFailed(e.error)
-            } catch (e :Exception) {
-                progressDialog.dismiss()
-                onLoginFailed(e.message)
+                uiThread {
+                    if (!isClosed) {
+                        progressDialog.dismiss()
+                        onLoginFailed(e.error)
+                    }
+                }
+            } catch (e: Exception) {
+                uiThread {
+                    if (!isClosed) {
+                        progressDialog.dismiss()
+                        onLoginFailed(e.message)
+                    }
+                }
             }
-            loginTask = null
         }
     }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == REQUEST_SIGNUP) {

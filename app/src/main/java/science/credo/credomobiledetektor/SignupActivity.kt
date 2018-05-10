@@ -24,17 +24,20 @@ import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.uiThread
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
 import science.credo.credomobiledetektor.network.messages.RegisterRequest
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
 
 class SignupActivity : AppCompatActivity() {
 
-    private var registerTask: Job? = null
+    private var registerTask: Future<Unit>? = null
+    private var isClosed = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +55,8 @@ class SignupActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        registerTask?.cancel()
+        isClosed = true
+        registerTask?.cancel(true)
         super.onDestroy()
     }
 
@@ -70,6 +74,7 @@ class SignupActivity : AppCompatActivity() {
         val progressDialog = ProgressDialog(this@SignupActivity,
                 R.style.Base_Theme_AppCompat_Dialog)
         progressDialog.isIndeterminate = true
+        progressDialog.setCancelable(false)
         progressDialog.setMessage("Creating Account...")
         progressDialog.show()
 
@@ -91,28 +96,37 @@ class SignupActivity : AppCompatActivity() {
 
         val pref = UserInfoWrapper(this)
 
-        registerTask = launch(UI) {
+        registerTask = doAsync {
             try {
-                val response = doAsyncResult{
-                    ServerInterface.getDefault(baseContext).register(registerRequest)
-                    // TODO: because register only create account, login is need after it
-                    ServerInterface.getDefault(baseContext).login(loginRequest)
-                }.get(60, TimeUnit.SECONDS)!!
+                ServerInterface.getDefault(baseContext).register(registerRequest)
+                val response = ServerInterface.getDefault(baseContext).login(loginRequest)
 
-                pref.login = response.username
-                pref.email = response.email
-                pref.token = response.token
-                pref.team = response.team
+                uiThread {
+                    if (!isClosed) {
+                        pref.login = response.username
+                        pref.email = response.email
+                        pref.token = response.token
+                        pref.team = response.team
 
-                progressDialog.dismiss()
-                onSignupSuccess()
+                        progressDialog.dismiss()
+                        onSignupSuccess()
+                    }
+                }
             } catch (e: ServerException) {
-                // TODO: support response from server i.e. login/email already exists, no connection etc.
-                progressDialog.dismiss()
-                onSignupFailed(e.error)
+                uiThread {
+                    if (!isClosed) {
+                        // TODO: support response from server i.e. login/email already exists, no connection etc.
+                        progressDialog.dismiss()
+                        onSignupFailed(e.error)
+                    }
+                }
             } catch (e :Exception) {
-                progressDialog.dismiss()
-                onSignupFailed(e.message)
+                uiThread {
+                    if (!isClosed) {
+                        progressDialog.dismiss()
+                        onSignupFailed(e.message)
+                    }
+                }
             }
             registerTask = null
         }
