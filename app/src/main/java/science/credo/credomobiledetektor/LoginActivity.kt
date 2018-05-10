@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
         loginTask = launch(UI) {
             try {
                 val response = doAsyncResult{
-                    ServerInterface.getDefault().login(loginRequest)
+                    ServerInterface.getDefault(baseContext).login(loginRequest)
                 }.get(60, TimeUnit.SECONDS)!!
 
                 pref.login = response.username

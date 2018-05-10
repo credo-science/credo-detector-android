@@ -238,7 +238,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
 //            NetworkInterface.getInstance(this).sendHitsToNetwork()
             val hits: MutableList<Hit> = DataManager.getInstance(this).getHits()
             val deviceInfo = IdentityInfo.getInstance(this).getIdentityData()
-            ServerInterface.getDefault().sendDetections(DetectionRequest(hits, deviceInfo))
+            ServerInterface.getDefault(this).sendDetections(DetectionRequest(hits, deviceInfo))
         }, 0, 10, TimeUnit.MINUTES)
         /**
          * Database cleanup scheduler

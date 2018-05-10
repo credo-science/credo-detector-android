@@ -25,6 +25,7 @@ import org.jetbrains.anko.custom.async
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.doAsyncResult
 import science.credo.credomobiledetektor.database.UserInfoWrapper
+import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
@@ -78,25 +79,14 @@ class SignupActivity : AppCompatActivity() {
                 input_name.text.toString(), // TODO: display name?
                 input_password.text.toString(),
                 "noteam", // TODO: field
-
-                // TODO: acquire from mobile
                 "pl",
-                "todo",
-                "todo",
-                "todo",
-                "todo",
-                "todo"
+                IdentityInfo.getInstance(this).getIdentityData()
         )
 
         val loginRequest = LoginByUsernameRequest(
                 input_name.text.toString(),
                 input_password.text.toString(),
-                // TODO: acquire from mobile
-                "todo",
-                "todo",
-                "todo",
-                "todo",
-                "todo"
+                IdentityInfo.getInstance(this).getIdentityData()
         )
 
         val pref = UserInfoWrapper(this)
@@ -104,9 +94,9 @@ class SignupActivity : AppCompatActivity() {
         registerTask = launch(UI) {
             try {
                 val response = doAsyncResult{
-                    ServerInterface.getDefault().register(registerRequest)
+                    ServerInterface.getDefault(baseContext).register(registerRequest)
                     // TODO: because register only create account, login is need after it
-                    ServerInterface.getDefault().login(loginRequest)
+                    ServerInterface.getDefault(baseContext).login(loginRequest)
                 }.get(60, TimeUnit.SECONDS)!!
 
                 pref.login = response.username

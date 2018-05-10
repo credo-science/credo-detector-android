@@ -1,7 +1,10 @@
 package science.credo.credomobiledetektor.network
 
+import android.content.Context
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import okhttp3.Response
+import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.network.exceptions.*
 import science.credo.credomobiledetektor.network.messages.*
 
@@ -10,7 +13,7 @@ import science.credo.credomobiledetektor.network.messages.*
  *
  * @property mMapper JSON object mapper used to serialize objects to JSON and deserialize JSON string to objects.
  */
-class ServerInterface {
+class ServerInterface (val context: Context) {
     private val mMapper = jacksonObjectMapper()
 
     /**
@@ -20,7 +23,13 @@ class ServerInterface {
      * @param outFrame outFrame object, contains request data.
      */
     private inline fun <reified T: Any> sendAndGetResponse(endpoint: String, outFrame: Any): T {
-        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame))
+        val pref = UserInfoWrapper(context)
+
+        val response: NetworkCommunication.Response
+
+        if(pref.token != "")    response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
+        else                    response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame))
+
         when(response.code) {
             in 200..299 -> return mMapper.readValue(response.message)
             else -> throw throwError(response)
@@ -106,8 +115,8 @@ class ServerInterface {
         /**
          * @return default instance of ServerInterface.
          */
-        fun getDefault() : ServerInterface {
-            return ServerInterface()
+        fun getDefault(context: Context) : ServerInterface {
+            return ServerInterface(context)
         }
     }
 

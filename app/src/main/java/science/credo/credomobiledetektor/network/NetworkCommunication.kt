@@ -5,6 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.MediaType
+import science.credo.credomobiledetektor.database.UserInfoWrapper
 import java.io.IOException
 
 /**
@@ -51,16 +52,18 @@ object NetworkCommunication {
      * @param json JSON string sent in request body.
      * @return Response object
      */
-    fun post(endpoint: String, json: String): Response {
+    fun post(endpoint: String, json: String, token: String? = ""): Response {
         try {
             Log.d(TAG, "post: (${json.length}) $json")
 
             val body = RequestBody.create(JSON, json)
             //Log.d("BODY",body.contentType())
-            val request = Request.Builder()
-                    .url(mServiceUrl + endpoint)
-                    .post(body)
-                    .build()
+            val builder = Request.Builder()
+                .url(mServiceUrl + endpoint)
+                .post(body)
+            if(token != "") builder.header("Authorization", "Token {$token}")
+            val request = builder.build()
+
             val response = client.newCall(request).execute()
             val responseString = response.body()?.string() ?: ""
             Log.d(TAG, "post result: ${response.code()} $responseString")
