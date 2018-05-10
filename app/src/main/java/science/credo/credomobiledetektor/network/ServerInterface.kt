@@ -24,12 +24,7 @@ class ServerInterface (val context: Context) {
      */
     private inline fun <reified T: Any> sendAndGetResponse(endpoint: String, outFrame: Any): T {
         val pref = UserInfoWrapper(context)
-
-        val response: NetworkCommunication.Response
-
-        if(pref.token != "")    response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
-        else                    response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame))
-
+        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
         when(response.code) {
             in 200..299 -> return mMapper.readValue(response.message)
             else -> throw throwError(response)
@@ -44,7 +39,8 @@ class ServerInterface (val context: Context) {
      * @throws Exception corresponding to error code.
      */
     private fun sendAndGetNoContent(endpoint: String, outFrame: Any) {
-        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame))
+        val pref = UserInfoWrapper(context)
+        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
         when(response.code) {
             in 200..299 -> return
             else -> throw throwError(response)

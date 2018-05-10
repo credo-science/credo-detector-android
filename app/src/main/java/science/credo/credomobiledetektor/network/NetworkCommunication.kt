@@ -25,24 +25,32 @@ object NetworkCommunication {
 
     data class Response(val code: Int, val message: String) {}
 
+    private fun prepareRequest(endpoint : String, token: String? = "") : Request.Builder {
+        val builder = Request.Builder().url(mServiceUrl + endpoint)
+
+        if(token != "") builder.header("Authorization", "Token {$token}")
+
+        return builder
+    }
+
+    private fun prepareResponse(request: Request) : Response {
+        return try {
+            val response = client.newCall(request).execute()
+            val responseString = response.body()?.string() ?: ""
+            Response(response.code(), responseString)
+        } catch (e: IOException) {
+            Response(0, "")
+        }
+    }
+
     /**
      * Sends GET request.
      *
      * @param endpoint Endpoint that receives the request.
      * @return Response object
      */
-    fun get(endpoint : String): Response {
-        try {
-            val request = Request.Builder()
-                    .url(mServiceUrl + endpoint)
-                    .build();
-
-            val response = client.newCall(request).execute();
-            val responseString = response.body()?.string() ?: ""
-            return Response(response.code(), responseString)
-        } catch (e: IOException) {
-            return Response(0, "")
-        }
+    fun get(endpoint : String, token: String? = ""): Response {
+        return prepareResponse(prepareRequest(endpoint, token).build())
     }
 
     /**
@@ -53,24 +61,8 @@ object NetworkCommunication {
      * @return Response object
      */
     fun post(endpoint: String, json: String, token: String? = ""): Response {
-        try {
-            Log.d(TAG, "post: (${json.length}) $json")
-
-            val body = RequestBody.create(JSON, json)
-            //Log.d("BODY",body.contentType())
-            val builder = Request.Builder()
-                .url(mServiceUrl + endpoint)
-                .post(body)
-            if(token != "") builder.header("Authorization", "Token {$token}")
-            val request = builder.build()
-
-            val response = client.newCall(request).execute()
-            val responseString = response.body()?.string() ?: ""
-            Log.d(TAG, "post result: ${response.code()} $responseString")
-            return Response(response.code(), responseString)
-        } catch (e: IOException) {
-            Log.d("Post", e.toString())
-            return Response(0, "")
-        }
+        return prepareResponse(
+                prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
+        )
     }
 }
