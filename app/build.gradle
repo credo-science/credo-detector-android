@@ -89,4 +89,5 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     testImplementation 'junit:junit:4.12'
     implementation "ch.acra:acra-http:$acraVersion"
+    implementation 'com.android.support:multidex:1.0.3'
 }
