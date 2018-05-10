@@ -16,6 +16,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import science.credo.credomobiledetektor.database.DataManager
+import science.credo.credomobiledetektor.database.DetectionStateWrapper
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.fragment.*
 import science.credo.credomobiledetektor.fragment.detections.DetectionContent
@@ -34,6 +35,8 @@ class MainActivity : AppCompatActivity(),
     override fun onStartDetection() {
         ConfigurationInfo(this).isDetectionOn = true
         credoApplication().turnOnDetection()
+        DetectionStateWrapper.getLatestSession(this).clear()
+        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = System.currentTimeMillis()
     }
 
     override fun onStopDetection() {

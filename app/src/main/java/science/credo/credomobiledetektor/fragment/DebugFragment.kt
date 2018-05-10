@@ -18,7 +18,7 @@ import science.credo.credomobiledetektor.info.LocationInfo
 import science.credo.credomobiledetektor.R
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.detection.Hit
-import science.credo.credomobiledetektor.network.NetworkInterface
+import science.credo.credomobiledetektor.network.ServerInterface
 
 
 /**
@@ -68,7 +68,7 @@ class DebugFragment : Fragment() {
 
         var hitCounter: Int = 0
         val dataManager = DataManager.getInstance(activity!!.applicationContext)
-        val networkInterface = NetworkInterface.getInstance(activity!!.applicationContext)
+        val networkInterface = ServerInterface.getDefault(activity!!.applicationContext)
 
         butgen.setOnClickListener {
             Log.d(TAG, "generate button pressed")
@@ -80,7 +80,7 @@ class DebugFragment : Fragment() {
         butupl.setOnClickListener {
             Log.d(TAG, "upload button pressed")
             doAsync {
-                networkInterface.sendHitsToNetwork()
+                dataManager.sendHitsToNetwork()
                 uiThread{
                     postUpdate(tv, dataManager)
                 }

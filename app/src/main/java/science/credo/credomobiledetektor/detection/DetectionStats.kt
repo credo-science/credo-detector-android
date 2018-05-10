@@ -19,10 +19,10 @@ class DetectionStats {
     private var average = StatsValueBuilder()
     private var blacks = StatsValueBuilder()
 
-    fun updateStats(max: Long, average: Double, zeroes: Long) {
+    fun updateStats(max: Long, average: Double, zeroes: Double) {
         this.max.addSample(max.toDouble())
         this.average.addSample(average)
-        blacks.addSample(zeroes.toDouble())
+        blacks.addSample(zeroes)
     }
 
     fun frameAchieved() {

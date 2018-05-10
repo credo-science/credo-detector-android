@@ -10,11 +10,15 @@ import io.github.silvaren.easyrs.tools.Nv21Image
 import org.jetbrains.anko.doAsync
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
+import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.info.LocationInfo
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.messages.DetectionRequest
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
-    private var detectionStatsManager = DetectionStatsManager()
+    //private var detectionStatsManager = DetectionStatsManager()
 
 
     private val mDataManager: DataManager = DataManager.getInstance(mContext)
@@ -24,11 +28,16 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         val TAG = "CameraPreviewClbkNative"
         val aDataSize = 24
         //val cropSize = 20
+        var detectionStatsManager: DetectionStatsManager? = null
     }
 
     val rs = RenderScript.create(mContext)
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
+
+        if (detectionStatsManager == null) {
+            detectionStatsManager = DetectionStatsManager()
+        }
 
         val config = ConfigurationInfo(mContext)
 
@@ -38,7 +47,10 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         val analysisData = LongArray(aDataSize)
 
         var loop = -1
-        detectionStatsManager.frameAchieved(width, height)
+        detectionStatsManager!!.frameAchieved(width, height)
+
+        val hits = LinkedList<Hit>()
+
 
         while(true) {
             loop++
@@ -49,14 +61,15 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             val sum = analysisData[aDataSize - 3]
             val zeroes = analysisData[aDataSize - 4]
             val average: Double = sum.toDouble() / (width * height).toDouble()
+            val blacks: Double = zeroes * 1000 / (width * height).toDouble()
 
             if (loop == 0) {
-                detectionStatsManager.updateStats(max, average, zeroes);
+                detectionStatsManager!!.updateStats(max, average, blacks)
             }
 
             // frames not rejected conditions
             val averageBrightCondition = average < config.averageFactor
-            val blackPixelsCondition = (zeroes * 1000 / (width * height)) >= config.blackCount
+            val blackPixelsCondition = blacks >= config.blackCount
 
             // found Hit condition
             val brightestPixelCondition = max > config.maxFactor
@@ -64,37 +77,30 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
             if (averageBrightCondition && blackPixelsCondition) {
                 if (loop == 0) {
-                    detectionStatsManager.framePerformed()
+                    detectionStatsManager!!.framePerformed()
                 }
 
                 if (brightestPixelCondition) {
                     val bitmap = yuv2bitmap(data, width, height)
                     val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
-                    detectionStatsManager.hitRegistered()
+                    detectionStatsManager!!.hitRegistered()
+                    val cropDataPNG = bitmap2png(cropBitmap)
+                    val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
+                    val location = mLocationInfo.getLocationData()
 
-                    doAsync {
-                        val cropDataPNG = bitmap2png(cropBitmap)
-                        val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
+                    val hit = Hit(
+                            dataString,
+                            System.currentTimeMillis(),
+                            location.latitude,
+                            location.longitude,
+                            location.altitude,
+                            location.accuracy,
+                            location.provider,
+                            width,
+                            height
 
-                        val location = mLocationInfo.getLocationData()
-
-                        val hit = Hit(
-                                dataString,
-                                System.currentTimeMillis(),
-                                location.latitude,
-                                location.longitude,
-                                location.altitude,
-                                location.accuracy,
-                                location.provider,
-                                width,
-                                height
-
-                        )
-                        mDataManager.storeHit(hit)
-
-                        Log.d(TAG, "Image detected and stored in DB")
-
-                    }
+                    )
+                    hits.add(hit)
 
                     fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
                 } else {
@@ -106,7 +112,17 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         hCamera.addCallbackBuffer(data)
-        detectionStatsManager.flush(false)
+        detectionStatsManager!!.flush(mContext, false)
+
+        if (hits.size > 0) {
+            doAsync {
+                val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
+                for (hit in hits) {
+                    mDataManager.storeHit(hit)
+                }
+                ServerInterface.getDefault(mContext).sendDetections(DetectionRequest(hits, deviceInfo))
+            }
+        }
     }
 
     external fun calcHistogram (data: ByteArray, analysisData: LongArray, width: Int, height: Int, black: Int)
