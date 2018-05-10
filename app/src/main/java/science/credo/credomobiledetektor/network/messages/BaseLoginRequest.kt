@@ -1,5 +1,7 @@
 package science.credo.credomobiledetektor.network.messages
 
+import science.credo.credomobiledetektor.info.IdentityInfo
+
 /**
  * Base login class, contains fields required by all login methods.
  *
@@ -7,10 +9,5 @@ package science.credo.credomobiledetektor.network.messages
  */
 abstract class BaseLoginRequest (
         val password: String,
-
-        val device_id: String,
-        val device_type: String,
-        val device_model: String,
-        val system_version: String,
-        val app_version: String
-)
+        deviceInfo: IdentityInfo.IdentityData
+) : BaseRequest(deviceInfo)

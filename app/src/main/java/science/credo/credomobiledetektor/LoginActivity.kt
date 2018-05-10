@@ -17,6 +17,7 @@ import kotlinx.coroutines.experimental.android.UI
 import kotlinx.coroutines.experimental.launch
 import org.jetbrains.anko.doAsyncResult
 import science.credo.credomobiledetektor.database.UserInfoWrapper
+import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByEmailRequest
@@ -80,23 +81,13 @@ class LoginActivity : AppCompatActivity() {
             LoginByEmailRequest(
                     inputText,
                     input_password.text.toString(),
-                    // TODO: acquire from mobile
-                    "todo",
-                    "todo",
-                    "todo",
-                    "todo",
-                    "todo"
+                    IdentityInfo.getInstance(applicationContext).getIdentityData()
             )
         } else {
             LoginByUsernameRequest(
                     inputText,
                     input_password.text.toString(),
-                    // TODO: acquire from mobile
-                    "todo",
-                    "todo",
-                    "todo",
-                    "todo",
-                    "todo"
+                    IdentityInfo.getInstance(applicationContext).getIdentityData()
             )
         }
 

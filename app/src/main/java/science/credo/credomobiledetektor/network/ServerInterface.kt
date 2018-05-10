@@ -94,6 +94,14 @@ class ServerInterface {
         return sendAndGetNoContent("/user/register", request)
     }
 
+    fun ping(request: PingRequest) {
+        return sendAndGetNoContent("/ping", request)
+    }
+
+    fun sendDetections(request: DetectionRequest) : DetectionResponse {
+        return sendAndGetResponse("/detection", request)
+    }
+
     companion object {
         /**
          * @return default instance of ServerInterface.
