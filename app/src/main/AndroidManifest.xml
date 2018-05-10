@@ -22,41 +22,50 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/AppTheme">
+        <activity
+            android:name=".LauncherActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
+        <service
+            android:name=".DetectorService"
+            android:enabled="true"
+            android:exported="true" />
 
-    <activity android:name=".MainActivity"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme.NoActionBar"
-        android:screenOrientation="portrait"
-        >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".SignupActivity"
+            android:label="@string/title_activity_register"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait" />
 
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
-
-    <service android:name=".DetectorService" android:enabled="true" android:exported="true" />
-
-    <activity android:name=".SettingsActivity"
-        android:label="@string/title_activity_settings"
-        android:parentActivityName=".MainActivity"
-        android:screenOrientation="portrait"
-        />
-    <activity android:name=".RegisterActivity"
-        android:label="@string/title_activity_register"
-        android:parentActivityName=".MainActivity"
-        android:screenOrientation="portrait"
-        />
-
-    <!--<receiver android:name=".info.PowerConnectionReceiver">
+        <!--
+    <receiver android:name=".info.PowerConnectionReceiver">
         <intent-filter>
             <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
             <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
         </intent-filter>
-    </receiver>-->
+    </receiver>
+        -->
 
-</application>
+        <activity android:name=".ResetPasswordActivity" />
+    </application>
 
 </manifest>

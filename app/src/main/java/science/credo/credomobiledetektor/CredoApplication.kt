@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.support.multidex.MultiDex
 import org.acra.ACRA
 import org.acra.annotation.AcraCore
 import org.acra.annotation.AcraHttpSender
@@ -28,7 +29,7 @@ class CredoApplication : Application() {
 
     protected override fun attachBaseContext(base: Context) {
         super.attachBaseContext(base)
-
+        MultiDex.install(this)
         // The following line triggers the initialization of ACRA
         ACRA.init(this)
     }

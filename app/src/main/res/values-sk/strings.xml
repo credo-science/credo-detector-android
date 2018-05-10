@@ -24,7 +24,7 @@
     <string name="title_register">Registrácia</string>
     <string name="msg_no_network_connection">žiadne sieťové pripojenie</string>
     <string name="msg_network_connection_problem">problém so sieťovým pripojením, prosím skúste neskôr</string>
-    <string name="action_login">Registrácia</string>
+    <string name="action_logout">Registrácia</string>
     <string name="login_button_text">login</string>
     <string name="register_button_text">registrovať</string>
 

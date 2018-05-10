@@ -1,10 +1,7 @@
 package science.credo.credomobiledetektor
 
-import android.app.ActivityManager
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
-import android.content.IntentFilter
-import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
@@ -19,10 +16,13 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import science.credo.credomobiledetektor.database.DataManager
+import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.fragment.*
 import science.credo.credomobiledetektor.fragment.detections.DetectionContent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
+
+const val REQUEST_SIGNUP = 1
 
 class MainActivity : AppCompatActivity(),
         StatusFragment.OnFragmentInteractionListener,
@@ -60,7 +60,11 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
         super.onDestroy()
-        DataManager.getInstance(applicationContext).closeDb()
+        try {
+            DataManager.getInstance(applicationContext).closeDb()
+        } catch (e:Exception) {
+            Log.w(TAG, e)
+        }
 
     }
 
@@ -83,6 +87,13 @@ class MainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
+
+        if (UserInfoWrapper(this).token.isEmpty()) {
+            setResult(Activity.RESULT_OK)
+            finish()
+            return
+        }
+
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
         setContentView(R.layout.activity_main)
 
@@ -137,14 +148,24 @@ class MainActivity : AppCompatActivity(),
                 startSettingsActivity()
                 true
             }
-            R.id.action_login -> {
-                startRegisterActivity()
+            R.id.action_logout -> {
+                //startRegisterActivity()
+                UserInfoWrapper(this).token = ""
+                setResult(Activity.RESULT_OK)
+                finish()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
     }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == REQUEST_SIGNUP) {
+            if (UserInfoWrapper(this).token.isEmpty()) {
+                this.finish()
+            }
+        }
+    }
 
     fun switchFragment(id: Int): Boolean {
 
@@ -166,7 +187,7 @@ class MainActivity : AppCompatActivity(),
                 mSettingsFlag = true
             }
             R.id.nav_register -> {
-                startRegisterActivity()
+                //startRegisterActivity()
                 mSettingsFlag = true
            }
             R.id.nav_statistics -> {
@@ -207,8 +228,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun startSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))
-
-    private fun startRegisterActivity() = startActivity(Intent(this, RegisterActivity::class.java))
 
     override fun onGoToExperiment() {
         switchFragment(R.id.nav_status)

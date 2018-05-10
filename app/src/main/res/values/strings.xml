@@ -19,12 +19,10 @@
     <string name="title_settings">Settings</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_register">Registration</string>
 
     <string name="title_register">Register</string>
     <string name="msg_no_network_connection">no network connection</string>
     <string name="msg_network_connection_problem">network connection problem, please try again later</string>
-    <string name="action_login">Register</string>
     <string name="login_button_text">login</string>
     <string name="register_button_text">register</string>
 
@@ -130,5 +128,18 @@
 
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
+
+    <string name="title_activity_login">Sign in</string>
+    <string name="input_email">Email</string>
+    <string name="action_logoin">Login</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_reset_password">Forgot Password</string>
+    <string name="link_signup">No account yet? Create one</string>
+
+    <string name="title_activity_register">Sign up</string>
+    <string name="action_register">Create Account</string>
+    <string name="link_signin">Already a member? Login</string>
+
+    <string name="forgot_password_text">Click on button if you don`t remember password</string>
 
 </resources>

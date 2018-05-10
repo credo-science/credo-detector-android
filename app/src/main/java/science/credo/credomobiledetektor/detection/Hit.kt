@@ -7,10 +7,6 @@ import ninja.sakib.pultusorm.annotations.PrimaryKey
 import science.credo.credomobiledetektor.info.HitInfo
 import science.credo.credomobiledetektor.info.LocationInfo
 
-/**
- * Created by poznan on 27/08/2017.
- */
-
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
     getterVisibility = JsonAutoDetect.Visibility.NONE,
@@ -85,6 +81,5 @@ class Hit(
         LocationInfo.LocationData(0.0, 0.0, 0.0, 0f, "", 0),
         HitInfo.FactorData(0, 0, 0, 0),
         false
-    ) {
-    }
+    )
 }
