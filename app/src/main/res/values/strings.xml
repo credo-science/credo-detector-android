@@ -124,6 +124,9 @@
     <string name="pref_register_temperature_title">Max temperature [°C]</string>
     <string name="pref_register_temperature_summary">Stop detection when temperature is greater than max temperature, default: 60°C</string>
 
+    <string name="pref_full_frame_title">Use max camera resolution</string>
+    <string name="pref_full_frame_summary">Max camera resolution (usually FullHD) may be more drain battery and heating</string>
+
     <string name="pref_register_level_title">Battery level [0–100%]</string>
     <string name="pref_register_level_summary">Stop detection when temperature is lesser than battery level, default: 60%</string>
 

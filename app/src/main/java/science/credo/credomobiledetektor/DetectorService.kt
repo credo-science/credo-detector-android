@@ -19,6 +19,7 @@ import android.view.WindowManager
 import android.widget.Toast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.configuration
 import org.jetbrains.anko.doAsync
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.database.DetectionStateWrapper
@@ -174,8 +175,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         val parameters: Camera.Parameters = mCamera!!.parameters;
         parameters.setRecordingHint(true)
         val sizes = parameters.supportedPreviewSizes
-        val index = sizes.size/2 // ~medium resolution
-//        val index = 0 // max resolution
+        //val index = sizes.size/2 // ~medium resolution
+        val index = if (ConfigurationInfo(this).isFullFrame) 0 else sizes.size/2
         for (size in sizes) {
             Log.d(TAG, "width: ${size.width}, height: ${size.height}")
         }

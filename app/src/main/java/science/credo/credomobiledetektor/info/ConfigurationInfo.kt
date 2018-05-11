@@ -61,6 +61,10 @@ class ConfigurationInfo (context: Context) {
     val pauseTime: Int
         get() = parseIntPref(mContext, "pause_time", 0)
 
+    val isFullFrame: Boolean
+        get() = PreferenceManager.getDefaultSharedPreferences(mContext)
+                .getBoolean("full_frame",false)
+
 
     val isCharging: Boolean
         get() {
@@ -70,7 +74,7 @@ class ConfigurationInfo (context: Context) {
             Log.d(TAG, "BATTERY_STATUS_CHARGING: ${status == BatteryManager.BATTERY_STATUS_CHARGING}")
             Log.d(TAG, "BATTERY_STATUS_FULL: ${status == BatteryManager.BATTERY_STATUS_FULL}")
             return status == BatteryManager.BATTERY_STATUS_CHARGING ||
-                    status == BatteryManager.BATTERY_STATUS_FULL;
+                    status == BatteryManager.BATTERY_STATUS_FULL
         }
 
     val isPlugged: Boolean
