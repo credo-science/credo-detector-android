@@ -18,7 +18,6 @@ import science.credo.credomobiledetektor.detection.Hit
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.info.LocationInfo
-import science.credo.credomobiledetektor.network.NetworkInterface
 
 /**
  * Created by poznan on 18/09/2017.

@@ -1,6 +1,7 @@
 package science.credo.credomobiledetektor
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,11 +17,17 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import science.credo.credomobiledetektor.database.DataManager
+import science.credo.credomobiledetektor.database.DetectionStateWrapper
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.fragment.*
 import science.credo.credomobiledetektor.fragment.detections.DetectionContent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
+import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+import android.os.PowerManager
+import android.os.Build
+import android.provider.Settings
+
 
 const val REQUEST_SIGNUP = 1
 
@@ -34,6 +41,8 @@ class MainActivity : AppCompatActivity(),
     override fun onStartDetection() {
         ConfigurationInfo(this).isDetectionOn = true
         credoApplication().turnOnDetection()
+        DetectionStateWrapper.getLatestSession(this).clear()
+        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = System.currentTimeMillis()
     }
 
     override fun onStopDetection() {
@@ -219,12 +228,26 @@ class MainActivity : AppCompatActivity(),
         Log.d(TAG,"onResume")
         super.onResume()
         mSettingsFlag = false;
+        disableDoze()
     }
 
     override fun onPause() {
         Log.d(TAG,"onPause")
 //        restartService()
         super.onPause()
+    }
+
+    fun disableDoze() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val intent = Intent()
+            val packageName = packageName
+            val pm = getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+                intent.action = Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                intent.data = Uri.parse("package:$packageName")
+                startActivity(intent)
+            }
+        }
     }
 
     private fun startSettingsActivity() = startActivity(Intent(this, SettingsActivity::class.java))

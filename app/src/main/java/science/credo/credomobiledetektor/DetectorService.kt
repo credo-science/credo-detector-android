@@ -19,7 +19,9 @@ import android.view.WindowManager
 import android.widget.Toast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import org.jetbrains.anko.doAsync
 import science.credo.credomobiledetektor.database.DataManager
+import science.credo.credomobiledetektor.database.DetectionStateWrapper
 import science.credo.credomobiledetektor.detection.CameraSurfaceHolder
 import science.credo.credomobiledetektor.detection.Hit
 import science.credo.credomobiledetektor.events.BatteryEvent
@@ -27,7 +29,6 @@ import science.credo.credomobiledetektor.events.DetectorStateEvent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.info.PowerConnectionReceiver
-import science.credo.credomobiledetektor.network.NetworkInterface
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.messages.DetectionRequest
 import science.credo.credomobiledetektor.network.messages.PingRequest
@@ -224,21 +225,27 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
 
     private fun startPing() {
         /**
-         * Ping scheduler.
-         */
-        scheduler.scheduleAtFixedRate({
-            //@TODO send ping
-//            NetworkInterface.getInstance(this).sendPing()
-//            ServerInterface.getDefault().ping(PingRequest(0, System.currentTimeMillis()))
-        }, 0, 60, TimeUnit.MINUTES)
-        /**
          * Detection synchronization scheduler.
          */
+
+        // TODO: when send JSON is not possible (i.e. no internet connection) then store json try to send stored JSONs in schedule
+
+        /*
         scheduler.scheduleAtFixedRate({
 //            NetworkInterface.getInstance(this).sendHitsToNetwork()
             val hits: MutableList<Hit> = DataManager.getInstance(this).getHits()
             val deviceInfo = IdentityInfo.getInstance(this).getIdentityData()
-            ServerInterface.getDefault(this).sendDetections(DetectionRequest(hits, deviceInfo))
+            val pingRequest = PingRequest.build(System.currentTimeMillis(), deviceInfo, DetectionStateWrapper.getLatestPing(this))
+
+            /*doAsync {
+                ServerInterface.getDefault(applicationContext).ping(pingRequest)
+            }*/
+
+            if (hits.size > 0) {
+                doAsync {
+                    ServerInterface.getDefault(applicationContext).sendDetections(DetectionRequest(hits, deviceInfo))
+                }
+            }
         }, 0, 10, TimeUnit.MINUTES)
         /**
          * Database cleanup scheduler

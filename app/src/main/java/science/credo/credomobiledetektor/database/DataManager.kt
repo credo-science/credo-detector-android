@@ -1,12 +1,16 @@
 package science.credo.credomobiledetektor.database
 
 import android.content.Context
+import android.content.ServiceConnection
 import android.util.Log
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
 import science.credo.credomobiledetektor.detection.Hit
+import science.credo.credomobiledetektor.info.IdentityInfo
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.messages.DetectionRequest
 
 /**
  * Database management class.
@@ -249,5 +253,13 @@ class DataManager private constructor(context: Context) {
      */
     fun isUploaded(state: Boolean): PultusORMCondition {
         return PultusORMCondition.Builder().eq("is_uploaded", state).build()
+    }
+
+    fun sendHitsToNetwork() {
+        val hits = getHits(false)
+        val serverInterface = ServerInterface.getDefault(mContext)
+        val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
+        val request = DetectionRequest(hits, deviceInfo)
+        serverInterface.sendDetections(request)
     }
 }

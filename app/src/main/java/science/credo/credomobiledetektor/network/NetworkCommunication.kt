@@ -19,7 +19,7 @@ import java.io.IOException
 object NetworkCommunication {
     val TAG = "NetworkCommunication"
 //    val mServiceUrl = "https://api.credo.science/"
-    val mServiceUrl = "http://145.239.92.63:8000/api/v2"
+    val mServiceUrl = "https://api.credo.science/api/v2/"
     val client: OkHttpClient = OkHttpClient()
     val JSON = MediaType.parse("application/json; charset=utf-8")
 
@@ -28,7 +28,7 @@ object NetworkCommunication {
     private fun prepareRequest(endpoint : String, token: String? = "") : Request.Builder {
         val builder = Request.Builder().url(mServiceUrl + endpoint)
 
-        if(token != "") builder.header("Authorization", "Token {$token}")
+        if(token != "") builder.header("Authorization", "Token $token")
 
         return builder
     }

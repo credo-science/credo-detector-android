@@ -1,6 +1,9 @@
 package science.credo.credomobiledetektor.detection
 
+import android.content.Context
 import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import science.credo.credomobiledetektor.database.DetectionStateWrapper
 import science.credo.credomobiledetektor.events.StatsEvent
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
@@ -14,11 +17,13 @@ class DetectionStatsManager {
     private var height = 0
     private var startDetectionTimestamp = System.currentTimeMillis()
 
-    fun updateStats(max: Long, average: Double, zeroes: Long) {
+    @Synchronized
+    fun updateStats(max: Long, average: Double, zeroes: Double) {
         statsForScreen.updateStats(max, average, zeroes)
         statsForServer.updateStats(max, average, zeroes)
     }
 
+    @Synchronized
     fun frameAchieved(width : Int, height : Int) {
         this.width = width
         this.height = height
@@ -26,17 +31,20 @@ class DetectionStatsManager {
         statsForServer.frameAchieved()
     }
 
+    @Synchronized
     fun framePerformed() {
         statsForScreen.framePerformed()
         statsForServer.framePerformed()
     }
 
+    @Synchronized
     fun hitRegistered() {
         statsForScreen.hitRegistered()
         statsForServer.hitRegistered()
     }
 
-    fun flush(force : Boolean) {
+    @Synchronized
+    fun flush(context: Context, force : Boolean) {
         val screenCondition = checkNextTimePeriod(statsForScreen.lastFlushTimestamp, 1000L)
         val serverCondition = checkNextTimePeriod(statsForServer.lastFlushTimestamp, 600000L)
 
@@ -49,9 +57,14 @@ class DetectionStatsManager {
         if (force || serverCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForServer.flush(statsEvent,  true)
-            TODO("send ping request")
-//            val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getInstance(context).getIdentityData()
-//            ServerInterface.getDefault().ping(PingRequest(statsEvent.lastHitTimestamp, System.currentTimeMillis(), deviceInfo))
+
+            val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getInstance(context).getIdentityData()
+            doAsync {
+                ServerInterface.getDefault(context).ping(PingRequest.build(System.currentTimeMillis(), deviceInfo, statsEvent))
+            }
+
+            DetectionStateWrapper.getLatestSession(context).merge(statsEvent)
+            DetectionStateWrapper.getTotal(context).merge(statsEvent)
         }
     }
 

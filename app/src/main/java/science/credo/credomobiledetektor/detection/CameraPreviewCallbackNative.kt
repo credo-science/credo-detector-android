@@ -8,14 +8,20 @@ import android.util.Base64
 import android.util.Log
 import io.github.silvaren.easyrs.tools.Nv21Image
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.HitInfo
 import science.credo.credomobiledetektor.info.LocationInfo
+import java.util.*
+import science.credo.credomobiledetektor.info.IdentityInfo
+import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.messages.DetectionRequest
 import java.io.ByteArrayOutputStream
+import java.util.*
 
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
-    private var detectionStatsManager = DetectionStatsManager()
+    //private var detectionStatsManager = DetectionStatsManager()
 
 
     private val mDataManager: DataManager = DataManager.getInstance(mContext)
@@ -25,55 +31,62 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         val TAG = "CameraPreviewClbkNative"
         val aDataSize = 24
         //val cropSize = 20
+        var detectionStatsManager: DetectionStatsManager? = null
     }
 
     val rs = RenderScript.create(mContext)
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
 
+        if (detectionStatsManager == null) {
+            detectionStatsManager = DetectionStatsManager()
+        }
+
         val config = ConfigurationInfo(mContext)
 
-        val parameters = hCamera.parameters
-        val width = parameters.previewSize.width
-        val height = parameters.previewSize.height
-        val analysisData = LongArray(aDataSize)
+        doAsync {
 
-        var loop = -1
-        detectionStatsManager.frameAchieved(width, height)
+            val parameters = hCamera.parameters
+            val width = parameters.previewSize.width
+            val height = parameters.previewSize.height
+            val analysisData = LongArray(aDataSize)
 
-        while (true) {
-            loop++
-            calcHistogram(data, analysisData, width, height, config.blackFactor)
+            var loop = -1
+            detectionStatsManager!!.frameAchieved(width, height)
+            val hits = LinkedList<Hit>()
 
-            val max = analysisData[aDataSize - 1]
-            val maxIndex = analysisData[aDataSize - 2]
-            val sum = analysisData[aDataSize - 3]
-            val zeroes = analysisData[aDataSize - 4]
-            val average: Double = sum.toDouble() / (width * height).toDouble()
+            while (true) {
+                loop++
+                calcHistogram(data, analysisData, width, height, config.blackFactor)
 
-            if (loop == 0) {
-                detectionStatsManager.updateStats(max, average, zeroes);
-            }
+                val max = analysisData[aDataSize - 1]
+                val maxIndex = analysisData[aDataSize - 2]
+                val sum = analysisData[aDataSize - 3]
+                val zeroes = analysisData[aDataSize - 4]
+                val average: Double = sum.toDouble() / (width * height).toDouble()
+                val blacks: Double = zeroes * 1000 / (width * height).toDouble()
 
-            // frames not rejected conditions
-            val averageBrightCondition = average < config.averageFactor
-            val blackPixelsCondition = (zeroes * 1000 / (width * height)) >= config.blackCount
-
-            // found Hit condition
-            val brightestPixelCondition = max > config.maxFactor
-
-
-            if (averageBrightCondition && blackPixelsCondition) {
                 if (loop == 0) {
-                    detectionStatsManager.framePerformed()
+                    detectionStatsManager!!.updateStats(max, average, blacks)
                 }
 
-                if (brightestPixelCondition) {
-                    val bitmap = yuv2bitmap(data, width, height)
-                    val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
-                    detectionStatsManager.hitRegistered()
+                // frames not rejected conditions
+                val averageBrightCondition = average < config.averageFactor
+                val blackPixelsCondition = blacks >= config.blackCount
 
-                    doAsync {
+                // found Hit condition
+                val brightestPixelCondition = max > config.maxFactor
+
+
+                if (averageBrightCondition && blackPixelsCondition) {
+                    if (loop == 0) {
+                        detectionStatsManager!!.framePerformed()
+                    }
+
+                    if (brightestPixelCondition) {
+                        val bitmap = yuv2bitmap(data, width, height)
+                        val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
+                        detectionStatsManager!!.hitRegistered()
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
@@ -82,26 +95,33 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                             HitInfo.FrameData(dataString, width, height, 0, 0, 0, 0, 0),
                             mLocationInfo.getLocationData(),
                             HitInfo.FactorData(0, 0, 0, 0),
-                            System.currentTimeMillis(),
                             false
                         )
-                        mDataManager.storeHit(hit)
+                        hits.add(hit)
 
-                        Log.d(TAG, "Image detected and stored in DB")
-
+                        fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
+                    } else {
+                        break
                     }
-
-                    fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
                 } else {
                     break
                 }
-            } else {
-                break
+            }
+
+            uiThread {
+                hCamera.addCallbackBuffer(data)
+            }
+            detectionStatsManager!!.flush(mContext, false)
+
+            if (hits.size > 0) {
+                val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
+                for (hit in hits) {
+                    mDataManager.storeHit(hit)
+                }
+                ServerInterface.getDefault(mContext)
+                    .sendDetections(DetectionRequest(hits, deviceInfo))
             }
         }
-
-        hCamera.addCallbackBuffer(data)
-        detectionStatsManager.flush(false)
     }
 
     external fun calcHistogram(
