@@ -39,6 +39,7 @@ class DetectionAdapter(
 
         holder.mHit.setImageBitmap(Bitmap.createScaledBitmap(img, img.width * scaleFactor, img.height * scaleFactor, false))
         holder.mSizeView.text = holder.mSizeView.context.getString(R.string.detections_item_size, img.width, img.height)
+        holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, holder.mItem!!.hit.mX, holder.mItem!!.hit.mY)
 
         holder.mView.setOnClickListener {
             mListener?.onListFragmentInteraction(holder.mItem)
@@ -50,10 +51,11 @@ class DetectionAdapter(
     }
 
     inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.findViewById(R.id.id)
-        val mContentView: TextView = mView.findViewById(R.id.content)
-        val mSizeView: TextView = mView.findViewById(R.id.size)
-        val mHit: ImageView = mView.findViewById(R.id.hit)
+        val mIdView: TextView = mView.pk
+        val mContentView: TextView = mView.content
+        val mSizeView: TextView = mView.size
+        val mPositionView = mView.position
+        val mHit: ImageView = mView.hit
         var mItem: DetectionContent.HitItem? = null
     }
 }

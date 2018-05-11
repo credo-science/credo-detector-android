@@ -99,6 +99,7 @@
 
 
     <string name="detections_item_size">Crop size: %1$dx%2$d</string>
+    <string name="detections_item_pos">Hit position XY: [%1$d, %2$d]</string>
 
     <string name="settings_factors_name">Algorithm factors</string>
 
