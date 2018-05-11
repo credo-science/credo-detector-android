@@ -107,7 +107,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 centerY,
                                 max.toInt(),
                                 average,
-                                blacks
+                                blacks,
+                                config.blackFactor
                         )
                         hits.add(hit)
 

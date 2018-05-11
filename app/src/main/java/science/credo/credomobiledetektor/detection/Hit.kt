@@ -23,7 +23,8 @@ class Hit (frameContent: String,
            y: Int,
            maxValue: Int,
            average: Double,
-           blacks: Double
+           blacks: Double,
+           blackThreshold: Int
            ){
     @PrimaryKey
     @AutoIncrement
@@ -57,6 +58,8 @@ class Hit (frameContent: String,
     val mAverage: Double = average
     @JsonProperty("blacks")
     val mBlacks: Double = blacks
+    @JsonProperty("black_threshold")
+    val mBlackThreshold: Int = blackThreshold
 
-    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0) {}
+    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0) {}
 }
