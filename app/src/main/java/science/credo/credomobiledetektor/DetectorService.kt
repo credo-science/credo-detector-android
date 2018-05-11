@@ -181,6 +181,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         }
         Log.d(TAG,"will use: ${sizes[index].width}, height: ${sizes[index].height}")
         parameters.setPreviewSize(sizes[index].width, sizes[index].height)
+        //parameters.previewFormat =
         mCamera?.parameters = parameters;
 
         mSurfaceView = SurfaceView(this)

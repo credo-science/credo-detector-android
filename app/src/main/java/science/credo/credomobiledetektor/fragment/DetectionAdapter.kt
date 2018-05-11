@@ -40,6 +40,9 @@ class DetectionAdapter(
         holder.mHit.setImageBitmap(Bitmap.createScaledBitmap(img, img.width * scaleFactor, img.height * scaleFactor, false))
         holder.mSizeView.text = holder.mSizeView.context.getString(R.string.detections_item_size, img.width, img.height)
         holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, holder.mItem!!.hit.mX, holder.mItem!!.hit.mY)
+        holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, holder.mItem!!.hit.mMaxValue)
+        holder.mAverageView.text = holder.mSizeView.context.getString(R.string.detections_item_average, holder.mItem!!.hit.mAverage)
+        holder.mBlacksView.text = holder.mSizeView.context.getString(R.string.detections_item_blacks, holder.mItem!!.hit.mBlacks, holder.mItem!!.hit.mBlackThreshold)
 
         holder.mView.setOnClickListener {
             mListener?.onListFragmentInteraction(holder.mItem)
@@ -54,7 +57,10 @@ class DetectionAdapter(
         val mIdView: TextView = mView.pk
         val mContentView: TextView = mView.content
         val mSizeView: TextView = mView.size
-        val mPositionView = mView.position
+        val mPositionView: TextView = mView.position
+        val mMaxView: TextView = mView.maxBright
+        val mAverageView: TextView = mView.average
+        val mBlacksView: TextView = mView.blacks
         val mHit: ImageView = mView.hit
         var mItem: DetectionContent.HitItem? = null
     }

@@ -100,6 +100,9 @@
 
     <string name="detections_item_size">Crop size: %1$dx%2$d</string>
     <string name="detections_item_pos">Hit position XY: [%1$d, %2$d]</string>
+    <string name="detections_item_max">Brightest: %1$d</string>
+    <string name="detections_item_average">Average: %1$.1f</string>
+    <string name="detections_item_blacks">Blacks: %1$.1f&#8240; (%2$d)</string>
 
     <string name="settings_factors_name">Algorithm factors</string>
 
