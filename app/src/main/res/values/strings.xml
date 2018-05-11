@@ -93,6 +93,7 @@
     <string name="status_fragment_battery_nocharge">no</string>
     <string name="status_fragment_level">Battery:</string>
     <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_orientation">Azimuth:</string>
     <string name="status_fragment_acc">Acc.:</string>
     <string name="status_fragment_hit">Hit:</string>
     <string name="status_fragment_black">Blacks:</string>
@@ -103,6 +104,8 @@
     <string name="detections_item_max">Brightest: %1$d</string>
     <string name="detections_item_average">Average: %1$.1f</string>
     <string name="detections_item_blacks">Blacks: %1$.1f&#8240; (%2$d)</string>
+    <string name="detections_item_acc">Gravity: X:%1$.1f Y:%2$.1f Z:%3$.1f</string>
+    <string name="detections_item_orientation">Azimuth: %1$.1f°</string>
 
     <string name="settings_factors_name">Algorithm factors</string>
 

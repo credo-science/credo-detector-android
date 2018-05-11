@@ -1,6 +1,7 @@
 package science.credo.credomobiledetektor.network
 
 import android.content.Context
+import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import okhttp3.Response
@@ -55,6 +56,10 @@ class ServerInterface (val context: Context) {
      */
     private fun throwError(response: NetworkCommunication.Response) : Exception {
         val message = extractJsonMessage(response.message)
+
+        if ((response.code in 200..299).not()) {
+            Log.w("network", "Code: ${response.code}\n${response.message}")
+        }
 
         return when(response.code) {
             400 -> BadRequestException(message)

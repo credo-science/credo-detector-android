@@ -101,8 +101,8 @@ class StatusFragment : Fragment() {
         }
 
         level_text.text = "%d%%".format(batteryState.batteryPct)
-        temperature_text.text = "%d °C".format(detectorState.temperature)
-        acc_text.text = "X:%d Y:%d Z:%d".format(detectorState.accX, detectorState.accY, detectorState.accZ)
+        orientation_text.text = "%.2f°".format(detectorState.orientation)
+        acc_text.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
     }
 
     override fun onResume() {

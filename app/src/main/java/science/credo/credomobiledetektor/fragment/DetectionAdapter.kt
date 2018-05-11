@@ -37,12 +37,16 @@ class DetectionAdapter(
             scaleFactor *= 2
         }
 
+        val hit = holder.mItem!!.hit
+
         holder.mHit.setImageBitmap(Bitmap.createScaledBitmap(img, img.width * scaleFactor, img.height * scaleFactor, false))
         holder.mSizeView.text = holder.mSizeView.context.getString(R.string.detections_item_size, img.width, img.height)
-        holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, holder.mItem!!.hit.mX, holder.mItem!!.hit.mY)
-        holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, holder.mItem!!.hit.mMaxValue)
-        holder.mAverageView.text = holder.mSizeView.context.getString(R.string.detections_item_average, holder.mItem!!.hit.mAverage)
-        holder.mBlacksView.text = holder.mSizeView.context.getString(R.string.detections_item_blacks, holder.mItem!!.hit.mBlacks, holder.mItem!!.hit.mBlackThreshold)
+        holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, hit.mX, hit.mY)
+        holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, hit.mMaxValue)
+        holder.mAverageView.text = holder.mSizeView.context.getString(R.string.detections_item_average, hit.mAverage)
+        holder.mBlacksView.text = holder.mSizeView.context.getString(R.string.detections_item_blacks, hit.mBlacks, hit.mBlackThreshold)
+        holder.mAccView.text = holder.mSizeView.context.getString(R.string.detections_item_acc, hit.mAx, hit.mAy, hit.mAz)
+        holder.mOrientationView.text = holder.mSizeView.context.getString(R.string.detections_item_orientation, hit.mOrientation)
 
         holder.mView.setOnClickListener {
             mListener?.onListFragmentInteraction(holder.mItem)
@@ -61,6 +65,8 @@ class DetectionAdapter(
         val mMaxView: TextView = mView.maxBright
         val mAverageView: TextView = mView.average
         val mBlacksView: TextView = mView.blacks
+        val mAccView: TextView = mView.acc
+        val mOrientationView: TextView = mView.orientation
         val mHit: ImageView = mView.hit
         var mItem: DetectionContent.HitItem? = null
     }

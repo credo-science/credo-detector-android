@@ -1,5 +1,6 @@
 package science.credo.credomobiledetektor.detection
 
+import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.Camera
@@ -7,6 +8,7 @@ import android.util.Base64
 import android.util.Log
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import science.credo.credomobiledetektor.CredoApplication
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.IdentityInfo
@@ -36,6 +38,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         val config = ConfigurationInfo(mContext)
+        val sensorsState = (mContext.applicationContext as CredoApplication).detectorState
 
         doAsync {
 
@@ -108,7 +111,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 max.toInt(),
                                 average,
                                 blacks,
-                                config.blackFactor
+                                config.blackFactor,
+                                sensorsState.accX,
+                                sensorsState.accY,
+                                sensorsState.accZ,
+                                sensorsState.orientation,
+                                sensorsState.temperature
                         )
                         hits.add(hit)
 

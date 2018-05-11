@@ -24,7 +24,12 @@ class Hit (frameContent: String,
            maxValue: Int,
            average: Double,
            blacks: Double,
-           blackThreshold: Int
+           blackThreshold: Int,
+           ax: Float,
+           ay: Float,
+           az: Float,
+           orientation: Float,
+           temperature: Int
            ){
     @PrimaryKey
     @AutoIncrement
@@ -60,6 +65,16 @@ class Hit (frameContent: String,
     val mBlacks: Double = blacks
     @JsonProperty("black_threshold")
     val mBlackThreshold: Int = blackThreshold
+    @JsonProperty("ax")
+    val mAx: Float = ax
+    @JsonProperty("ay")
+    val mAy: Float = ay
+    @JsonProperty("az")
+    val mAz: Float = az
+    @JsonProperty("orientation")
+    val mOrientation: Float = orientation
+    @JsonProperty("temperature")
+    val mTemperature: Int = temperature
 
-    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0) {}
+    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
 }

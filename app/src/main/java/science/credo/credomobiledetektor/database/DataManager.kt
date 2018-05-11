@@ -27,7 +27,7 @@ class DataManager private constructor (context: Context){
     val mCachedHitDBFileName = "cached.hit.db"
     val mHitDBFileName = "hit.db"
     val mKeyValueFileName = "keyvalue.db"
-    val mDbSchema = "0.3"
+    val mDbSchema = "0.4"
 
 
 

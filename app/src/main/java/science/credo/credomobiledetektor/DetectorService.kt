@@ -85,8 +85,10 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         val accelerometerSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+        val orientationSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ORIENTATION)
         mSensorManager?.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
         mSensorManager?.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        mSensorManager?.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
         PreferenceManager.getDefaultSharedPreferences(applicationContext).registerOnSharedPreferenceChangeListener(this)
 
@@ -277,11 +279,13 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
 
     override fun onSensorChanged(event: SensorEvent?) {
         if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
-            state.accX = event.values[0].toInt()
-            state.accY = event.values[1].toInt()
-            state.accZ = event.values[2].toInt()
+            state.accX = event.values[0]
+            state.accY = event.values[1]
+            state.accZ = event.values[2]
         } else if (event?.sensor?.type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             state.temperature = event.values[0].toInt()
+        } else if (event?.sensor?.type == Sensor.TYPE_ORIENTATION) {
+            state.orientation = event.values[0]
         }
         //startStopOnConditionChange()
         //emitStateChange()
