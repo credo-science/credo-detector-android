@@ -27,7 +27,7 @@ class DataManager private constructor (context: Context){
     val mCachedHitDBFileName = "cached.hit.db"
     val mHitDBFileName = "hit.db"
     val mKeyValueFileName = "keyvalue.db"
-
+    val mDbSchema = "0.2"
 
 
 
@@ -73,8 +73,8 @@ class DataManager private constructor (context: Context){
         val schema_key = "database_schema_version"
         if (SI) openKeyValueDb()
         val storedDbSchema: String? = get(schema_key)
-        Log.d(TAG, "DBSchema: $storedDbSchema, resources schema: 0.1")
-        if (storedDbSchema != "0.1") {
+        Log.d(TAG, "DBSchema: $storedDbSchema, resources schema: $mDbSchema")
+        if (storedDbSchema != mDbSchema) {
             Log.d(TAG, "resetting schema")
             if (SI) {
                 openHitDb()
@@ -86,7 +86,7 @@ class DataManager private constructor (context: Context){
                 closeHitDb()
                 closeCachedHitDb()
             }
-            put(schema_key, "0.1")
+            put(schema_key, mDbSchema)
         }
         if (SI) closeKeyValueDb()
         return this
