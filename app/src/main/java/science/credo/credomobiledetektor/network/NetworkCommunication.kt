@@ -1,11 +1,15 @@
 package science.credo.credomobiledetektor.network
 
+import android.content.Context
 import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.MediaType
+import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.database.UserInfoWrapper
+import science.credo.credomobiledetektor.network.exceptions.InternalServerErrorException
+import science.credo.credomobiledetektor.network.exceptions.ServerException
 import java.io.IOException
 
 /**
@@ -18,22 +22,22 @@ import java.io.IOException
  */
 object NetworkCommunication {
     val TAG = "NetworkCommunication"
-//    val mServiceUrl = "https://api.credo.science/"
+    //    val mServiceUrl = "https://api.credo.science/"
     val mServiceUrl = "https://api.credo.science/api/v2/"
     val client: OkHttpClient = OkHttpClient()
     val JSON = MediaType.parse("application/json; charset=utf-8")
 
     data class Response(val code: Int, val message: String) {}
 
-    private fun prepareRequest(endpoint : String, token: String? = "") : Request.Builder {
+    private fun prepareRequest(endpoint: String, token: String? = ""): Request.Builder {
         val builder = Request.Builder().url(mServiceUrl + endpoint)
 
-        if(token != "") builder.header("Authorization", "Token $token")
+        if (token != "") builder.header("Authorization", "Token $token")
 
         return builder
     }
 
-    private fun prepareResponse(request: Request) : Response {
+    private fun prepareResponse(request: Request): Response {
         return try {
             val response = client.newCall(request).execute()
             val responseString = response.body()?.string() ?: ""
@@ -49,7 +53,7 @@ object NetworkCommunication {
      * @param endpoint Endpoint that receives the request.
      * @return Response object
      */
-    fun get(endpoint : String, token: String? = ""): Response {
+    fun get(endpoint: String, token: String? = ""): Response {
         return prepareResponse(prepareRequest(endpoint, token).build())
     }
 
@@ -62,7 +66,7 @@ object NetworkCommunication {
      */
     fun post(endpoint: String, json: String, token: String? = ""): Response {
         return prepareResponse(
-                prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
+            prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
         )
     }
 }

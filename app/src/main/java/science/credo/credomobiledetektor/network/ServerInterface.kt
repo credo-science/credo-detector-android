@@ -108,17 +108,30 @@ class ServerInterface(val context: Context) {
     fun ping(request: PingRequest) {
         try {
             return sendAndGetNoContent("/ping", request)
-        } catch (e: IOException) {
-            cacheMessage("/ping", request)
+        } catch (e: Exception) {
+            when (e) {
+                is IOException,
+                is InternalServerErrorException,
+                is ServerException -> {
+                    cacheMessage("/ping", request)
+                }
+            }
         }
     }
 
-    fun sendDetections(request: DetectionRequest) {
+    fun sendDetections(request: DetectionRequest): DetectionResponse {
         try {
             return sendAndGetResponse("/detection", request)
-        } catch (e: IOException) {
-            cacheMessage("/detection", request)
+        } catch (e: Exception) {
+            when (e) {
+                is IOException,
+                is InternalServerErrorException,
+                is ServerException -> {
+                    cacheMessage("/detection", request)
+                }
+            }
         }
+        return DetectionResponse(mutableListOf(StoredDetectionEntity(0)))
     }
 
     fun cacheMessage(endpoint: String, request: Any) {

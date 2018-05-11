@@ -12,6 +12,7 @@ import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.NetworkCommunication
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.messages.DetectionRequest
+import science.credo.credomobiledetektor.network.messages.DetectionResponse
 
 /**
  * Database management class.
@@ -187,9 +188,9 @@ class DataManager private constructor(context: Context) {
     }
 
     fun storeCachedMessage(message: CachedMessage) {
-        if(SI) openCachedMessagesDb()
+        if (SI) openCachedMessagesDb()
         mCachedMessagesDb!!.save(message)
-        if(SI) closeCachedMessagesDb()
+        if (SI) closeCachedMessagesDb()
     }
 
     /**
@@ -285,7 +286,7 @@ class DataManager private constructor(context: Context) {
         val serverInterface = ServerInterface.getDefault(mContext)
         val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
         val request = DetectionRequest(hits, deviceInfo)
-        serverInterface.sendDetections(request)
+        val response = serverInterface.sendDetections(request)
     }
 
     fun flushCachedMessages() {
