@@ -7,7 +7,7 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "science.credo.credomobiledetektor"
-        minSdkVersion 16
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 5
         versionName "1.0"
@@ -85,7 +85,6 @@ dependencies {
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     implementation 'ninja.sakib:PultusORM:v1.5'
     implementation 'com.android.support:recyclerview-v7:27.1.1'
-    implementation 'io.github.silvaren:easyrs:0.5.3'
     implementation 'org.greenrobot:eventbus:3.1.1'
     testImplementation 'junit:junit:4.12'
     implementation "ch.acra:acra-http:$acraVersion"
