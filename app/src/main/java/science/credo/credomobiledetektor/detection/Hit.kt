@@ -18,7 +18,12 @@ class Hit (frameContent: String,
            accuracy: Float,
            provider: String,
            width: Int,
-           height: Int
+           height: Int,
+           x: Int,
+           y: Int,
+           maxValue: Int,
+           average: Double,
+           blacks: Double
            ){
     @PrimaryKey
     @AutoIncrement
@@ -42,7 +47,16 @@ class Hit (frameContent: String,
     val mHeight: Int = height
     @JsonProperty("width")
     val mWidth: Int = width
+    @JsonProperty("x")
+    val mX: Int = x
+    @JsonProperty("y")
+    val mY: Int = y
+    @JsonProperty("max")
+    val mMaxValue: Int = maxValue
+    @JsonProperty("average")
+    val mAverage: Double = average
+    @JsonProperty("blacks")
+    val mBlacks: Double = blacks
 
-
-    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0) {}
+    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0) {}
 }

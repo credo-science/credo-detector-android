@@ -102,8 +102,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 location.accuracy,
                                 location.provider,
                                 width,
-                                height
-
+                                height,
+                                centerX,
+                                centerY,
+                                max.toInt(),
+                                average,
+                                blacks
                         )
                         hits.add(hit)
 

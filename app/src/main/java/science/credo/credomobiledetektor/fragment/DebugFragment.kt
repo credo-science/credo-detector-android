@@ -73,7 +73,7 @@ class DebugFragment : Fragment() {
         butgen.setOnClickListener {
             Log.d(TAG, "generate button pressed")
             ///val hit = Hit((++hitCounter).toString(), "PICTURE$hitCounter")
-            val hit = Hit("FRAME_CONTENT", System.currentTimeMillis(),12344.0,13444.0,3242134.0,1234.0f,"GSM",100,100)
+            val hit = Hit("FRAME_CONTENT", System.currentTimeMillis(),12344.0,13444.0,3242134.0,1234.0f,"GSM",100,100, 0, 0, 0, 0.0, 0.0)
             dataManager.storeHit(hit)
             postUpdate(tv, dataManager)
         }
