@@ -85,8 +85,7 @@ class DebugFragment : Fragment() {
             val hit = Hit(
                 HitInfo.FrameData("FRAME_CONTENT", 0, 0, 0, 0, 0, 0, 0),
                 LocationInfo.LocationData(12344.0, 13444.0, 3242134.0, 1234.0f, "GSM", 0),
-                HitInfo.FactorData(0, 0, 0, 0),
-                false
+                HitInfo.FactorData(0, 0, 0, 0)
             )
             dataManager.storeHit(hit)
             postUpdate(tv, dataManager)
@@ -106,7 +105,7 @@ class DebugFragment : Fragment() {
         }
         butclr.setOnClickListener {
             Log.d(TAG, "clear db pressed")
-            val hits = dataManager.getHits(false)
+            val hits = dataManager.getHits()
             for (hit in hits) {
                 dataManager.removeHit(hit)
             }
@@ -114,7 +113,7 @@ class DebugFragment : Fragment() {
         }
         butcclr.setOnClickListener {
             Log.d(TAG, "clear cached db pressed")
-            val hits = dataManager.getHits(true)
+            val hits = dataManager.getCachedHits()
             for (hit in hits) {
                 dataManager.removeHit(hit)
             }

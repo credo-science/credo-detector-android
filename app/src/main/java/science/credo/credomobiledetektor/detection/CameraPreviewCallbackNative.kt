@@ -94,8 +94,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                             //@TODO add missing data
                             HitInfo.FrameData(dataString, width, height, 0, 0, 0, 0, 0),
                             mLocationInfo.getLocationData(),
-                            HitInfo.FactorData(0, 0, 0, 0),
-                            false
+                            HitInfo.FactorData(0, 0, 0, 0)
                         )
                         hits.add(hit)
 

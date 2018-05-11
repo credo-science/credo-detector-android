@@ -18,8 +18,8 @@ object DetectionContent {
 
     fun initContent(ctx: Context) {
         val dm = DataManager.getInstance(ctx)
-        val hits = dm.getHits(false)
-        val cHits = dm.getHits(true)
+        val hits = dm.getHits()
+        val cHits = dm.getCachedHits()
         var number = 0
 
         ITEMS.clear()

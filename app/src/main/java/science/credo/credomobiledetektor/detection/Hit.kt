@@ -13,11 +13,10 @@ import science.credo.credomobiledetektor.info.LocationInfo
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 
-class Hit(
-    frameInfo: HitInfo.FrameData,
-    locationInfo: LocationInfo.LocationData,
-    factorInfo: HitInfo.FactorData,
-    isUploaded: Boolean
+open class Hit(
+    val frameInfo: HitInfo.FrameData,
+    val locationInfo: LocationInfo.LocationData,
+    val factorInfo: HitInfo.FactorData
 ) {
     @PrimaryKey
     @AutoIncrement
@@ -25,9 +24,6 @@ class Hit(
     var id: Int = 0
     @JsonProperty("timestamp")
     val mTimestamp: Long = locationInfo.timestamp
-    @JsonProperty("is_uploaded")
-    var mIsUploaded: Boolean = isUploaded
-
     // Location information
     @JsonProperty("latitude")
     val mLatitude: Double = locationInfo.latitude
@@ -79,7 +75,6 @@ class Hit(
     constructor() : this(
         HitInfo.FrameData("", 0, 0, 0, 0, 0, 0, 0),
         LocationInfo.LocationData(0.0, 0.0, 0.0, 0f, "", 0),
-        HitInfo.FactorData(0, 0, 0, 0),
-        false
+        HitInfo.FactorData(0, 0, 0, 0)
     )
 }

@@ -1,14 +1,15 @@
 package science.credo.credomobiledetektor.database
 
 import android.content.Context
-import android.content.ServiceConnection
 import android.util.Log
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
+import science.credo.credomobiledetektor.detection.CachedHit
 import science.credo.credomobiledetektor.detection.Hit
 import science.credo.credomobiledetektor.info.IdentityInfo
+import science.credo.credomobiledetektor.network.NetworkCommunication
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.messages.DetectionRequest
 
@@ -21,13 +22,15 @@ import science.credo.credomobiledetektor.network.messages.DetectionRequest
  */
 class DataManager private constructor(context: Context) {
     val mContext = context
+    var mAppPath: String = context.getFilesDir().getAbsolutePath()
 
     var mHitsDb: PultusORM? = null
     var mKeyValueDb: PultusORM? = null
-    var mAppPath: String = context.getFilesDir().getAbsolutePath()
+    var mCachedMessagesDb: PultusORM? = null
 
     val mHitsDBFileName = "hits.db"
     val mKeyValueFileName = "keyvalue.db"
+    val mCachedMessagesFileName = "cachedMessages.db"
 
     companion object {
         val TAG = "DataManager"
@@ -65,6 +68,10 @@ class DataManager private constructor(context: Context) {
         mKeyValueDb = PultusORM(mKeyValueFileName, mAppPath)
     }
 
+    private fun openCachedMessagesDb() {
+        mCachedMessagesDb = PultusORM(mCachedMessagesFileName, mAppPath)
+    }
+
     /**
      * Closes hits database.
      */
@@ -77,6 +84,10 @@ class DataManager private constructor(context: Context) {
      */
     private fun closeKeyValueDb() {
         mKeyValueDb?.close()
+    }
+
+    private fun closeCachedMessagesDb() {
+        mCachedMessagesDb?.close()
     }
 
     /**
@@ -175,6 +186,12 @@ class DataManager private constructor(context: Context) {
         if (SI) closeDb()
     }
 
+    fun storeCachedMessage(message: CachedMessage) {
+        if(SI) openCachedMessagesDb()
+        mCachedMessagesDb!!.save(message)
+        if(SI) closeCachedMessagesDb()
+    }
+
     /**
      * Removes hit from Hits database.
      *
@@ -187,28 +204,46 @@ class DataManager private constructor(context: Context) {
     }
 
     /**
-     * Retrieves detected or cached hits from the database.
+     * Retrieves detected hits from the database.
      *
-     * @param uploaded determines what to returns - if true - returns cached (already synchronized) results, if false - returns detections to be synchronized.
      * @return MutableList<Hit> list containing found Hit objects.
      */
-    fun getHits(uploaded: Boolean): MutableList<Hit> {
+    fun getHits(): MutableList<Hit> {
         if (SI) openHitsDb()
-        val hits = mHitsDb!!.find(Hit(), isUploaded(uploaded)) as MutableList<Hit>
+        val hits = mHitsDb!!.find(Hit()) as MutableList<Hit>
         if (SI) closeHitsDb()
         return hits
+    }
+
+    fun getCachedHits(): MutableList<CachedHit> {
+        if (SI) openHitsDb()
+        val hits = mHitsDb!!.find(CachedHit()) as MutableList<CachedHit>
+        if (SI) closeHitsDb()
+        return hits
+    }
+
+    fun getCachedMessages(): MutableList<CachedMessage> {
+        if (SI) openCachedMessagesDb()
+        val msgs = mCachedMessagesDb!!.find(CachedMessage()) as MutableList<CachedMessage>
+        if (SI) closeCachedMessagesDb()
+        return msgs
     }
 
     /**
      * Returns count of detected hits.
      */
-    // @TODO fix
     fun getHitsNumber(): Long {
-        return 0
-//        if (SI) openHitsDb()
-//        val number = mHitsDb!!.count(Hit())
-//        if (SI) closeDb()
-//        return number
+        if (SI) openHitsDb()
+        val number = mHitsDb!!.count(Hit())
+        if (SI) closeDb()
+        return number
+    }
+
+    fun getCachedHitsNumber(): Long {
+        if (SI) openHitsDb()
+        val number = mHitsDb!!.count(CachedHit())
+        if (SI) closeDb()
+        return number
     }
 
     /**
@@ -217,17 +252,8 @@ class DataManager private constructor(context: Context) {
      * @param hit Hit object to be stored.
      */
     fun storeCachedHit(hit: Hit) {
-        hit.mIsUploaded = true
-        storeHit(hit)
-    }
-
-    // @TODO fix
-    fun getCachedHitsNumber(): Long {
-        return 0
-//        if (SI) openCachedHitDb()
-//        val number = mCachedHitDb!!.count(Hit())
-//        if (SI) closeCachedHitDb()
-//        return number
+        val cachedHit = CachedHit(hit.frameInfo, hit.locationInfo, hit.factorInfo)
+        storeHit(cachedHit)
     }
 
     /**
@@ -237,29 +263,40 @@ class DataManager private constructor(context: Context) {
         if (SI) openHitsDb()
         val treshhold = System.currentTimeMillis() - TRIMPERIOD_HITS
         val hits = mHitsDb!!.find(Hit()) as MutableList<Hit>
+        val cachedHits = mHitsDb!!.find(CachedHit()) as MutableList<CachedHit>
+
         for (hit in hits) {
             if (hit.mTimestamp < treshhold) {
                 mHitsDb!!.delete(hit)
             }
         }
+
+        for (hit in cachedHits) {
+            if (hit.mTimestamp < treshhold) {
+                mHitsDb!!.delete(hit)
+            }
+        }
+
         if (SI) closeHitsDb()
     }
 
-    /**
-     * Helper function.
-     *
-     * @param state which upload state to look for.
-     * @return PultusORMCondition object used to narrow results based on is_uploaded column (determines if hit needs to be synchronized or if is already cached).
-     */
-    fun isUploaded(state: Boolean): PultusORMCondition {
-        return PultusORMCondition.Builder().eq("is_uploaded", state).build()
-    }
-
     fun sendHitsToNetwork() {
-        val hits = getHits(false)
+        val hits = getHits()
         val serverInterface = ServerInterface.getDefault(mContext)
         val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
         val request = DetectionRequest(hits, deviceInfo)
         serverInterface.sendDetections(request)
+    }
+
+    fun flushCachedMessages() {
+        val msgs = getCachedMessages()
+        openCachedMessagesDb()
+        for (msg in msgs) {
+            val response = NetworkCommunication.post(msg.mEndpoint, msg.mMessage, msg.mToken)
+            when (response.code) {
+                in 200..299 -> mCachedMessagesDb!!.delete(msg)
+            }
+        }
+        closeCachedMessagesDb()
     }
 }
