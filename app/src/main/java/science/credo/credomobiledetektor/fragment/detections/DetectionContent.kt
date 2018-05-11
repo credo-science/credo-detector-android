@@ -25,10 +25,10 @@ object DetectionContent {
         ITEMS.clear()
         ITEM_MAP.clear()
 
-        for (hit in hits) {
+        for (hit in cHits.reversed()) {
             addItem(createHitItem(hit, ++number))
         }
-        for (hit in cHits) {
+        for (hit in hits.reversed()) {
             addItem(createHitItem(hit, ++number))
         }
     }
@@ -42,7 +42,7 @@ object DetectionContent {
         return DateFormat.format(dateInMilliseconds)
     }
     private fun createHitItem(hit: Hit, number: Int): HitItem {
-        return HitItem("$number (${hit.mTimestamp})", convertDate(hit.mTimestamp), hit.mFrameContent)
+        return HitItem("$number (${hit.mTimestamp})", convertDate(hit.mTimestamp), hit.mFrameContent, hit)
     }
 
     private fun makeDetails(context: Context, position: Int): String {
@@ -54,7 +54,7 @@ object DetectionContent {
         return builder.toString()
     }
 
-    class HitItem(val id: String, val content: String, val frame: String) {
+    class HitItem(val id: String, val content: String, val frame: String, val hit: Hit) {
 
         override fun toString(): String {
             return content
