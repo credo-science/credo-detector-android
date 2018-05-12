@@ -15,7 +15,7 @@ class LauncherActivity : AppCompatActivity() {
         var activityIntent = Intent()
 
         if(check == null){
-            activityIntent = Intent(this, LoginActivity::class.java)
+            activityIntent = Intent(this, StartActivity::class.java)
         }
         else{
             activityIntent = Intent(this, MainActivity::class.java)

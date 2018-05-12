@@ -66,6 +66,7 @@
         -->
 
         <activity android:name=".ResetPasswordActivity"></activity>
+        <activity android:name=".StartActivity"></activity>
     </application>
 
 </manifest>
