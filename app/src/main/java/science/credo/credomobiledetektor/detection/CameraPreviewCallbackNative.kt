@@ -109,8 +109,6 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         detectionStatsManager.flush(false)
     }
 
-    external fun calcHistogram (data: ByteArray, analysisData: LongArray, width: Int, height: Int, black: Int)
-
     fun yuv2bitmap (data: ByteArray, width: Int, height: Int) : Bitmap {
         return Nv21Image.nv21ToBitmap(rs, data, width,height)
     }
@@ -178,6 +176,44 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             }
         }
 
+    }
+
+    fun calcHistogram(data: ByteArray, analysisData: LongArray, width: Int, height: Int, black: Int){
+        val analysisDataLength = analysisData.size
+
+        var histoLength : Int = analysisDataLength - 4
+        var slotSize : Int = 255 / histoLength
+
+        var maxIndex : Long = 0
+        var sum : Long = 0
+        var zeros : Long = 0
+
+        var max : Byte = 0
+        var value : Byte = 0
+
+        for(i in 0 .. histoLength-1 step 1){
+            analysisData[i] = 0
+        }
+        for(i in 0 .. width*height step 1){
+            value = data.get(i)
+
+            //with Histogram calculation version
+            if(value > 0.toByte()){
+                sum += value
+                if( value > max ){
+                    max = value
+                    maxIndex = i.toLong()
+                }
+                analysisData[value / slotSize]++
+            }
+            if (value <= black) {
+                zeros++
+            }
+        }
+        analysisData[analysisDataLength-1] = max.toLong()
+        analysisData[analysisDataLength-2] = maxIndex
+        analysisData[analysisDataLength-3] = sum
+        analysisData[analysisDataLength-4] = zeros
     }
 
 }
