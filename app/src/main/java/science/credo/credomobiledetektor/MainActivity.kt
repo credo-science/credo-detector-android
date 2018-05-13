@@ -27,6 +27,7 @@ import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
+import science.credo.credomobiledetektor.database.ConfigurationWrapper
 
 
 const val REQUEST_SIGNUP = 1
@@ -161,6 +162,7 @@ class MainActivity : AppCompatActivity(),
                 //startRegisterActivity()
                 UserInfoWrapper(this).token = ""
                 setResult(Activity.RESULT_OK)
+                ConfigurationWrapper(this).endpoint = ConfigurationWrapper.defaultEndpoint
                 finish()
                 true
             }

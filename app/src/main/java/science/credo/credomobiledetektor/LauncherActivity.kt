@@ -30,7 +30,7 @@ class LauncherActivity : AppCompatActivity() {
         }
 
         register_button.onClick {
-            startActivityForResult(Intent(this@LauncherActivity, SignupActivity::class.java), REQUEST_SIGN)
+            startActivityForResult(Intent(this@LauncherActivity, RegisterActivity::class.java), REQUEST_SIGN)
         }
 
         remember_password_button.onClick {

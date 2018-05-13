@@ -19,7 +19,7 @@
     <string name="title_settings">تنظیمات</string>
     <string name="title_information">وب سایت</string>
     <string name="title_activity_settings">تنظیمات</string>
-    <string name="title_activity_register">ثبت نام</string>
+    <string name="login_title_activity">ثبت نام</string>
 
     <string name="title_register">ثبت نام</string>
     <string name="msg_no_network_connection">اتصال به شبکه موجود نیست</string>

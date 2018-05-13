@@ -140,12 +140,9 @@
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
 
 
-
-    <string name="title_activity_login">Sign in</string>
     <string name="input_email">Email</string>
     <string name="action_logout">Logout</string>
 
-    <string name="title_activity_register">Sign up</string>
     <string name="action_register">Create Account</string>
     <string name="link_signin">Already a member? Login</string>
 
@@ -161,6 +158,7 @@
     <string name="launcher_toast_debug_activated">Yeah, debug mode are activated :)</string>
 
     <!-- Login Activity -->
+    <string name="login_title_activity">Login</string>
     <string name="login_text_logo">@string/launcher_text_logo</string>
     <string name="login_input_login">Login or e-mail</string>
     <string name="login_input_password">Password</string>
@@ -172,4 +170,29 @@
     <string name="login_message_login_pending">Authenticating&#8230;</string>
     <string name="login_message_validation_failed">Validation failed</string>
 
+    <!-- Register Activity -->
+    <string name="register_title_activity">Register</string>
+    <string name="register_text_logo">@string/launcher_text_logo</string>
+    <string name="register_input_login">Login</string>
+    <string name="register_input_email">E-mail</string>
+    <string name="register_input_password">@string/login_input_password</string>
+    <string name="register_input_confirm">Confirm password</string>
+    <string name="register_input_display_name">Display name</string>
+    <string name="register_input_team">Team</string>
+    <string name="register_input_language">Language</string>
+    <string name="register_input_accept_rules">Accept rules</string>
+    <string name="register_button_view_rules">(view rules)</string>
+    <string name="register_button_register">Register</string>
+    <string name="register_input_login_validation">at least 3 characters</string>
+    <string name="register_input_email_validation">enter valid email address</string>
+    <string name="register_input_password_validation">between 4 and 10 alphanumeric characters</string>
+    <string name="register_input_password2_validation">password not match</string>
+    <string name="register_input_accept_rules_validation">You must read and accept rules</string>
+    <string name="register_toast_register_failed">Create account failed</string>
+    <string name="register_message_register_pending">Creating account&#8230;</string>
+    <string name="register_message_validation_failed">Validation failed</string>
+
+    <!-- Register Activity -->
+    <string name="rules_title_activity">Rules</string>
+    <string name="rules_content_file">rules</string>
 </resources>

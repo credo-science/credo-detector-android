@@ -20,7 +20,7 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
     <string name="title_settings">Beállítások</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Beállítások</string>
-    <string name="title_activity_register">Regisztráció</string>
+    <string name="login_title_activity">Regisztráció</string>
 
 
     <string name="title_register">Register</string>

@@ -1,29 +1,17 @@
 package science.credo.credomobiledetektor
 
 import android.app.Activity
-import android.app.Application
 import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.Patterns
-import android.view.View
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_signup.*
-import kotlinx.android.synthetic.main.fragment_status.*
-import kotlinx.coroutines.experimental.Job
-import kotlinx.coroutines.experimental.android.UI
-import kotlinx.coroutines.experimental.async
-import kotlinx.coroutines.experimental.delay
-import kotlinx.coroutines.experimental.launch
-import org.jetbrains.anko.custom.async
+import kotlinx.android.synthetic.main.activity_register.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.doAsyncResult
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.uiThread
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.info.IdentityInfo
@@ -31,27 +19,27 @@ import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
 import science.credo.credomobiledetektor.network.messages.RegisterRequest
+import java.util.*
 import java.util.concurrent.Future
-import java.util.concurrent.TimeUnit
 
-class SignupActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity() {
 
     private var registerTask: Future<Unit>? = null
     private var isClosed = false
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_signup)
+        setContentView(R.layout.activity_register)
 
-        //Signup button
-        signup_button.setOnClickListener({
+        signup_button.onClick{
             signup()
-        })
+        }
 
-        // Finish the registration screen and return to the Login activity
-        link_login.setOnClickListener({
-            finish()
-        })
+        view_rules_button.onClick {
+            startActivity(Intent(this@RegisterActivity, RulesActivity::class.java))
+        }
+
+        //language_input.setText(Locale.getDefault().language)
     }
 
     override fun onDestroy() {
@@ -60,37 +48,37 @@ class SignupActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-    fun signup() {
+    private fun signup() {
         Log.d(TAG, "Signup")
 
         if (!validate()) {
-            onSignupFailed("Validation failed")
+            onSignupFailed(getString(R.string.register_message_validation_failed))
             return
         }
 
         signup_button.setEnabled(false)
 
         // TODO: use i.e. button with progress bar instead progress dialog
-        val progressDialog = ProgressDialog(this@SignupActivity,
+        val progressDialog = ProgressDialog(this@RegisterActivity,
                 R.style.Base_Theme_AppCompat_Dialog)
         progressDialog.isIndeterminate = true
         progressDialog.setCancelable(false)
-        progressDialog.setMessage("Creating Account...")
+        progressDialog.setMessage(getString(R.string.register_message_register_pending))
         progressDialog.show()
 
         val registerRequest = RegisterRequest(
-                input_email.text.toString(),
-                input_name.text.toString(),
-                input_name.text.toString(), // TODO: display name?
-                input_password.text.toString(),
-                "noteam", // TODO: field
-                "pl",
+                email_input.text.toString(),
+                name_input.text.toString(),
+                display_name_input.text.toString(),
+                password_input.text.toString(),
+                team_input.text.toString(),
+                Locale.getDefault().language, //language_input.text.toString(),
                 IdentityInfo.getInstance(this).getIdentityData()
         )
 
         val loginRequest = LoginByUsernameRequest(
-                input_name.text.toString(),
-                input_password.text.toString(),
+                name_input.text.toString(),
+                password_input.text.toString(),
                 IdentityInfo.getInstance(this).getIdentityData()
         )
 
@@ -140,56 +128,59 @@ class SignupActivity : AppCompatActivity() {
     }
 
     private fun onSignupFailed(message:String?) {
-        Toast.makeText(baseContext, "Login failed: $message", Toast.LENGTH_LONG).show()
+        Toast.makeText(baseContext, message ?: getText(R.string.register_toast_register_failed), Toast.LENGTH_LONG).show()
         val btn_signup = findViewById<Button>(R.id.signup_button)
         btn_signup.setEnabled(true)
-        input_email.setError(message)
+        email_input.setError(message)
     }
 
-    fun validate(): Boolean {
+    private fun validate(): Boolean {
         var valid = true
 
-        //val name = findViewById<EditText>(R.id.input_name)
-        //val email = findViewById<EditText>(R.id.input_email)
-        //val password = findViewById<EditText>(R.id.input_password)
+        val nameStr = name_input.text.toString()
+        val emailStr = email_input.text.toString()
+        val passwordStr = password_input.text.toString()
+        val password2Str = password2_input.text.toString()
 
-        val nameStr = input_name.getText().toString()
-        val emailStr = input_email.getText().toString()
-        val passwordStr = input_password.getText().toString()
-        val password2Str = input_password2.getText().toString()
-
-        if (nameStr.isEmpty() || input_name.length() < 3) {
-            input_name.setError("at least 3 characters")
+        if (nameStr.isEmpty() || name_input.length() < 3) {
+            name_input.error = getText(R.string.register_input_login_validation)
             valid = false
         } else {
-            input_name.setError(null)
+            name_input.error = null
         }
 
         if (emailStr.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            input_email.setError("enter a valid email address")
+            email_input.error = getText(R.string.register_input_email_validation)
             valid = false
         } else {
-            input_email.setError(null)
+            email_input.error = null
         }
 
-        if (passwordStr.isEmpty() || input_password.length() < 4 || input_password.length() > 10) {
-            input_password.setError("between 4 and 10 alphanumeric characters")
+        if (passwordStr.isEmpty() || password_input.length() < 4 || password_input.length() > 10) {
+            password_input.error = getText(R.string.register_input_password_validation)
             valid = false
         } else {
-            input_password.setError(null)
+            password_input.error = null
         }
 
         if (passwordStr != password2Str) {
-            input_password2.setError("passwords not match")
+            password2_input.error = getText(R.string.register_input_password2_validation)
             valid = false
         } else {
-            input_password2.setError(null)
+            password2_input.error = null
+        }
+
+        if (!accept_rules_input.isChecked) {
+            accept_rules_input.error = getText(R.string.register_input_accept_rules_validation)
+            valid = false
+        } else {
+            accept_rules_input.error = null
         }
 
         return valid
     }
 
     companion object {
-        private val TAG = "SignupActivity"
+        private val TAG = "RegisterActivity"
     }
 }

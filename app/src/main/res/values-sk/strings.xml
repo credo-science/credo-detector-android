@@ -19,7 +19,7 @@
     <string name="title_settings">Nastavenia</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Nastavenia</string>
-    <string name="title_activity_register">Registrácia</string>
+    <string name="login_title_activity">Registrácia</string>
 
     <string name="title_register">Registrácia</string>
     <string name="msg_no_network_connection">žiadne sieťové pripojenie</string>

@@ -16,7 +16,7 @@
 	<string name="title_settings">Configurações</string>
 	<string name="title_information">credo.science</string>
 	<string name="title_activity_settings">Configurações</string>
-	<string name="title_activity_register">Registro</string>
+	<string name="login_title_activity">Registro</string>
 
 	<string name="title_register">Registrar</string>
 	<string name="msg_no_network_connection">sem conexão de rede</string>

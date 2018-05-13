@@ -66,18 +66,18 @@ class LoginActivity : AppCompatActivity() {
         progressDialog.setMessage(getText(R.string.login_message_login_pending))
         progressDialog.show()
 
-        val inputText = input_email.text.toString()
+        val inputText = email_input.text.toString()
 
         val loginRequest = if ('@' in inputText) {
             LoginByEmailRequest(
                     inputText,
-                    input_password.text.toString(),
+                    password_input.text.toString(),
                     IdentityInfo.getInstance(applicationContext).getIdentityData()
             )
         } else {
             LoginByUsernameRequest(
                     inputText,
-                    input_password.text.toString(),
+                    password_input.text.toString(),
                     IdentityInfo.getInstance(applicationContext).getIdentityData()
             )
         }
@@ -136,31 +136,31 @@ class LoginActivity : AppCompatActivity() {
     private fun onLoginFailed(message: String?) {
         Toast.makeText(baseContext, message ?: getText(R.string.login_toast_login_failed), Toast.LENGTH_LONG).show()
         login_button.isEnabled = true
-        input_email.error = message
+        email_input.error = message
     }
 
     private fun validate(): Boolean {
         var valid = true
 
-        val emailStr = input_email.text.toString()
-        val passwordStr = input_password.text.toString()
+        val emailStr = email_input.text.toString()
+        val passwordStr = password_input.text.toString()
 
         if (emailStr.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            if (emailStr.isEmpty() || input_email.length() < 3) {
-                input_email.error = getText(R.string.login_input_login_validation)
+            if (emailStr.isEmpty() || email_input.length() < 3) {
+                email_input.error = getText(R.string.login_input_login_validation)
                 valid = false
             } else {
-                input_email.setError(null)
+                email_input.setError(null)
             }
         } else {
-            input_email.error = null
+            email_input.error = null
         }
 
-        if (passwordStr.isEmpty() || input_password.length() < 4 || input_password.length() > 10) {
-            input_password.error = getText(R.string.login_input_password_validation)
+        if (passwordStr.isEmpty() || password_input.length() < 4 || password_input.length() > 10) {
+            password_input.error = getText(R.string.login_input_password_validation)
             valid = false
         } else {
-            input_password.error = null
+            password_input.error = null
         }
 
         return valid
