@@ -141,6 +141,7 @@
 
 
     <string name="input_email">Email</string>
+    <string name="action_account">Account</string>
     <string name="action_logout">Logout</string>
 
     <string name="action_register">Create Account</string>
@@ -196,4 +197,21 @@
     <!-- Register Activity -->
     <string name="rules_title_activity">Rules</string>
     <string name="rules_content_file">rules</string>
+
+    <!-- User account Activity -->
+    <string name="user_title_activity">User account settings</string>
+    <string name="user_input_email">@string/register_input_email</string>
+    <string name="user_input_password">Password (leave empty if you don\'t want to change)</string>
+    <string name="user_input_confirm">@string/register_input_confirm</string>
+    <string name="user_input_display_name">@string/register_input_display_name</string>
+    <string name="user_input_team">@string/register_input_team</string>
+    <string name="user_input_language">@string/register_input_language</string>
+    <string name="user_button_save">Save</string>
+    <string name="user_input_email_validation">@string/register_input_email_validation</string>
+    <string name="user_input_password_validation">@string/register_input_password_validation</string>
+    <string name="user_input_password2_validation">@string/register_input_password2_validation</string>
+    <string name="user_toast_user_failed">Save account settings failed</string>
+    <string name="user_message_user_pending">Save account settings&#8230;</string>
+    <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
+
 </resources>

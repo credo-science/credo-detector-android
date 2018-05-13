@@ -59,7 +59,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LauncherActivity" />
         </activity>
-
         <activity
             android:name=".LoginActivity"
             android:label="@string/register_title_activity"
@@ -83,13 +82,20 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LauncherActivity" />
         </activity>
-
         <activity
             android:name=".RulesActivity"
             android:label="@string/rules_title_activity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".RegisterActivity" />
+        </activity>
+        <activity
+            android:name=".UserActivity"
+            android:label="@string/user_title_activity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="science.credo.credomobiledetektor.MainActivity" />
         </activity>
     </application>
 
