@@ -6,6 +6,7 @@ import android.preference.MultiSelectListPreference
 import android.util.Log
 import android.view.MenuItem
 import android.preference.*
+import science.credo.credomobiledetektor.notifications.ExperimentReminder
 
 /**
  * Created by poznan on 19/09/2017.
@@ -44,6 +45,11 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
         Log.d(TAG, "onSharedPreferenceChanged: key: $key")
         val pref = findPreference(key)
         if (pref != null) updatePrefSummary(pref, sharedPreferences, key)
+        if (key=="reminder_notification"){
+            val onOff = sharedPreferences.getBoolean(key,false)
+            val reminder = ExperimentReminder(applicationContext)
+            reminder.scheduleAlarm(onOff)
+        }
     }
 
     protected fun initSummary(p: Preference) {

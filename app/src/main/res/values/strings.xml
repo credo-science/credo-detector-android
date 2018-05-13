@@ -12,6 +12,10 @@
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+
+    <string name="set">set</string> <!-- translate -->
+    <string name="cancel">cancel</string> <!-- translate -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_status">Status</string>
     <string name="title_statistics">Detections</string>
@@ -32,6 +36,13 @@
     <string name="stats_upload">Upload</string>
     <string name="stats_clear_db">Clear DB</string>
     <string name="stats_clear_cache_db">Clear Cache DB</string>
+
+    <string name="settings_notification_name">Notification</string> <!-- translate -->
+    <string name="settings_notification_title">Remind about project</string> <!-- translate -->
+    <string name="settings_notification_summary">Make statusbar notification at given time</string> <!-- translate -->
+
+    <string name="settings_timeremind_title">Reminder time</string> <!-- translate -->
+    <string name="settings_timeremind_summary">Sets time at which the notification will appear</string> <!-- translate -->
 
     <string name="settings_detection_name">Detection</string>
     <string name="settings_detection_title">Detect Only When Charging</string>
@@ -54,6 +65,9 @@
 
     <string name="pref_register_team_title">Team</string>
     <string name="pref_register_team_summary">Name of the team to which the user belongs</string>
+
+    <string name="alarm_scheduled">Alarm scheduled at</string>  <!-- translate -->
+    <string name="alarm_canceled">Alarm canceled</string> <!-- translate -->
 
     <string name="hit_make_details">Details about Item:</string>
     <string name="hit_make_details_foot">More details information here.</string>
