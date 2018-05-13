@@ -16,7 +16,7 @@ import java.io.ByteArrayOutputStream
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
     private var detectionStatsManager = DetectionStatsManager()
 
-    private var lastNotification = 0L
+    private var lastNotification = System.currentTimeMillis()
 
     private val mDataManager: DataManager = DataManager.getInstance(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
@@ -64,6 +64,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
 
             if (averageBrightCondition && blackPixelsCondition) {
+                lastNotification= System.currentTimeMillis()
                 if (loop == 0) {
                     detectionStatsManager.framePerformed()
                 }
@@ -102,7 +103,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                     break
                 }
             } else {
-                if(System.currentTimeMillis()-lastNotification>10000) {
+                if(System.currentTimeMillis()-lastNotification>8000) {
                     notification.coverageNotify()
                     lastNotification= System.currentTimeMillis()
                 }
