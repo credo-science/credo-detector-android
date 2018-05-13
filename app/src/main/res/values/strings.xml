@@ -156,6 +156,7 @@
     <string name="launcher_input_endpoint">Enter custom API Endpoint</string>
     <string name="launcher_toast_debug_activating">Tap %1$d more times to turn on debug mode!</string>
     <string name="launcher_toast_debug_activated">Yeah, debug mode are activated :)</string>
+    <string name="launcher_button_turnoff_debug">Turnoff debug mode</string>
 
     <!-- Login Activity -->
     <string name="login_title_activity">Login</string>
@@ -185,12 +186,12 @@
     <string name="register_button_register">Register</string>
     <string name="register_input_login_validation">at least 3 characters</string>
     <string name="register_input_email_validation">enter valid email address</string>
-    <string name="register_input_password_validation">between 4 and 10 alphanumeric characters</string>
+    <string name="register_input_password_validation">@string/login_input_password_validation</string>
     <string name="register_input_password2_validation">password not match</string>
     <string name="register_input_accept_rules_validation">You must read and accept rules</string>
     <string name="register_toast_register_failed">Create account failed</string>
     <string name="register_message_register_pending">Creating account&#8230;</string>
-    <string name="register_message_validation_failed">Validation failed</string>
+    <string name="register_message_validation_failed">@string/login_message_validation_failed</string>
 
     <!-- Register Activity -->
     <string name="rules_title_activity">Rules</string>

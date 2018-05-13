@@ -66,5 +66,13 @@
                 android:hint="@string/launcher_input_endpoint"/>
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/debug_mode_off_button"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/launcher_button_turnoff_debug"/>
+
     </LinearLayout>
 </ScrollView>

@@ -37,12 +37,20 @@ class LauncherActivity : AppCompatActivity() {
             startActivityForResult(Intent(applicationContext, ResetPasswordActivity::class.java), REQUEST_SIGN)
         }
 
+        debug_mode_off_button.onClick {
+            ConfigurationWrapper(this@LauncherActivity).endpoint = ConfigurationWrapper.defaultEndpoint
+            debugClicksCount = 0
+            endpoint_layout.visibility = View.GONE
+            debug_mode_off_button.visibility = View.GONE
+        }
+
         endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
 
         logo_image.onClick {
             debugClicksCount++
             if (debugClicksCount >= debugClicksToActivate) {
                 endpoint_layout.visibility = View.VISIBLE
+                debug_mode_off_button.visibility = View.VISIBLE
                 if (debugClicksCount == debugClicksToActivate) {
                     toast.setText(R.string.launcher_toast_debug_activated)
                     toast.show()
