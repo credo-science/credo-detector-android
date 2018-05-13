@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import okhttp3.Response
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.network.exceptions.*
 import science.credo.credomobiledetektor.network.messages.*
@@ -16,6 +15,7 @@ import science.credo.credomobiledetektor.network.messages.*
  */
 class ServerInterface (val context: Context) {
     private val mMapper = jacksonObjectMapper()
+    private val nc = NetworkCommunication(context)
 
     /**
      * Sends request and converts response to object or handles errors based on status code.
@@ -25,7 +25,7 @@ class ServerInterface (val context: Context) {
      */
     private inline fun <reified T: Any> sendAndGetResponse(endpoint: String, outFrame: Any): T {
         val pref = UserInfoWrapper(context)
-        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
+        val response = nc.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
         when(response.code) {
             in 200..299 -> return mMapper.readValue(response.message)
             else -> throw throwError(response)
@@ -41,7 +41,7 @@ class ServerInterface (val context: Context) {
      */
     private fun sendAndGetNoContent(endpoint: String, outFrame: Any) {
         val pref = UserInfoWrapper(context)
-        val response = NetworkCommunication.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
+        val response = nc.post(endpoint, mMapper.writeValueAsString(outFrame), pref.token)
         when(response.code) {
             in 200..299 -> return
             else -> throw throwError(response)
