@@ -16,6 +16,7 @@ import java.io.ByteArrayOutputStream
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
     private var detectionStatsManager = DetectionStatsManager()
 
+    private var lastNotification = 0L
 
     private val mDataManager: DataManager = DataManager.getInstance(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
@@ -29,7 +30,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
     val rs = RenderScript.create(mContext)
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
-
+        val notification = CameraCoverageNotification(mContext)
         val config = ConfigurationInfo(mContext)
 
         val parameters = hCamera.parameters
@@ -101,6 +102,10 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                     break
                 }
             } else {
+                if(System.currentTimeMillis()-lastNotification>10000) {
+                    notification.coverageNotify()
+                    lastNotification= System.currentTimeMillis()
+                }
                 break
             }
         }
