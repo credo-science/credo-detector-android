@@ -2,6 +2,24 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceCategory
+        android:key="notification_category"
+        android:title="@string/settings_notification_name">
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="reminder_notification"
+            android:summary="@string/settings_notification_summary"
+            android:title="@string/settings_notification_title"/>
+
+        <science.credo.credomobiledetektor.notifications.TimePreference
+            android:dependency="reminder_notification"
+            android:key="reminder_time"
+            android:title="@string/settings_timeremind_title"
+            android:summary="@string/settings_timeremind_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="detection_category"
         android:title="@string/settings_detection_name">
 
