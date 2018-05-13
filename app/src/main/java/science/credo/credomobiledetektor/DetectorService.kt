@@ -191,16 +191,16 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         mWindowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
         val params = WindowManager.LayoutParams(
-                2,
-                2,
-                -5000,
-                5000,
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-                    WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
-                else
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE + WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT)
+            2,
+            2,
+            -5000,
+            5000,
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
+                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+            else
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE + WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+            PixelFormat.TRANSLUCENT)
 
         mSurfaceView?.holder?.addCallback(CameraSurfaceHolder(mCamera!!, baseContext))
 

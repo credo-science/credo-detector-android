@@ -33,12 +33,12 @@ class NetworkCommunication(val context: Context) {
         val serverUrl = cw.endpoint.removeSuffix("/")
         val builder = Request.Builder().url(serverUrl + endpoint)
 
-        if(token != "") builder.header("Authorization", "Token $token")
+        if (token != "") builder.header("Authorization", "Token $token")
 
         return builder
     }
 
-    private fun prepareResponse(request: Request) : Response {
+    private fun prepareResponse(request: Request): Response {
         return try {
             val response = client.newCall(request).execute()
             val responseString = response.body()?.string() ?: ""
@@ -54,7 +54,7 @@ class NetworkCommunication(val context: Context) {
      * @param endpoint Endpoint that receives the request.
      * @return Response object
      */
-    fun get(endpoint : String, token: String? = ""): Response {
+    fun get(endpoint: String, token: String? = ""): Response {
         return prepareResponse(prepareRequest(endpoint, token).build())
     }
 
@@ -67,7 +67,7 @@ class NetworkCommunication(val context: Context) {
      */
     fun post(endpoint: String, json: String, token: String? = ""): Response {
         return prepareResponse(
-                prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
+            prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
         )
     }
 

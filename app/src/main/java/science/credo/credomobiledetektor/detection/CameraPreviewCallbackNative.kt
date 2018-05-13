@@ -49,9 +49,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
             var loop = -1
             detectionStatsManager!!.frameAchieved(width, height)
-
             val hits = LinkedList<Hit>()
-
 
             while (true) {
                 loop++
@@ -139,12 +137,19 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                 for (hit in hits) {
                     mDataManager.storeHit(hit)
                 }
-                ServerInterface.getDefault(mContext).sendDetections(DetectionRequest(hits, deviceInfo))
+                ServerInterface.getDefault(mContext)
+                    .sendDetections(DetectionRequest(hits, deviceInfo))
             }
         }
     }
 
-    external fun calcHistogram (data: ByteArray, analysisData: LongArray, width: Int, height: Int, black: Int)
+    external fun calcHistogram(
+        data: ByteArray,
+        analysisData: LongArray,
+        width: Int,
+        height: Int,
+        black: Int
+    )
 
     fun bitmap2png (bitmap: Bitmap) : ByteArray {
         val pngData = ByteArrayOutputStream()
@@ -156,11 +161,11 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
         //Point (maxX,maxY) is center(brightest pixel) of hit
         val maxX = maxPosition.rem(width)
-        val maxY = maxPosition/width
+        val maxY = maxPosition / width
 
         //Point (x,y) is upper-left corner of square with we want to fill
-        var x = maxX - sideLength/2
-        var y = maxY - sideLength/2
+        var x = maxX - sideLength / 2
+        var y = maxY - sideLength / 2
 
 
         when {
@@ -169,15 +174,15 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         when {
-            //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
+        //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
             y < 0 -> y = 0
             y >= height - sideLength -> y = height - sideLength
         }
 
         //Loops iterates from upper-left point sideLength times
-        for(i in y..y+sideLength){
-            for(j in x..x+sideLength){
-                data[i*width+j]=0
+        for (i in y..y + sideLength) {
+            for (j in x..x + sideLength) {
+                data[i * width + j] = 0
             }
         }
 

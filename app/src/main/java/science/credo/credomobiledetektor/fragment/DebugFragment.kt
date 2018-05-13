@@ -46,9 +46,17 @@ class DebugFragment : Fragment() {
         }
     }
 
-    data class Test (val locationInfo: LocationInfo.LocationData, val identityInfo: IdentityInfo.IdentityData, val configurationInfo: ConfigurationInfo.ConfigurationData)
+    data class Test(
+        val locationInfo: LocationInfo.LocationData,
+        val identityInfo: IdentityInfo.IdentityData,
+        val configurationInfo: ConfigurationInfo.ConfigurationData
+    )
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         Log.i(TAG, activity.toString())
         Log.i(TAG, "onCreateView")
@@ -88,7 +96,7 @@ class DebugFragment : Fragment() {
 
 
         }
-        butclr.setOnClickListener{
+        butclr.setOnClickListener {
             Log.d(TAG, "clear db pressed")
             val hits = dataManager.getHits()
             for (hit in hits) {
@@ -96,26 +104,28 @@ class DebugFragment : Fragment() {
             }
             postUpdate(tv, dataManager)
         }
-        butcclr.setOnClickListener{
+        butcclr.setOnClickListener {
             Log.d(TAG, "clear cached db pressed")
             val hits = dataManager.getCachedHits()
             for (hit in hits) {
-                dataManager.removeCachedHit(hit)
+                dataManager.removeHit(hit)
             }
             postUpdate(tv, dataManager)
         }
 
 
         tv.text = getString(R.string.debug_upload_hits) + dataManager.getHitsNumber() +
-                " \n" + getString(R.string.debug_cached_hits) + " " + dataManager.getCachedHitsNumber()
+                " \n" + getString(R.string.debug_cached_hits) + " " +
+                dataManager.getCachedHitsNumber()
         tv.postInvalidate()
 
         return v
-   }
+    }
 
-    fun postUpdate (tv: TextView, dataManager: DataManager) {
+    fun postUpdate(tv: TextView, dataManager: DataManager) {
         tv.text = getString(R.string.debug_to_upload_hits) + dataManager.getHitsNumber() +
-                " \n" + getString(R.string.debug_cached_hits) + " " + dataManager.getCachedHitsNumber()
+                " \n" + getString(R.string.debug_cached_hits) + " " +
+                dataManager.getCachedHitsNumber()
         tv.postInvalidate()
 
     }

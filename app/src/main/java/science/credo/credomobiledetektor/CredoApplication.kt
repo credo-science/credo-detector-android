@@ -12,6 +12,7 @@ import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.events.DetectorStateEvent
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import java.util.concurrent.atomic.AtomicBoolean
@@ -40,6 +41,8 @@ class CredoApplication : Application() {
         if (ConfigurationInfo(this).isDetectionOn) {
             turnOnDetection()
         }
+        // sends messages that failed to sync previously
+        DataManager.getInstance(this).flushCachedMessages()
     }
 
     fun turnOnDetection() {
