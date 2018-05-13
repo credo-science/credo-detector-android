@@ -20,6 +20,14 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
             setString("user_email", v)
         }
 
+    var displayName : String
+        get() {
+            return preferences.getString("display_name", login)
+        }
+        set(v) {
+            setString("display_name", v)
+        }
+
     var team : String
         get() {
             return preferences.getString("user_team", "")

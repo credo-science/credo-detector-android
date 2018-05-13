@@ -95,6 +95,7 @@ class RegisterActivity : AppCompatActivity() {
                         pref.email = response.email
                         pref.token = response.token
                         pref.team = response.team
+                        pref.displayName = response.display_name ?: response.username
 
                         progressDialog.dismiss()
                         onSignupSuccess()
