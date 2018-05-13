@@ -139,17 +139,37 @@
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
 
+
+
     <string name="title_activity_login">Sign in</string>
     <string name="input_email">Email</string>
-    <string name="action_logoin">Login</string>
     <string name="action_logout">Logout</string>
-    <string name="action_reset_password">Forgot Password</string>
-    <string name="link_signup">No account yet? Create one</string>
 
     <string name="title_activity_register">Sign up</string>
     <string name="action_register">Create Account</string>
     <string name="link_signin">Already a member? Login</string>
 
     <string name="forgot_password_text">Click on button if you don`t remember password</string>
+
+    <!-- Launcher Activity -->
+    <string name="launcher_text_logo">@string/app_name</string>
+    <string name="launcher_button_login">Login</string>
+    <string name="launcher_button_register">Register</string>
+    <string name="launcher_button_remember_password">Forgot Password</string>
+    <string name="launcher_input_endpoint">Enter custom API Endpoint</string>
+    <string name="launcher_toast_debug_activating">Tap %1$d more times to turn on debug mode!</string>
+    <string name="launcher_toast_debug_activated">Yeah, debug mode are activated :)</string>
+
+    <!-- Login Activity -->
+    <string name="login_text_logo">@string/launcher_text_logo</string>
+    <string name="login_input_login">Login or e-mail</string>
+    <string name="login_input_password">Password</string>
+    <string name="login_button_login">@string/launcher_button_login</string>
+    <string name="login_button_remember_password">@string/launcher_button_remember_password</string>
+    <string name="login_input_login_validation">at least 3 characters or enter a valid email address</string>
+    <string name="login_input_password_validation">between 4 and 10 alphanumeric characters</string>
+    <string name="login_toast_login_failed">Login failed</string>
+    <string name="login_message_login_pending">Authenticating&#8230;</string>
+    <string name="login_message_validation_failed">Validation failed</string>
 
 </resources>
