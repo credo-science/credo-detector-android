@@ -22,10 +22,12 @@ class LoginActivity : AppCompatActivity() {
 
     private var loginTask: Future<Unit>? = null
     private var isClosed = false
+    private var info : IdentityInfo.IdentityData? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+        info = IdentityInfo.getDefault(this).getIdentityData()
 
         if (!UserInfoWrapper(this).token.isEmpty()) {
             setResult(Activity.RESULT_OK)
@@ -69,14 +71,16 @@ class LoginActivity : AppCompatActivity() {
         val inputText = email_input.text.toString()
 
         val loginRequest = if ('@' in inputText) {
-            LoginByEmailRequest(
+            LoginByEmailRequest.build(
                     inputText,
-                    password_input.text.toString()
+                    password_input.text.toString(),
+                    info!!
             )
         } else {
-            LoginByUsernameRequest(
+            LoginByUsernameRequest.build(
                     inputText,
-                    password_input.text.toString()
+                    password_input.text.toString(),
+                    info!!
             )
         }
 
@@ -154,7 +158,7 @@ class LoginActivity : AppCompatActivity() {
             email_input.error = null
         }
 
-        if (passwordStr.isEmpty() || password_input.length() < 4 || password_input.length() > 10) {
+        if (passwordStr.isEmpty() || password_input.length() < 4) {
             password_input.error = getText(R.string.login_input_password_validation)
             valid = false
         } else {

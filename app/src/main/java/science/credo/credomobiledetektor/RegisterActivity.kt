@@ -26,10 +26,12 @@ class RegisterActivity : AppCompatActivity() {
 
     private var registerTask: Future<Unit>? = null
     private var isClosed = false
+    private var info : IdentityInfo.IdentityData? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+        info = IdentityInfo.getDefault(this@RegisterActivity).getIdentityData()
 
         signup_button.onClick{
             signup()
@@ -66,18 +68,20 @@ class RegisterActivity : AppCompatActivity() {
         progressDialog.setMessage(getString(R.string.register_message_register_pending))
         progressDialog.show()
 
-        val registerRequest = RegisterDeviceInfoRequest(
+        val registerRequest = RegisterDeviceInfoRequest.build(
                 email_input.text.toString(),
                 name_input.text.toString(),
                 display_name_input.text.toString(),
                 password_input.text.toString(),
                 team_input.text.toString(),
-                Locale.getDefault().language //language_input.text.toString()
+                Locale.getDefault().language, //language_input.text.toString()
+                info!!
         )
 
-        val loginRequest = LoginByUsernameRequest(
+        val loginRequest = LoginByUsernameRequest.build(
                 name_input.text.toString(),
-                password_input.text.toString()
+                password_input.text.toString(),
+                info!!
         )
 
         val pref = UserInfoWrapper(this)
@@ -155,7 +159,7 @@ class RegisterActivity : AppCompatActivity() {
             email_input.error = null
         }
 
-        if (passwordStr.isEmpty() || password_input.length() < 4 || password_input.length() > 10) {
+        if (passwordStr.isEmpty() || password_input.length() < 4) {
             password_input.error = getText(R.string.register_input_password_validation)
             valid = false
         } else {

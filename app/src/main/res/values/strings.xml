@@ -167,7 +167,7 @@
     <string name="login_button_login">@string/launcher_button_login</string>
     <string name="login_button_remember_password">@string/launcher_button_remember_password</string>
     <string name="login_input_login_validation">at least 3 characters or enter a valid email address</string>
-    <string name="login_input_password_validation">between 4 and 10 alphanumeric characters</string>
+    <string name="login_input_password_validation">at least 4 alphanumeric characters</string>
     <string name="login_toast_login_failed">Login failed</string>
     <string name="login_message_login_pending">Authenticating&#8230;</string>
     <string name="login_message_validation_failed">Validation failed</string>
