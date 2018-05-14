@@ -134,6 +134,10 @@ class ServerInterface(val context: Context) {
         return sendAndGetNoContent("/ping", request)
     }
 
+    fun info(request: UserInfoRequest): UserInfoResponse {
+        return sendAndGetResponse("/user/info", request)
+    }
+
     companion object {
         /**
          * @return default instance of ServerInterface.

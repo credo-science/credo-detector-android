@@ -61,7 +61,7 @@ class LoginActivity : AppCompatActivity() {
         login_button.isEnabled = false
 
         // TODO: https://stackoverflow.com/questions/45373007/progressdialog-is-deprecated-what-is-the-alternate-one-to-use
-        val progressDialog = ProgressDialog(this@LoginActivity,
+        val progressDialog = ProgressDialog(this,
                 R.style.Theme_AppCompat_DayNight_Dialog)
         progressDialog.isIndeterminate = true
         progressDialog.setCancelable(false)
@@ -97,6 +97,7 @@ class LoginActivity : AppCompatActivity() {
                         pref.email = response.email
                         pref.token = response.token
                         pref.team = response.team
+                        pref.displayName = response.display_name
 
                         progressDialog.dismiss()
                         onLoginSuccess()

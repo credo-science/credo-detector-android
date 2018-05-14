@@ -8,7 +8,7 @@
     <string name="navigation_drawer_open">باز کردن کشوی پیمایش</string>
     <string name="navigation_drawer_close">بستن کشوی پیمایش</string>
 
-    <string name="action_settings">تنظیمات</string>
+    <string name="main_action_settings">تنظیمات</string>
     <string name="credo_name">کردو</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -24,7 +24,7 @@
     <string name="title_register">ثبت نام</string>
     <string name="msg_no_network_connection">اتصال به شبکه موجود نیست</string>
     <string name="msg_network_connection_problem">مشکل اتصال به شبکه، لطفا بعدا دوباره امتحان کنید</string>
-    <string name="action_logout">ثبت نام</string>
+    <string name="main_action_logout">ثبت نام</string>
     <string name="login_button_text">ورود به سیستم</string>
     <string name="register_button_text">ثبت نام</string>
 

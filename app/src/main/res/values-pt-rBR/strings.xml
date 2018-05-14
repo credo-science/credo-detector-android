@@ -7,7 +7,7 @@
 	<string name="app_homepage">Para saber mais, por favor, visite o site do CREDO em:</string>
 	<string name="navigation_drawer_open">Abrir gaveta de navegação</string>
 	<string name="navigation_drawer_close">Fechar gaveta de navegação</string>
-	<string name="action_settings">Configurações</string>
+	<string name="main_action_settings">Configurações</string>
 	<string name="credo_name">CREDO</string>
 	<string name="hello_blank_fragment">Olá fragmento branco</string>
 	<string name="title_status">Status</string>
@@ -21,7 +21,7 @@
 	<string name="title_register">Registrar</string>
 	<string name="msg_no_network_connection">sem conexão de rede</string>
 	<string name="msg_network_connection_problem">problemas com a conexão de rede, tente novamente mais tarde</string>
-	<string name="action_logout">Registrar</string>
+	<string name="main_action_logout">Registrar</string>
 	<string name="login_button_text">login</string>
 	<string name="register_button_text">registrar</string>
 	<string name="stats_generate">Gerar</string>

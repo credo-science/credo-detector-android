@@ -15,7 +15,6 @@
     <string name="navigation_drawer_open">Otwórz panel nawigacyjny</string>
     <string name="navigation_drawer_close">Zamknij panel nawigacyjny</string>
 
-    <string name="action_settings">Ustawienia</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -30,7 +29,6 @@
     <string name="title_register">Rejestracja</string>
     <string name="msg_no_network_connection">brak połączenia z internetem</string>
     <string name="msg_network_connection_problem">problem z połączeniem ze serwerem, spróbuj ponownie później</string>
-    <string name="action_logout">Wyloguj</string>
     <string name="login_button_text">Zaloguj</string>
     <string name="register_button_text">Zarejestruj</string>
 
@@ -199,4 +197,26 @@
     <!-- Register Activity -->
     <string name="rules_title_activity">Regulamin</string>
     <string name="rules_content_file">rules-pl</string>
+
+    <!-- Main Activity -->
+    <string name="main_action_settings">Ustawienia</string>
+    <string name="main_action_account">Drużyna i nazwa</string>
+    <string name="main_action_logout">Wyloguj</string>
+
+    <!-- User account Activity -->
+    <string name="user_title_activity">Ustawienia konta użytkownika</string>
+    <string name="user_input_email">@string/register_input_email</string>
+    <string name="user_input_password">Hasło (zostaw puste jeżeli nie chcesz zmieniać)</string>
+    <string name="user_input_confirm">@string/register_input_confirm</string>
+    <string name="user_input_display_name">@string/register_input_display_name</string>
+    <string name="user_input_team">@string/register_input_team</string>
+    <string name="user_input_language">@string/register_input_language</string>
+    <string name="user_button_save">Zapisz</string>
+    <string name="user_input_email_validation">@string/register_input_email_validation</string>
+    <string name="user_input_password_validation">@string/register_input_password_validation</string>
+    <string name="user_input_password2_validation">@string/register_input_password2_validation</string>
+    <string name="user_toast_save_failed">Błąd zapisywania ustawień konta użytkownika</string>
+    <string name="user_message_save_pending">Zapisywanie ustawień konta użytkownika&#8230;</string>
+    <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
+
 </resources>

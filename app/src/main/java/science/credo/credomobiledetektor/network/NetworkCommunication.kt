@@ -33,6 +33,7 @@ class NetworkCommunication(val context: Context) {
     private fun prepareRequest(endpoint : String, token: String? = "") : Request.Builder {
         val serverUrl = cw.endpoint.removeSuffix("/")
         val builder = Request.Builder().url(serverUrl + endpoint)
+        Log.v(TAG, "Use endpoint prefix: $serverUrl")
 
         if (token != "") builder.header("Authorization", "Token $token")
 

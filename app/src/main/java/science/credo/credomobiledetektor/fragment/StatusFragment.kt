@@ -19,6 +19,7 @@ import science.credo.credomobiledetektor.CredoApplication
 
 import science.credo.credomobiledetektor.R
 import science.credo.credomobiledetektor.database.DataManager
+import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.events.BatteryEvent
 import science.credo.credomobiledetektor.events.DetectorStateEvent
 import science.credo.credomobiledetektor.events.StatsEvent
@@ -47,9 +48,9 @@ class StatusFragment : Fragment() {
     }
 
     private fun fillInValuesOnPage() {
-        val ui = UserInfo.getNewInstance(context!!)
+        val ui = UserInfoWrapper(context!!)
 
-        name_text.text = ui.username
+        name_text.text = ui.displayName
         email_text.text = ui.email
         team_text.text = ui.team
 

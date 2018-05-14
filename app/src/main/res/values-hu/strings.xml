@@ -9,7 +9,7 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
     <string name="navigation_drawer_open">Navigációs fiók megnyitása</string>
     <string name="navigation_drawer_close">Navigációs fiók bezárása</string>
 
-    <string name="action_settings">Beállítások</string>
+    <string name="main_action_settings">Beállítások</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -26,7 +26,7 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
     <string name="title_register">Register</string>
     <string name="msg_no_network_connection">nincs hálózati kapcsolat</string>
     <string name="msg_network_connection_problem">hálózati csatlakozási hiba, próbálja meg később</string>
-    <string name="action_logout">Regisztráció</string>
+    <string name="main_action_logout">Regisztráció</string>
     <string name="login_button_text">belépés</string>
     <string name="register_button_text">regisztrálás</string>
 

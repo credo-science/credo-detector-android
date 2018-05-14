@@ -44,8 +44,6 @@ class LauncherActivity : AppCompatActivity() {
             debug_mode_off_button.visibility = View.GONE
         }
 
-        endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
-
         logo_image.onClick {
             debugClicksCount++
             if (debugClicksCount >= debugClicksToActivate) {
@@ -71,6 +69,7 @@ class LauncherActivity : AppCompatActivity() {
         super.onPostResume()
         launchSpecificActivity()
         debugClicksCount = 0
+        endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
     }
 
     override fun onPause() {

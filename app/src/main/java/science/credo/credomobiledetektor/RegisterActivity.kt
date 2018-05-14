@@ -61,11 +61,11 @@ class RegisterActivity : AppCompatActivity() {
         signup_button.setEnabled(false)
 
         // TODO: use i.e. button with progress bar instead progress dialog
-        val progressDialog = ProgressDialog(this@RegisterActivity,
-                R.style.Base_Theme_AppCompat_Dialog)
+        val progressDialog = ProgressDialog(this,
+                R.style.Theme_AppCompat_DayNight_Dialog)
         progressDialog.isIndeterminate = true
         progressDialog.setCancelable(false)
-        progressDialog.setMessage(getString(R.string.register_message_register_pending))
+        progressDialog.setMessage(getText(R.string.register_message_register_pending))
         progressDialog.show()
 
         val registerRequest = RegisterDeviceInfoRequest.build(

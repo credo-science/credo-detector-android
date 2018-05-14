@@ -11,12 +11,11 @@ package science.credo.credomobiledetektor.network.messages
  * @property language ISO 639-1 language code representation.
  * @property token Authentication token. It's used in request header to authorize user.
  */
-data class LoginResponse (
+data class UserInfoResponse (
         val message: String?,
         val username: String,
         val display_name: String,
         val email: String,
         val team: String,
-        val language: String,
-        val token: String
+        val language: String
 )
