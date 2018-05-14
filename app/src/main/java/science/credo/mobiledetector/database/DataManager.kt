@@ -9,6 +9,7 @@ import ninja.sakib.pultusorm.annotations.PrimaryKey
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
 import ninja.sakib.pultusorm.core.PultusORMUpdater
+import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.detection.Hit
 import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.info.ConfigurationInfo
@@ -153,30 +154,38 @@ class DataManager private constructor(val context: Context) {
                 .eq("toSent", 1)
                 .build()
 
-        val hits = mDb.find(Hit(), condition) as MutableList<Hit>
-        Log.i(TAG, "Try to flush ${hits.size} cached hits")
+        val applicationContext = context.applicationContext
 
-        if (hits.size > 0) {
-            val deviceInfo = IdentityInfo.getDefault(context).getIdentityData()
-            try {
-                for (hit in hits) {
-                    val hitsToSend = LinkedList<Hit>()
-                    hitsToSend.add(hit)
+        doAsync {
+            synchronized(applicationContext) {
+                val hits = mDb.find(Hit(), condition) as MutableList<Hit>
+                Log.i(TAG, "${Thread.currentThread().id} Try to flush ${hits.size} cached hits")
 
-                    val request = DetectionRequest.build(deviceInfo, hitsToSend)
-                    val response = si.sendDetections(request)
-                    Log.i(TAG, "Try to flush ${hit.id} sent")
-                    hit.serverId = response.detections[0].id
-                    hit.toSent = false
-                    updateHit(hit)
-                }
-            } catch (e: ServerException) {
-                if ((e.code != 401).and(e.code in 400..499)) {
-                    for (hit in hits) {
-                        hit.toSent = false
-                        updateHit(hit)
+                if (hits.size > 0) {
+                    val deviceInfo = IdentityInfo.getDefault(context).getIdentityData()
+                    try {
+                        for (hit in hits) {
+                            val hitsToSend = LinkedList<Hit>()
+                            hitsToSend.add(hit)
+
+                            val request = DetectionRequest.build(deviceInfo, hitsToSend)
+                            val response = si.sendDetections(request)
+                            Log.i(TAG, "${Thread.currentThread().id} Try to flush ${hit.id} sent")
+                            hit.serverId = response.detections[0].id
+                            hit.toSent = false
+                            updateHit(hit)
+                        }
+                    } catch (e: ServerException) {
+                        if ((e.code != 401).and(e.code in 400..499)) {
+                            for (hit in hits) {
+                                hit.toSent = false
+                                updateHit(hit)
+                            }
+                        }
                     }
                 }
+
+                Log.i(TAG, "${Thread.currentThread().id} Flushing hits finish")
             }
         }
     }
