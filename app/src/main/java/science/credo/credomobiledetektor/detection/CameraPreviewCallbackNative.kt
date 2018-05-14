@@ -19,6 +19,8 @@ import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
+const val MAX_HITS_ONE_FRAME = 5
+
 
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
     private val mServerInterface = ServerInterface.getDefault(mContext)
@@ -50,7 +52,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             detectionStatsManager!!.frameAchieved(width, height)
             val hits = LinkedList<Hit>()
 
-            while (true) {
+            while (loop < MAX_HITS_ONE_FRAME) {
                 loop++
                 calcHistogram(data, analysisData, width, height, config.blackFactor)
 
@@ -141,7 +143,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         Log.e(TAG, "Can't store hit", e)
                     }
                 }
-
+                // FIXME: in separated service because "send and check as toSend=false" should be atomic
                 try {
                     mDataManager.sendHitsToNetwork(mServerInterface)
                 } catch (e: Exception) {
