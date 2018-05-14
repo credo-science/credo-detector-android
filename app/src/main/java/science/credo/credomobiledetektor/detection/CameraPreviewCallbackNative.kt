@@ -12,10 +12,11 @@ import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.LocationInfo
 import java.io.ByteArrayOutputStream
+import java.nio.ByteBuffer
+
 
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
     private var detectionStatsManager = DetectionStatsManager()
-
 
     private val mDataManager: DataManager = DataManager.getInstance(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
@@ -61,7 +62,6 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             // found Hit condition
             val brightestPixelCondition = max > config.maxFactor
 
-
             if (averageBrightCondition && blackPixelsCondition) {
                 if (loop == 0) {
                     detectionStatsManager.framePerformed()
@@ -70,8 +70,10 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                 if (brightestPixelCondition) {
                     val bitmap = yuv2bitmap(data, width, height)
                     val cropBitmap = cropBitmap(bitmap, maxIndex.toInt(), config.cropSize)
-                    detectionStatsManager.hitRegistered()
+                    if(artefactFilter(cropBitmap,config.cropSize,config.blackFactor))
+                        break
 
+                    detectionStatsManager.hitRegistered()
                     doAsync {
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
@@ -147,6 +149,28 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         return Bitmap.createBitmap(bitmap, x, y, sideLength, sideLength)
+    }
+
+    fun artefactFilter(bitmap: Bitmap,sideLength: Int,black: Int): Boolean{
+        val size = sideLength*sideLength
+        var pixels = IntArray(size)
+        bitmap.getPixels(pixels,0,sideLength,0,0,sideLength,sideLength)
+        var blackCount = 0.0
+        var sum=0.0
+        for (item: Int in pixels){
+            //Color format in bitmap is ARGB so we will skip first component
+            val bytes = ByteBuffer.allocate(4).putInt(item).array()
+            //Conversion from RGB to YUV (we need only luminance Y)
+            val Y = 0.299 * bytes[1] + 0.587 * bytes[2] + 0.114 * bytes[3]
+            sum += Y
+            if(Y <= black)
+                blackCount++
+        }
+
+        Log.d(TAG,"ArtefactFilter:%black"+(blackCount/size).toString())
+        Log.d(TAG,"ArtefactFilter:avg"+(sum/size).toString())
+        //true if artefact, false if good
+        return (blackCount/size < 0.6 && sum/size > 10.0 )
     }
 
     fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
