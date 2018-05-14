@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="science.credo.credomobiledetektor">
+    package="science.credo.mobiledetector">
 
     <uses-permission
         android:name="android.permission.WAKE_LOCK"
@@ -96,7 +96,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="science.credo.credomobiledetektor.MainActivity" />
+                android:value="science.credo.mobiledetector.MainActivity" />
         </activity>
     </application>
 

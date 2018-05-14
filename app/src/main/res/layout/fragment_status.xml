@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="science.credo.credomobiledetektor.fragment.StatusFragment">
+    tools:context="science.credo.mobiledetector.fragment.StatusFragment">
 
     <TextView
         android:id="@+id/detection_label"
