@@ -1,6 +1,7 @@
 package science.credo.credomobiledetektor.detection
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
@@ -75,6 +76,15 @@ class Hit (frameContent: String,
     val mOrientation: Float = orientation
     @JsonProperty("temperature")
     val mTemperature: Int = temperature
+
+    @JsonIgnore
+    var toSent = true
+
+    @JsonIgnore
+    var serverId = 0L
+
+    @JsonIgnore
+    val detectionTimestamp = (System.currentTimeMillis() / 10000L).toInt() // PultusORM less condition walkaround
 
     constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
 }

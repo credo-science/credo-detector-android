@@ -18,7 +18,7 @@ import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.exceptions.ServerException
 import science.credo.credomobiledetektor.network.messages.LoginByUsernameRequest
-import science.credo.credomobiledetektor.network.messages.RegisterRequest
+import science.credo.credomobiledetektor.network.messages.RegisterDeviceInfoRequest
 import java.util.*
 import java.util.concurrent.Future
 
@@ -66,20 +66,18 @@ class RegisterActivity : AppCompatActivity() {
         progressDialog.setMessage(getString(R.string.register_message_register_pending))
         progressDialog.show()
 
-        val registerRequest = RegisterRequest(
+        val registerRequest = RegisterDeviceInfoRequest(
                 email_input.text.toString(),
                 name_input.text.toString(),
                 display_name_input.text.toString(),
                 password_input.text.toString(),
                 team_input.text.toString(),
-                Locale.getDefault().language, //language_input.text.toString(),
-                IdentityInfo.getInstance(this).getIdentityData()
+                Locale.getDefault().language //language_input.text.toString()
         )
 
         val loginRequest = LoginByUsernameRequest(
                 name_input.text.toString(),
-                password_input.text.toString(),
-                IdentityInfo.getInstance(this).getIdentityData()
+                password_input.text.toString()
         )
 
         val pref = UserInfoWrapper(this)

@@ -5,6 +5,6 @@ package science.credo.credomobiledetektor.network.messages
  *
  * @property detections Returned detection ids.
  */
-class DetectionResponse (
+data class DetectionResponse (
     val detections : MutableList<StoredDetectionEntity>
 )

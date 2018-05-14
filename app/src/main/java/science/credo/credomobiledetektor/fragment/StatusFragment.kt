@@ -54,10 +54,11 @@ class StatusFragment : Fragment() {
         team_text.text = ui.team
 
         detection_text.text = detectionText()
-        detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIMPERIOD_HITS_DAYS)
+        detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
 
-        val dm = DataManager.getInstance(context!!)
-        detections_text.text = (dm.getCachedHitsNumber() + dm.getHitsNumber()).toString()
+        val dm = DataManager.getDefault(context!!)
+        detections_text.text = dm.getHitsCount().toString()
+        dm.closeDb()
 
         start_text.text = if (statsEvent.startDetectionTimestamp > 0)
             dateFormat.format(statsEvent.startDetectionTimestamp)

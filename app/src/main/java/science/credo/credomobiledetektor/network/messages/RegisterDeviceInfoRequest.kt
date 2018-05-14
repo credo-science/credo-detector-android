@@ -12,13 +12,11 @@ import science.credo.credomobiledetektor.info.IdentityInfo
  * @property team Team that user wants to join.
  * @property language ISO 639-1 language code representation.
  */
-class RegisterRequest (
+data class RegisterDeviceInfoRequest (
         val email: String,
         val username: String,
         val display_name: String,
         val password: String,
         val team: String,
-        // ISO 639-1 language code representation
-        val language: String,
-        deviceInfo: IdentityInfo.IdentityData
-) : BaseRequest(deviceInfo)
+        val language: String
+)

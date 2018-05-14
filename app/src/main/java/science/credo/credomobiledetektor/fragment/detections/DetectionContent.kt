@@ -17,19 +17,15 @@ object DetectionContent {
     val ITEM_MAP: MutableMap<String, HitItem> = HashMap()
 
     fun initContent(ctx: Context) {
-        val dm = DataManager.getInstance(ctx)
+        val dm = DataManager.getDefault(ctx)
         val hits = dm.getHits()
-        val cHits = dm.getCachedHits()
-        var number = 0
+        dm.closeDb()
 
         ITEMS.clear()
         ITEM_MAP.clear()
 
-        for (hit in cHits.reversed()) {
-            addItem(createHitItem(hit, ++number))
-        }
-        for (hit in hits.reversed()) {
-            addItem(createHitItem(hit, ++number))
+        for ((number, hit) in hits.reversed().withIndex()) {
+            addItem(createHitItem(hit, number + 1))
         }
     }
 

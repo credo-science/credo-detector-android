@@ -8,8 +8,7 @@ import science.credo.credomobiledetektor.info.IdentityInfo
  * @property username
  * @property password
  */
-class LoginByUsernameRequest(
+data class LoginByUsernameRequest(
         val username: String,
-        password: String,
-        deviceInfo: IdentityInfo.IdentityData
-) : BaseLoginRequest (password, deviceInfo)
+        override val password: String
+) : BaseLoginRequest()

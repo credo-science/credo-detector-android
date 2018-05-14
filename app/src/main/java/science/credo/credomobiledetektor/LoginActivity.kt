@@ -71,14 +71,12 @@ class LoginActivity : AppCompatActivity() {
         val loginRequest = if ('@' in inputText) {
             LoginByEmailRequest(
                     inputText,
-                    password_input.text.toString(),
-                    IdentityInfo.getInstance(applicationContext).getIdentityData()
+                    password_input.text.toString()
             )
         } else {
             LoginByUsernameRequest(
                     inputText,
-                    password_input.text.toString(),
-                    IdentityInfo.getInstance(applicationContext).getIdentityData()
+                    password_input.text.toString()
             )
         }
 

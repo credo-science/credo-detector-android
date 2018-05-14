@@ -41,8 +41,6 @@ class CredoApplication : Application() {
         if (ConfigurationInfo(this).isDetectionOn) {
             turnOnDetection()
         }
-        // sends messages that failed to sync previously
-        DataManager.getInstance(this).flushCachedMessages()
     }
 
     fun turnOnDetection() {

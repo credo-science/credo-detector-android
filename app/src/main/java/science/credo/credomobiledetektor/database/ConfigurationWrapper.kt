@@ -12,6 +12,14 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
             setString("endpoint", v)
         }
 
+    var dbSchema : String
+        get() {
+            return preferences.getString("db_schema", "")
+        }
+        set(v) {
+            setString("db_schema", v)
+        }
+
     companion object {
         val defaultEndpoint = "https://api.credo.science/api/v2"
     }

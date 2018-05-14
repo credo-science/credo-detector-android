@@ -8,6 +8,7 @@ import science.credo.credomobiledetektor.events.StatsEvent
 import science.credo.credomobiledetektor.info.IdentityInfo
 import science.credo.credomobiledetektor.network.ServerInterface
 import science.credo.credomobiledetektor.network.messages.PingRequest
+import science.credo.credomobiledetektor.network.messages.build
 
 class DetectionStatsManager {
     private val statsForScreen = DetectionStats()
@@ -58,9 +59,9 @@ class DetectionStatsManager {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForServer.flush(statsEvent,  true)
 
-            val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getInstance(context).getIdentityData()
+            val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getDefault(context).getIdentityData()
             doAsync {
-                ServerInterface.getDefault(context).ping(PingRequest.build(System.currentTimeMillis(), deviceInfo, statsEvent))
+                ServerInterface.getDefault(context).ping(build(System.currentTimeMillis(), deviceInfo, statsEvent))
             }
 
             DetectionStateWrapper.getLatestSession(context).merge(statsEvent)

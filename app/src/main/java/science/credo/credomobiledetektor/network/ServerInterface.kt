@@ -4,8 +4,6 @@ import android.content.Context
 import android.util.Log
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import okhttp3.Response
-import science.credo.credomobiledetektor.database.CachedMessage
 import science.credo.credomobiledetektor.database.DataManager
 import science.credo.credomobiledetektor.database.UserInfoWrapper
 import science.credo.credomobiledetektor.network.exceptions.*
@@ -82,10 +80,10 @@ class ServerInterface(val context: Context) {
      * @return String with error message.
      */
     private fun extractJsonMessage(message: String): String {
-        try {
-            return mMapper.readValue<ErrorMessage>(message).message
+        return try {
+            mMapper.readValue<ErrorMessage>(message).message
         } catch (e: Exception) {
-            return message
+            message
         }
     }
 
@@ -102,45 +100,38 @@ class ServerInterface(val context: Context) {
     /**
      * Handles user registration.
      *
-     * @param request RegisterRequest object, contains registration fields.
+     * @param request RegisterDeviceInfoRequest object, contains registration fields.
      */
-    fun register(request: RegisterRequest) {
+    fun register(request: RegisterDeviceInfoRequest) {
         return sendAndGetNoContent("/user/register", request)
     }
 
     fun ping(request: PingRequest) {
         try {
-            return sendAndGetNoContent("/ping", request)
+            return pingRaw(request)
         } catch (e: Exception) {
             when (e) {
                 is IOException,
-                is InternalServerErrorException,
-                is ServerException -> {
-                    cacheMessage("/ping", request)
+                is InternalServerErrorException -> {
+                    cachePing(request)
+                }
+                is ServerException -> if ((e.code in 400..499).not().or(e.code == 401)) {
+                    cachePing(request)
                 }
             }
         }
     }
 
     fun sendDetections(request: DetectionRequest): DetectionResponse {
-        try {
-            return sendAndGetResponse("/detection", request)
-        } catch (e: Exception) {
-            when (e) {
-                is IOException,
-                is InternalServerErrorException,
-                is ServerException -> {
-                    cacheMessage("/detection", request)
-                }
-            }
-        }
-        return DetectionResponse(mutableListOf(StoredDetectionEntity(0)))
+        return sendAndGetResponse("/detection", request)
     }
 
-    fun cacheMessage(endpoint: String, request: Any) {
-        val token = UserInfoWrapper(context).token
-        val msg = CachedMessage(endpoint, mMapper.writeValueAsString(request), token)
-        DataManager.getInstance(context).storeCachedMessage(msg)
+    private fun cachePing(ping: PingRequest) {
+        DataManager.getDefault(context).storePing(ping)
+    }
+
+    fun pingRaw(request: PingRequest) {
+        return sendAndGetNoContent("/ping", request)
     }
 
     companion object {

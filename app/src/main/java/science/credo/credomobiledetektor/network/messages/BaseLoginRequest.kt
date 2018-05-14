@@ -7,7 +7,6 @@ import science.credo.credomobiledetektor.info.IdentityInfo
  *
  * @property password
  */
-abstract class BaseLoginRequest (
-        val password: String,
-        deviceInfo: IdentityInfo.IdentityData
-) : BaseRequest(deviceInfo)
+abstract class BaseLoginRequest {
+    abstract val password: String
+}

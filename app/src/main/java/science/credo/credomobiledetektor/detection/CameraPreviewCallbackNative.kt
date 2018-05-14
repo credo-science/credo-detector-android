@@ -1,6 +1,5 @@
 package science.credo.credomobiledetektor.detection
 
-import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
 import android.hardware.Camera
@@ -22,7 +21,7 @@ import kotlin.math.min
 
 
 class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
-    private val mDataManager: DataManager = DataManager.getInstance(mContext)
+    private val mServerInterface = ServerInterface.getDefault(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
 
     companion object {
@@ -133,12 +132,22 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             detectionStatsManager!!.flush(mContext, false)
 
             if (hits.size > 0) {
-                val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
+                val mDataManager: DataManager = DataManager.getDefault(mContext)
+
                 for (hit in hits) {
-                    mDataManager.storeHit(hit)
+                    try {
+                        mDataManager.storeHit(hit)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Can't store hit", e)
+                    }
                 }
-                ServerInterface.getDefault(mContext)
-                    .sendDetections(DetectionRequest(hits, deviceInfo))
+
+                try {
+                    mDataManager.sendHitsToNetwork(mServerInterface)
+                } catch (e: Exception) {
+                    Log.w(TAG, "Can't sent hit to server", e)
+                }
+                mDataManager.closeDb()
             }
         }
     }
@@ -157,6 +166,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         return pngData.toByteArray()
     }
 
+    // FIXME: limit to ~5
     fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
 
         //Point (maxX,maxY) is center(brightest pixel) of hit

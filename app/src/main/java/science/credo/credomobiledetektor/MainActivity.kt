@@ -27,7 +27,9 @@ import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
+import org.jetbrains.anko.doAsync
 import science.credo.credomobiledetektor.database.ConfigurationWrapper
+import science.credo.credomobiledetektor.network.ServerInterface
 
 
 const val REQUEST_SIGNUP = 1
@@ -35,7 +37,6 @@ const val REQUEST_SIGNUP = 1
 class MainActivity : AppCompatActivity(),
         StatusFragment.OnFragmentInteractionListener,
         CredoFragment.OnFragmentInteractionListener,
-        DebugFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         DetectionFragment.OnListFragmentInteractionListener {
 
@@ -70,12 +71,6 @@ class MainActivity : AppCompatActivity(),
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
         super.onDestroy()
-        try {
-            DataManager.getInstance(applicationContext).closeDb()
-        } catch (e:Exception) {
-            Log.w(TAG, e)
-        }
-
     }
 
     override fun onFragmentInteraction(uri: Uri) {
@@ -206,7 +201,7 @@ class MainActivity : AppCompatActivity(),
                 mSettingsFlag = true
            }
             R.id.nav_statistics -> {
-                title = "Detections (last ${DataManager.TRIMPERIOD_HITS_DAYS} days)"
+                title = "Detections (last ${DataManager.TRIM_PERIOD_HITS_DAYS} days)"
                 fragment = DetectionFragment.newInstance(1)
             }
             R.id.nav_information -> {
@@ -235,6 +230,21 @@ class MainActivity : AppCompatActivity(),
         super.onResume()
         mSettingsFlag = false;
         disableDoze()
+
+        doAsync {
+            val db = DataManager.getDefault(this@MainActivity)
+            val si = ServerInterface.getDefault(this@MainActivity)
+
+            try {
+                // TODO: detect internet connection and try flush when is
+                db.trimHitsDb()
+                db.sendHitsToNetwork(si)
+                db.flushCachedPings(si)
+            } catch (e: Exception) {
+                Log.e(TAG, "Unable to sent to server", e)
+            }
+            db.closeDb()
+        }
     }
 
     override fun onPause() {

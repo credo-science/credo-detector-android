@@ -2,17 +2,23 @@ package science.credo.credomobiledetektor.database
 
 import android.content.Context
 import android.util.Log
+import com.fasterxml.jackson.annotation.JsonIgnore
 import ninja.sakib.pultusorm.annotations.AutoIncrement
+import ninja.sakib.pultusorm.annotations.Ignore
 import ninja.sakib.pultusorm.annotations.PrimaryKey
 import ninja.sakib.pultusorm.core.PultusORM
 import ninja.sakib.pultusorm.core.PultusORMCondition
-import science.credo.credomobiledetektor.detection.CachedHit
+import ninja.sakib.pultusorm.core.PultusORMUpdater
 import science.credo.credomobiledetektor.detection.Hit
+import science.credo.credomobiledetektor.events.StatsEvent
+import science.credo.credomobiledetektor.info.ConfigurationInfo
 import science.credo.credomobiledetektor.info.IdentityInfo
-import science.credo.credomobiledetektor.network.NetworkCommunication
 import science.credo.credomobiledetektor.network.ServerInterface
+import science.credo.credomobiledetektor.network.exceptions.ServerException
+import science.credo.credomobiledetektor.network.messages.BaseDeviceInfoRequest
 import science.credo.credomobiledetektor.network.messages.DetectionRequest
-import science.credo.credomobiledetektor.network.messages.DetectionResponse
+import science.credo.credomobiledetektor.network.messages.PingRequest
+import java.util.*
 
 /**
  * Database management class.
@@ -21,87 +27,29 @@ import science.credo.credomobiledetektor.network.messages.DetectionResponse
  *
  * @property context Android context object.
  */
-class DataManager private constructor(context: Context) {
-    val mContext = context
-    var mAppPath: String = context.getFilesDir().getAbsolutePath()
+class DataManager private constructor(val context: Context) {
+    private val mAppPath: String = context.getFilesDir().getAbsolutePath()
 
-    var mHitsDb: PultusORM? = null
-    var mKeyValueDb: PultusORM? = null
-    var mCachedMessagesDb: PultusORM? = null
-
-    val mHitsDBFileName = "hits.db"
-    val mKeyValueFileName = "keyvalue.db"
-    val mDbSchema = "0.4"
-
-
-    val mCachedMessagesFileName = "cachedMessages.db"
+    private val mDbFileName = "cache.db"
+    private val mDbSchema = "0.7"
+    private val mDb = PultusORM(mDbFileName, mAppPath)
 
     companion object {
-        val TAG = "DataManager"
-        val TRIMPERIOD_HITS_DAYS = 10
-        val TRIMPERIOD_HITS = 1000 * 3600 * 24 * TRIMPERIOD_HITS_DAYS
-        val SI = true
-        private var mDataManager: DataManager? = null
-        fun getInstance(context: Context): DataManager {
-            if (mDataManager == null) {
-                mDataManager = DataManager(context)
-            }
-            return mDataManager!!
+        const val TAG = "DataManager"
+        const val TRIM_PERIOD_HITS_DAYS = 10
+        const val TRIM_PERIOD_HITS = 1000 * 3600 * 24 * TRIM_PERIOD_HITS_DAYS
+
+        fun getDefault(context: Context): DataManager {
+            return DataManager(context)
         }
     }
 
     init {
-        if (!SI) {
-            openHitsDb()
-            openKeyValueDb()
-        }
         checkAndUpdateDbSchema()
     }
 
-    /**
-     * Opens hits database.
-     */
-    private fun openHitsDb() {
-        mHitsDb = PultusORM(mHitsDBFileName, mAppPath)
-    }
-
-    /**
-     * Opens Key-Value database.
-     */
-    private fun openKeyValueDb() {
-        mKeyValueDb = PultusORM(mKeyValueFileName, mAppPath)
-    }
-
-    private fun openCachedMessagesDb() {
-        mCachedMessagesDb = PultusORM(mCachedMessagesFileName, mAppPath)
-    }
-
-    /**
-     * Closes hits database.
-     */
-    private fun closeHitsDb() {
-        mHitsDb?.close()
-    }
-
-    /**
-     * Closes Key-Value databse.
-     */
-    private fun closeKeyValueDb() {
-        mKeyValueDb?.close()
-    }
-
-    private fun closeCachedMessagesDb() {
-        mCachedMessagesDb?.close()
-    }
-
-    /**
-     * Closes both databases.
-     */
     fun closeDb() {
-        if (!SI) {
-            closeHitsDb()
-            closeKeyValueDb()
-        }
+        //mDb.close()
     }
 
     /**
@@ -109,74 +57,12 @@ class DataManager private constructor(context: Context) {
      *
      * @return DataManager object (this).
      */
-    fun checkAndUpdateDbSchema(): DataManager {
-        val schema_key = "database_schema_version"
-        if (SI) openKeyValueDb()
-        val storedDbSchema: String? = get(schema_key)
-        Log.d(TAG, "DBSchema: $storedDbSchema, resources schema: $mDbSchema")
-        if (storedDbSchema != mDbSchema) {
-            Log.d(TAG, "resetting schema")
-            if (SI) {
-                openHitsDb()
-            }
-            mHitsDb!!.drop(Hit())
-            if (SI) {
-                closeHitsDb()
-            }
-            put(schema_key, mDbSchema)
+    private fun checkAndUpdateDbSchema() {
+        if (ConfigurationWrapper(context).dbSchema != mDbSchema) {
+            mDb.drop(Hit())
+            mDb.drop(PingRequest())
+            ConfigurationWrapper(context).dbSchema = mDbSchema
         }
-        if (SI) closeKeyValueDb()
-        return this
-    }
-
-    /**
-     *  Model for KeyValue database.
-     */
-    class KeyValue() {
-        @PrimaryKey
-        @AutoIncrement
-        var id: Int = 0
-        var key: String? = null
-        var value: String? = null
-
-        constructor(k: String, v: String) : this() {
-            key = k; value = v
-        }
-    }
-
-    /**
-     * Retrieve value from KeyValue database based on passed key.
-     *
-     * @param key an unique key that is used in search query.
-     */
-    fun get(key: String): String? {
-        if (SI) openKeyValueDb()
-        val condition: PultusORMCondition = PultusORMCondition.Builder()
-            .eq("key", key)
-            .build()
-        val values = mKeyValueDb!!.find(KeyValue(), condition)
-        if (SI) closeKeyValueDb()
-        for (it in values) {
-            val keyValue = it as KeyValue
-            return keyValue.value
-        }
-        return null
-    }
-
-    /**
-     * Stores value in KeyValue database.
-     *
-     * @param key an unique key.
-     * @param value data to store.
-     */
-    fun put(key: String, value: String) {
-        if (SI) openKeyValueDb()
-        val condition: PultusORMCondition = PultusORMCondition.Builder()
-            .eq("key", key)
-            .build()
-        mKeyValueDb!!.delete(KeyValue(), condition)
-        mKeyValueDb!!.save(KeyValue(key, value))
-        if (SI) closeKeyValueDb()
     }
 
     /**
@@ -185,122 +71,133 @@ class DataManager private constructor(context: Context) {
      * @param hit Hit object which will be saved.
      */
     fun storeHit(hit: Hit) {
-        if (SI) openHitsDb()
-        mHitsDb!!.save(hit)
-        if (SI) closeDb()
+        mDb.save(hit)
     }
 
-    fun storeCachedMessage(message: CachedMessage) {
-        if (SI) openCachedMessagesDb()
-        mCachedMessagesDb!!.save(message)
-        if (SI) closeCachedMessagesDb()
+    private fun updateHit(hit: Hit) {
+        val condition = PultusORMCondition.Builder().eq("id", hit.id).build()
+
+        val toSent = if(hit.toSent) 1 else 0
+
+        val updater = PultusORMUpdater
+                .Builder()
+                .set("toSent", toSent)
+                .set("serverId", hit.serverId)
+                .condition(condition)
+                .build()
+        mDb.update(hit, updater)
     }
 
-    /**
-     * Removes hit from Hits database.
-     *
-     * @param hit Hit object which will be deleted.
-     */
-    fun removeHit(hit: Hit) {
-        if (SI) openHitsDb()
-        mHitsDb!!.delete(hit)
-        if (SI) closeDb()
+    fun storePing(message: PingRequest) {
+        mDb.save(message)
     }
 
+    fun deletePing(ping: PingRequest) {
+        val condition = PultusORMCondition.Builder().eq("id", ping.id).build()
+        mDb.delete(ping, condition)
+    }
     /**
      * Retrieves detected hits from the database.
      *
      * @return MutableList<Hit> list containing found Hit objects.
      */
     fun getHits(): MutableList<Hit> {
-        if (SI) openHitsDb()
-        val hits = mHitsDb!!.find(Hit()) as MutableList<Hit>
-        if (SI) closeHitsDb()
-        return hits
+        return try {
+            mDb.find(Hit()) as MutableList<Hit>
+        } catch (e: NullPointerException) {
+            LinkedList()
+        }
     }
 
-    fun getCachedHits(): MutableList<CachedHit> {
-        if (SI) openHitsDb()
-        val hits = mHitsDb!!.find(CachedHit()) as MutableList<CachedHit>
-        if (SI) closeHitsDb()
-        return hits
-    }
-
-    fun getCachedMessages(): MutableList<CachedMessage> {
-        if (SI) openCachedMessagesDb()
-        val msgs = mCachedMessagesDb!!.find(CachedMessage()) as MutableList<CachedMessage>
-        if (SI) closeCachedMessagesDb()
-        return msgs
+    private fun getCachedPings(): MutableList<PingRequest> {
+        return try {
+            mDb.find(PingRequest()) as MutableList<PingRequest>
+        } catch (e: NullPointerException) {
+            LinkedList()
+        }
     }
 
     /**
      * Returns count of detected hits.
      */
-    fun getHitsNumber(): Long {
-        if (SI) openHitsDb()
-        val number = mHitsDb!!.count(Hit())
-        if (SI) closeDb()
-        return number
+    fun getHitsCount(): Long {
+        return mDb.count(Hit())
     }
 
-    fun getCachedHitsNumber(): Long {
-        if (SI) openHitsDb()
-        val number = mHitsDb!!.count(CachedHit())
-        if (SI) closeDb()
-        return number
-    }
-
-    /**
-     * Stores already uploaded hit.
-     *
-     * @param hit Hit object to be stored.
-     */
-    fun storeCachedHit(hit: Hit) {
-        val cachedHit = CachedHit(hit.frameInfo, hit.locationInfo, hit.factorInfo)
-        storeHit(cachedHit)
+    fun getPingsCount(): Long {
+        return mDb.count(PingRequest())
     }
 
     /**
      * Trims hits that are older than pre-defined live period.
      */
     fun trimHitsDb() {
-        if (SI) openHitsDb()
-        val treshhold = System.currentTimeMillis() - TRIMPERIOD_HITS
-        val hits = mHitsDb!!.find(Hit()) as MutableList<Hit>
-        val cachedHits = mHitsDb!!.find(CachedHit()) as MutableList<CachedHit>
+        val threshold = ((System.currentTimeMillis() - TRIM_PERIOD_HITS) / 10000L).toInt() // PultusORM less condition walkaround
 
-        for (hit in hits) {
-            if (hit.mTimestamp < treshhold) {
-                mHitsDb!!.delete(hit)
-            }
-        }
+        val condition: PultusORMCondition = PultusORMCondition.Builder()
+                .eq("toSent", 0)
+                .and()
+                .less("detectionTimestamp", threshold)
+                .build()
 
-        for (hit in cachedHits) {
-            if (hit.mTimestamp < treshhold) {
-                mHitsDb!!.delete(hit)
-            }
-        }
-
-        if (SI) closeHitsDb()
+        mDb.delete(Hit(), condition)
     }
 
-    fun sendHitsToNetwork() {
-        val hits = getHits()
-        val serverInterface = ServerInterface.getDefault(mContext)
-        val deviceInfo = IdentityInfo.getInstance(mContext).getIdentityData()
-        val request = DetectionRequest(hits, deviceInfo)
-        val response = serverInterface.sendDetections(request)
-    }
+    fun sendHitsToNetwork(si: ServerInterface) {
 
-    fun flushCachedMessages() {
-        val msgs = getCachedMessages()
-        openCachedMessagesDb()
-        for (msg in msgs) {
-            val response = NetworkCommunication.post(msg.mEndpoint, msg.mMessage, msg.mToken)
-            when (response.code) {
-                in 200..299 -> mCachedMessagesDb!!.delete(msg)
+        if (!ConfigurationInfo(context).canUpload) { // TODO: create PrivilegesWrapper, move it
+            return
+        }
+
+        val condition: PultusORMCondition = PultusORMCondition.Builder()
+                .eq("toSent", 1)
+                .build()
+
+        val hits = mDb.find(Hit(), condition) as MutableList<Hit>
+        Log.i(TAG, "Try to flush ${hits.size} cached hits")
+
+        if (hits.size > 0) {
+            val deviceInfo = IdentityInfo.getDefault(context).getIdentityData()
+            try {
+                for (hit in hits) {
+                    val hitsToSend = LinkedList<Hit>()
+                    hitsToSend.add(hit)
+
+                    val request = DetectionRequest.build(deviceInfo, hitsToSend)
+                    val response = si.sendDetections(request)
+                    Log.i(TAG, "Try to flush ${hit.id} sent")
+                    hit.serverId = response.detections[0].id
+                    hit.toSent = false
+                    updateHit(hit)
+                }
+            } catch (e: ServerException) {
+                if ((e.code != 401).and(e.code in 400..499)) {
+                    for (hit in hits) {
+                        hit.toSent = false
+                        updateHit(hit)
+                    }
+                }
             }
         }
-        closeCachedMessagesDb()
+    }
+
+    fun flushCachedPings(si: ServerInterface) {
+        if (!ConfigurationInfo(context).canUpload) { // TODO: create PrivilegesWrapper, move it
+            return
+        }
+
+        val pings = getCachedPings()
+
+        Log.i(TAG, "Try to flush ${pings.size} cached pings")
+        for (ping in pings) {
+            try {
+                si.pingRaw(ping)
+                deletePing(ping)
+            } catch (e: ServerException) {
+                if ((e.code != 401).and(e.code in 400..499)) {
+                    deletePing(ping)
+                }
+            }
+        }
     }
 }

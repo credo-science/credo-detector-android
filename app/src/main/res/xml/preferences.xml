@@ -89,7 +89,16 @@
             android:key="upload_wifi_only"
             android:summary="@string/settings_upload_summary"
             android:title="@string/settings_upload_title" />
+    </PreferenceCategory>
 
+    <PreferenceCategory
+        android:key="debug_category"
+        android:title="Debug">
+
+        <EditTextPreference
+            android:key="endpoint"
+            android:title="Endpoint"
+            android:summary="API Endpoint"/>
     </PreferenceCategory>
 
 

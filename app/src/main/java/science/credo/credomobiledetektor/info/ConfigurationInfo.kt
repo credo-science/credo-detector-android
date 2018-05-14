@@ -100,15 +100,23 @@ class ConfigurationInfo (context: Context) {
 
     val isConnected: Boolean
         get() {
-            val activeNetwork: NetworkInfo? = mConnectManager.activeNetworkInfo
-            val connected = activeNetwork?.isConnectedOrConnecting
-            return activeNetwork != null || connected ?: false
+            return try {
+                val activeNetwork: NetworkInfo? = mConnectManager.activeNetworkInfo
+                val connected = activeNetwork?.isConnectedOrConnecting
+                activeNetwork != null || connected ?: false
+            } catch (e: IllegalStateException) {
+                false
+            }
         }
 
     val isWifiConnected: Boolean
         get() {
-            val activeNetwork: NetworkInfo = mConnectManager.activeNetworkInfo
-            return activeNetwork.type == ConnectivityManager.TYPE_WIFI
+            return try {
+                val activeNetwork: NetworkInfo = mConnectManager.activeNetworkInfo
+                activeNetwork.type == ConnectivityManager.TYPE_WIFI
+            } catch (e: IllegalStateException) {
+                false
+            }
         }
 
     val canUpload: Boolean
