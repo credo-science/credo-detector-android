@@ -158,6 +158,7 @@
     <string name="launcher_toast_debug_activating">Tapnij jeszcze %1$d razy aby włączyć debug mode!</string>
     <string name="launcher_toast_debug_activated">Udało się, włączyłeś debug mode :)</string>
     <string name="launcher_button_turnoff_debug">Wyłącz debug mode</string>
+    <string name="launcher_activate_email_message">Sprawdź pocztę, czeka tam link aktywujący Twoje konto</string>
 
     <!-- Login Activity -->
     <string name="login_title_activity">Logowanie</string>

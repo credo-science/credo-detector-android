@@ -68,10 +68,16 @@ class RegisterActivity : AppCompatActivity() {
         progressDialog.setMessage(getText(R.string.register_message_register_pending))
         progressDialog.show()
 
+        val displayName = if (display_name_input.text.isBlank()) {
+            name_input.text.toString()
+        } else {
+            display_name_input.text.toString()
+        }
+
         val registerRequest = RegisterDeviceInfoRequest.build(
                 email_input.text.toString(),
                 name_input.text.toString(),
-                display_name_input.text.toString(),
+                displayName,
                 password_input.text.toString(),
                 team_input.text.toString(),
                 Locale.getDefault().language, //language_input.text.toString()
@@ -87,8 +93,11 @@ class RegisterActivity : AppCompatActivity() {
         val pref = UserInfoWrapper(this)
 
         registerTask = doAsync {
+            var registered = false
             try {
                 ServerInterface.getDefault(baseContext).register(registerRequest)
+                registered = true
+
                 val response = ServerInterface.getDefault(baseContext).login(loginRequest)
 
                 uiThread {
@@ -106,21 +115,33 @@ class RegisterActivity : AppCompatActivity() {
             } catch (e: ServerException) {
                 uiThread {
                     if (!isClosed) {
-                        // TODO: support response from server i.e. login/email already exists, no connection etc.
-                        progressDialog.dismiss()
-                        onSignupFailed(e.error)
+                        if (registered) {
+                            onNeedActivate()
+                        } else {
+                            progressDialog.dismiss()
+                            onSignupFailed(e.error)
+                        }
                     }
                 }
-            } catch (e :Exception) {
+            } catch (e: Exception) {
                 uiThread {
                     if (!isClosed) {
-                        progressDialog.dismiss()
-                        onSignupFailed(e.message)
+                        if (registered) {
+                            onNeedActivate()
+                        } else {
+                            progressDialog.dismiss()
+                            onSignupFailed(e.message)
+                        }
                     }
                 }
             }
             registerTask = null
         }
+    }
+
+    private fun onNeedActivate() {
+        setResult(Activity.RESULT_FIRST_USER, null)
+        finish()
     }
 
     private fun onSignupSuccess() {

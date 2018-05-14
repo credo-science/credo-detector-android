@@ -155,6 +155,7 @@
     <string name="launcher_toast_debug_activating">Tap %1$d more times to turn on debug mode!</string>
     <string name="launcher_toast_debug_activated">Yeah, debug mode are activated :)</string>
     <string name="launcher_button_turnoff_debug">Turnoff debug mode</string>
+    <string name="launcher_activate_email_message">Check e-mail for activation link</string>
 
     <!-- Login Activity -->
     <string name="login_title_activity">Login</string>

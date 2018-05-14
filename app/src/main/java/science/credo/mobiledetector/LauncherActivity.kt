@@ -29,6 +29,7 @@ class LauncherActivity : AppCompatActivity() {
 
         login_button.onClick {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
+            activate_email_message.visibility = View.GONE
         }
 
         register_button.onClick {
@@ -95,6 +96,8 @@ class LauncherActivity : AppCompatActivity() {
             if (resultCode != Activity.RESULT_OK) {
                 finish()
             }
+        } else if (requestCode == REQUEST_SIGN && resultCode == Activity.RESULT_FIRST_USER) {
+            activate_email_message.visibility = View.VISIBLE
         }
     }
 }
