@@ -78,11 +78,6 @@
     </receiver>
         -->
 
-        <activity android:name=".ResetPasswordActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".LauncherActivity" />
-        </activity>
         <activity
             android:name=".RulesActivity"
             android:label="@string/rules_title_activity">

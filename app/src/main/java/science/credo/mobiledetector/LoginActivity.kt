@@ -3,6 +3,7 @@ package science.credo.mobiledetector
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -10,6 +11,7 @@ import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.info.IdentityInfo
 import science.credo.mobiledetector.network.ServerInterface
@@ -40,7 +42,10 @@ class LoginActivity : AppCompatActivity() {
 
         // Go to Forgot password Activity
         remember_password_button.setOnClickListener {
-            startActivityForResult(Intent(applicationContext, ResetPasswordActivity::class.java), REQUEST_SIGNUP)
+            val endpoint = ConfigurationWrapper(this@LoginActivity).endpoint.replace("/api/v2", "")
+            val href = "$endpoint/web/password_reset/"
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
+            startActivity(browserIntent)
         }
     }
 

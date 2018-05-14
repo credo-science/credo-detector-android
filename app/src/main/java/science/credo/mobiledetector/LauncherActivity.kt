@@ -2,8 +2,10 @@ package science.credo.mobiledetector
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Html
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -34,7 +36,10 @@ class LauncherActivity : AppCompatActivity() {
         }
 
         remember_password_button.onClick {
-            startActivityForResult(Intent(applicationContext, ResetPasswordActivity::class.java), REQUEST_SIGN)
+            val endpoint = ConfigurationWrapper(this@LauncherActivity).endpoint.replace("/api/v2", "")
+            val href = "$endpoint/web/password_reset/"
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
+            startActivity(browserIntent)
         }
 
         debug_mode_off_button.onClick {
