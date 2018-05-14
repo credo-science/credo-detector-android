@@ -2,6 +2,7 @@ package science.credo.credomobiledetektor.network
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
@@ -42,8 +43,10 @@ class NetworkCommunication(val context: Context) {
         return try {
             val response = client.newCall(request).execute()
             val responseString = response.body()?.string() ?: ""
+            Log.v(TAG, "Response: ${response.code()}\n\n$responseString")
             Response(response.code(), responseString)
         } catch (e: IOException) {
+            Log.w(TAG, "Communication error", e)
             Response(0, "")
         }
     }
@@ -55,6 +58,7 @@ class NetworkCommunication(val context: Context) {
      * @return Response object
      */
     fun get(endpoint: String, token: String? = ""): Response {
+        Log.v(TAG, "GET $endpoint")
         return prepareResponse(prepareRequest(endpoint, token).build())
     }
 
@@ -66,6 +70,7 @@ class NetworkCommunication(val context: Context) {
      * @return Response object
      */
     fun post(endpoint: String, json: String, token: String? = ""): Response {
+        Log.v(TAG, "POST $endpoint\n\n$json")
         return prepareResponse(
             prepareRequest(endpoint, token).post(RequestBody.create(JSON, json)).build()
         )
