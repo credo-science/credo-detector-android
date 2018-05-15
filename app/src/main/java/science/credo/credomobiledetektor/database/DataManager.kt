@@ -187,6 +187,11 @@ class DataManager private constructor(context: Context) {
         if (SI) closeDb()
     }
 
+    /**
+     * Stores CachedMessage in database.
+     *
+     * @param message CachedMessage object.
+     */
     fun storeCachedMessage(message: CachedMessage) {
         if (SI) openCachedMessagesDb()
         mCachedMessagesDb!!.save(message)
@@ -216,6 +221,11 @@ class DataManager private constructor(context: Context) {
         return hits
     }
 
+    /**
+     * Retrieves cached hits from the database.
+     *
+     * @return MutableList<CachedHit> list containing found CachedHits objects.
+     */
     fun getCachedHits(): MutableList<CachedHit> {
         if (SI) openHitsDb()
         val hits = mHitsDb!!.find(CachedHit()) as MutableList<CachedHit>
@@ -223,6 +233,11 @@ class DataManager private constructor(context: Context) {
         return hits
     }
 
+    /**
+     * Retrieves cached message from the database.
+     *
+     * @return MutableList<CachedMessage> list containing CachedMessage objects to be synchronized.
+     */
     fun getCachedMessages(): MutableList<CachedMessage> {
         if (SI) openCachedMessagesDb()
         val msgs = mCachedMessagesDb!!.find(CachedMessage()) as MutableList<CachedMessage>
@@ -231,7 +246,7 @@ class DataManager private constructor(context: Context) {
     }
 
     /**
-     * Returns count of detected hits.
+     * @return count of detected hits.
      */
     fun getHitsNumber(): Long {
         if (SI) openHitsDb()
@@ -240,6 +255,9 @@ class DataManager private constructor(context: Context) {
         return number
     }
 
+    /**
+     * @return count of synchronized hits.
+     */
     fun getCachedHitsNumber(): Long {
         if (SI) openHitsDb()
         val number = mHitsDb!!.count(CachedHit())
@@ -281,6 +299,9 @@ class DataManager private constructor(context: Context) {
         if (SI) closeHitsDb()
     }
 
+    /**
+     * Synchronizes hits with the server.
+     */
     fun sendHitsToNetwork() {
         val hits = getHits()
         val serverInterface = ServerInterface.getDefault(mContext)
@@ -289,6 +310,11 @@ class DataManager private constructor(context: Context) {
         val response = serverInterface.sendDetections(request)
     }
 
+    /**
+     * Flushes cached messages.
+     *
+     * Sends cached messages to the server. Message is cached when there is a server or connection error. This function is called on every application startup.
+     */
     fun flushCachedMessages() {
         val msgs = getCachedMessages()
         openCachedMessagesDb()

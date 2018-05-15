@@ -10,6 +10,9 @@ import science.credo.credomobiledetektor.info.LocationInfo
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 
+/**
+ * Stores information about Hit synchronized with network.
+ */
 class CachedHit(
     frameInfo: HitInfo.FrameData,
     locationInfo: LocationInfo.LocationData,

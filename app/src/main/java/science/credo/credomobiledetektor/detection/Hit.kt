@@ -13,6 +13,13 @@ import science.credo.credomobiledetektor.info.LocationInfo
     setterVisibility = JsonAutoDetect.Visibility.NONE
 )
 
+/**
+ * Detection hit model. Contains informations that are synchronized with the API server.
+ *
+ * @property frameInfo frame informations
+ * @property locationInfo location information
+ * @property factorInfo factor information
+ */
 open class Hit(
     val frameInfo: HitInfo.FrameData,
     val locationInfo: LocationInfo.LocationData,
