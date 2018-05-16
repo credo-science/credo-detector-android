@@ -13,7 +13,7 @@
     <string name="navigation_drawer_open">Otvorite navigacijsku ploču</string>
     <string name="navigation_drawer_close">Zatvorite navigacijsku ploču</string>
 
-    <string name="action_settings">Postavke</string>
+    <string name="main_action_settings">Postavke</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -24,12 +24,12 @@
     <string name="title_settings">Postavke</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Postavke</string>
-    <string name="title_activity_register">Registracija</string>
+    <string name="login_title_activity">Registracija</string>
 
     <string name="title_register">Registracija</string>
     <string name="msg_no_network_connection">nema internetske veze</string>
     <string name="msg_network_connection_problem">problem povezivanja s poslužiteljem, pokušajte ponovo kasnje</string>
-    <string name="action_login">Registriraj</string>
+    <string name="main_action_logout">Registriraj</string>
     <string name="login_button_text">Prijavi se</string>
     <string name="register_button_text">Registracija</string>
 

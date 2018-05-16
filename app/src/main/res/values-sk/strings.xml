@@ -8,7 +8,7 @@
     <string name="navigation_drawer_open">Otvoriť navigačný panel</string>
     <string name="navigation_drawer_close">Zatvoriť navigačný panel</string>
 
-    <string name="action_settings">Nastavenia</string>
+    <string name="main_action_settings">Nastavenia</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -19,12 +19,12 @@
     <string name="title_settings">Nastavenia</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Nastavenia</string>
-    <string name="title_activity_register">Registrácia</string>
+    <string name="login_title_activity">Registrácia</string>
 
     <string name="title_register">Registrácia</string>
     <string name="msg_no_network_connection">žiadne sieťové pripojenie</string>
     <string name="msg_network_connection_problem">problém so sieťovým pripojením, prosím skúste neskôr</string>
-    <string name="action_login">Registrácia</string>
+    <string name="main_action_logout">Registrácia</string>
     <string name="login_button_text">login</string>
     <string name="register_button_text">registrovať</string>
 

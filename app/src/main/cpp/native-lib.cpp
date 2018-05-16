@@ -9,11 +9,11 @@
 extern "C" {
 #endif
 
-//science.credo.credomobiledetektor.detection.CameraPreviewCallbackNative
+//science.credo.mobiledetector.detection.CameraPreviewCallbackNative
 //external fun calcHistogram (data: ByteArray, analysisData: LongArray, width: Int, height: Int)
 
 JNIEXPORT void JNICALL
-Java_science_credo_credomobiledetektor_detection_CameraPreviewCallbackNative_calcHistogram (
+Java_science_credo_mobiledetector_detection_CameraPreviewCallbackNative_calcHistogram (
         JNIEnv *env,
         jobject /* this */,
         jbyteArray data,

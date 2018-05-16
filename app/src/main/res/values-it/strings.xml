@@ -8,7 +8,7 @@
     <string name="navigation_drawer_open">Apri il menu di navigazione</string>
     <string name="navigation_drawer_close">Chiudi il menu di navigazione</string>
 
-    <string name="action_settings">Impostazioni</string>
+    <string name="main_action_settings">Impostazioni</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -19,13 +19,13 @@
     <string name="title_settings">Impostazioni</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Impostazioni</string>
-    <string name="title_activity_register">Registrati</string>
+    <string name="login_title_activity">Registrati</string>
 
 
     <string name="title_register">Registrati</string>
     <string name="msg_no_network_connection">Nessuna connessione internet</string>
     <string name="msg_network_connection_problem">Problemi di connessione, ti preghiamo di riprovare più tardi</string>
-    <string name="action_login">Registrati</string>
+    <string name="main_action_logout">Registrati</string>
     <string name="login_button_text">Accedi</string>
     <string name="register_button_text">Registrati</string>
 

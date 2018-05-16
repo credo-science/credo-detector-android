@@ -15,7 +15,6 @@
     <string name="navigation_drawer_open">Otwórz panel nawigacyjny</string>
     <string name="navigation_drawer_close">Zamknij panel nawigacyjny</string>
 
-    <string name="action_settings">Ustawienia</string>
     <string name="credo_name">CREDO</string>
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -26,12 +25,10 @@
     <string name="title_settings">Ustawienia</string>
     <string name="title_information">credo.science</string>
     <string name="title_activity_settings">Ustawienia</string>
-    <string name="title_activity_register">Rejestracja</string>
 
     <string name="title_register">Rejestracja</string>
     <string name="msg_no_network_connection">brak połączenia z internetem</string>
     <string name="msg_network_connection_problem">problem z połączeniem ze serwerem, spróbuj ponownie później</string>
-    <string name="action_login">Rejestruj</string>
     <string name="login_button_text">Zaloguj</string>
     <string name="register_button_text">Zarejestruj</string>
 
@@ -151,5 +148,76 @@
 
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">Po zatrzymaniu detektora odczeka pause camera time czasu i włączy detektor ponownie, domyślnie: 0min</string>
+
+    <!-- Launcher Activity -->
+    <string name="launcher_text_logo">@string/app_name</string>
+    <string name="launcher_button_login">Logowanie</string>
+    <string name="launcher_button_register">Rejestracja</string>
+    <string name="launcher_button_remember_password">Zapomniałem hasła</string>
+    <string name="launcher_input_endpoint">Prowadź inny API Endpoint</string>
+    <string name="launcher_toast_debug_activating">Tapnij jeszcze %1$d razy aby włączyć debug mode!</string>
+    <string name="launcher_toast_debug_activated">Udało się, włączyłeś debug mode :)</string>
+    <string name="launcher_button_turnoff_debug">Wyłącz debug mode</string>
+    <string name="launcher_activate_email_message">Sprawdź pocztę, czeka tam link aktywujący Twoje konto</string>
+
+    <!-- Login Activity -->
+    <string name="login_title_activity">Logowanie</string>
+    <string name="login_text_logo">@string/launcher_text_logo</string>
+    <string name="login_input_login">Login lub e-mail</string>
+    <string name="login_input_password">Hasło</string>
+    <string name="login_button_login">@string/launcher_button_login</string>
+    <string name="login_button_remember_password">@string/launcher_button_remember_password</string>
+    <string name="login_input_login_validation">login musi mieć co najmniej 3 znaku lub być poprawnym adresem e-mail</string>
+    <string name="login_input_password_validation">hasło musi mieć co najmniej 4 znaki</string>
+    <string name="login_toast_login_failed">Logowanie nieudane</string>
+    <string name="login_message_login_pending">Logowanie&#8230;</string>
+    <string name="login_message_validation_failed">Wprowadzono niepoprawne dane</string>
+
+    <!-- Register Activity -->
+    <string name="register_title_activity">Rejestracja</string>
+    <string name="register_text_logo">@string/launcher_text_logo</string>
+    <string name="register_input_login">Login</string>
+    <string name="register_input_email">E-mail</string>
+    <string name="register_input_password">@string/login_input_password</string>
+    <string name="register_input_confirm">Powtórz hasło</string>
+    <string name="register_input_display_name">Nazwa wyświetlana</string>
+    <string name="register_input_team">Drużyna</string>
+    <string name="register_input_language">Język</string>
+    <string name="register_input_accept_rules">Akceptuję regulamin</string>
+    <string name="register_button_view_rules">(zobacz regulamin)</string>
+    <string name="register_button_register">Zarejestruj</string>
+    <string name="register_input_login_validation">login musi mieć co najmniej 3 znaki</string>
+    <string name="register_input_email_validation">wprowadź poprawny adres e-mail</string>
+    <string name="register_input_password_validation">@string/login_input_password_validation</string>
+    <string name="register_input_password2_validation">powtórzone hasło nie zgadza się z pierwszym</string>
+    <string name="register_input_accept_rules_validation">Musisz przeczytać i zaakceptować regulamin</string>
+    <string name="register_toast_register_failed">Nie udało się utworzyć konta</string>
+    <string name="register_message_register_pending">Tworzenie konta uczestnika&#8230;</string>
+    <string name="register_message_validation_failed">@string/login_message_validation_failed</string>
+
+    <!-- Register Activity -->
+    <string name="rules_title_activity">Regulamin</string>
+    <string name="rules_content_file">rules-pl</string>
+
+    <!-- Main Activity -->
+    <string name="main_action_settings">Ustawienia</string>
+    <string name="main_action_account">Drużyna i nazwa</string>
+    <string name="main_action_logout">Wyloguj</string>
+
+    <!-- User account Activity -->
+    <string name="user_title_activity">Ustawienia konta użytkownika</string>
+    <string name="user_input_email">@string/register_input_email</string>
+    <string name="user_input_password">Hasło (zostaw puste jeżeli nie chcesz zmieniać)</string>
+    <string name="user_input_confirm">@string/register_input_confirm</string>
+    <string name="user_input_display_name">@string/register_input_display_name</string>
+    <string name="user_input_team">@string/register_input_team</string>
+    <string name="user_input_language">@string/register_input_language</string>
+    <string name="user_button_save">Zapisz</string>
+    <string name="user_input_email_validation">@string/register_input_email_validation</string>
+    <string name="user_input_password_validation">@string/register_input_password_validation</string>
+    <string name="user_input_password2_validation">@string/register_input_password2_validation</string>
+    <string name="user_toast_save_failed">Błąd zapisywania ustawień konta użytkownika</string>
+    <string name="user_message_save_pending">Zapisywanie ustawień konta użytkownika&#8230;</string>
+    <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
 
 </resources>

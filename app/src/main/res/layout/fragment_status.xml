@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="science.credo.credomobiledetektor.fragment.StatusFragment">
+    tools:context="science.credo.mobiledetector.fragment.StatusFragment">
 
     <TextView
         android:id="@+id/detection_label"
@@ -365,11 +365,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_temperature"
+            android:text="@string/status_fragment_orientation"
             android:textSize="8pt" />
 
         <TextView
-            android:id="@+id/temperature_text"
+            android:id="@+id/orientation_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
