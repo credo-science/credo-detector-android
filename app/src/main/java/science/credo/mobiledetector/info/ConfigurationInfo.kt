@@ -42,7 +42,7 @@ class ConfigurationInfo (context: Context) {
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val maxFactor: Int
-        get() = parseIntPref(mContext, "max", 120)
+        get() = parseIntPref(mContext, "max", 80)
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val averageFactor: Int

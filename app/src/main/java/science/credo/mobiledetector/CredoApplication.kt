@@ -18,11 +18,8 @@ import science.credo.mobiledetector.info.ConfigurationInfo
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AcraCore(buildConfigClass = BuildConfig::class)
-//ToDO Change URL !
-@AcraHttpSender(uri = "http://mars.iti.pk.edu.pl/~nkg/acra/dump.php",
+@AcraHttpSender(uri = "https://api.credo.science/acra/report",
         httpMethod = HttpSender.Method.POST)
-
-
 class CredoApplication : Application() {
 
     val detectorRunning = AtomicBoolean(false)
