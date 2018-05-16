@@ -14,7 +14,7 @@ import android.util.Log
  * Created by poznan on 26/08/2017.
  * Modified by nkg on 17/03/2018
  */
-
+@Deprecated("TODO: move config to ConfiguraionWrapper, leave rest and rename to StateInfo")
 class ConfigurationInfo (context: Context) {
 
     val TAG = "ConfigurationInfo"
@@ -26,44 +26,56 @@ class ConfigurationInfo (context: Context) {
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
                 .getString("LOGIN_TOKEN", null);
 */
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val isChargerOnly: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getBoolean("process_charging_only",true)
+                .getBoolean("process_charging_only",false)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val isWifiOnly: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getBoolean("upload_wifi_only",true)
+                .getBoolean("upload_wifi_only",false)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val cropSize: Int
-        get() = parseIntPref(mContext, "crop", 20)
+        get() = parseIntPref(mContext, "crop", 60)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val maxFactor: Int
         get() = parseIntPref(mContext, "max", 120)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val averageFactor: Int
         get() = parseIntPref(mContext, "average", 30)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val blackFactor: Int
-        get() = parseIntPref(mContext, "black", 0)
+        get() = parseIntPref(mContext, "black", 30)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val blackCount: Int
-        get() = parseIntPref(mContext, "count", 0)
+        get() = parseIntPref(mContext, "count", 999)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val maxTemperature: Int
         get() = parseIntPref(mContext, "temperature", 60)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val batteryLevel: Int
         get() = parseIntPref(mContext, "level", 60)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val stopAfter: Int
         get() = parseIntPref(mContext, "stop_after", 0)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val pauseTime: Int
         get() = parseIntPref(mContext, "pause_time", 0)
 
+    @Deprecated("TODO: move config to ConfiguraionWrapper")
     val isFullFrame: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getBoolean("full_frame",false)
+                .getBoolean("full_frame",true)
 
 
     val isCharging: Boolean
