@@ -138,6 +138,14 @@ class StatusFragment : Fragment() {
                 false -> mListener?.onStartDetection()
             }
         }
+        v.show_statistic.setOnClickListener{
+            if(detection_stats.visibility == View.INVISIBLE){
+                detection_stats.visibility = View.VISIBLE
+            }
+            else{
+                detection_stats.visibility = View.INVISIBLE
+            }
+        }
         return v
     }
 

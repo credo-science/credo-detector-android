@@ -68,6 +68,7 @@
     <string name="status_fragment_switched_off">SWITCHED OFF</string>
     <string name="status_fragment_running">ON: RUNNING</string>
     <string name="status_fragment_hold">ON: ON HOLD</string>
+    <string name="status_fragment_show_statistic">Show stats</string> <!---Translate-->
 
 
     <string name="error_camera">Camera error: %1$s</string>

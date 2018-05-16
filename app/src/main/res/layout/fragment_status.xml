@@ -46,6 +46,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/detection_text" />
 
+    <TextView
+        android:id="@+id/points_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:textSize="12pt"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/detection_text" />
+
     <GridLayout
         android:id="@+id/login_info"
         android:layout_width="wrap_content"
@@ -56,7 +69,7 @@
         app:layout_constraintBottom_toTopOf="@+id/detections_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text">
+        app:layout_constraintTop_toBottomOf="@+id/points_info">
 
         <TextView
             android:layout_width="wrap_content"
@@ -139,8 +152,18 @@
         android:text="@string/status_fragment_toggle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/detection_stats"
         app:layout_constraintTop_toBottomOf="@+id/detections_label" />
+
+    <Button
+        android:id="@+id/show_statistic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/status_fragment_show_statistic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toggle_detection" />
 
     <GridLayout
         android:id="@+id/detection_stats"
@@ -151,8 +174,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggle_detection">
-
+        app:layout_constraintTop_toBottomOf="@+id/toggle_detection"
+        android:visibility="invisible">
 
         <TextView
             android:layout_width="wrap_content"
