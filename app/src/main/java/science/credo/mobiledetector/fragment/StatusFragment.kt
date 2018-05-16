@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import org.greenrobot.eventbus.ThreadMode
 import science.credo.mobiledetector.CredoApplication
 
 import science.credo.mobiledetector.R
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.events.BatteryEvent
@@ -26,6 +28,10 @@ import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.info.*
 import java.text.SimpleDateFormat
 import java.util.*
+import android.content.Context.MODE_PRIVATE
+import android.R.id.edit
+import android.content.SharedPreferences
+import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
 
 class StatusFragment : Fragment() {
@@ -60,6 +66,9 @@ class StatusFragment : Fragment() {
         val dm = DataManager.getDefault(context!!)
         detections_text.text = dm.getHitsCount().toString()
         dm.closeDb()
+
+        val pm = PreferenceManager.getDefaultSharedPreferences(context)
+        points_info.text = pm.getInt("points_pm", 0).toString()
 
         start_text.text = if (statsEvent.startDetectionTimestamp > 0)
             dateFormat.format(statsEvent.startDetectionTimestamp)
@@ -182,6 +191,14 @@ class StatusFragment : Fragment() {
     fun onBatteryEvent(batteryEvent: BatteryEvent) {
         batteryState = batteryEvent
         fillInValuesOnPage()
+    }
+
+    private fun count_points(){
+        val pm = PreferenceManager.getDefaultSharedPreferences(context)
+        var score = pm.getInt("points_pm", 0)
+        score += statsEvent.allFrames * 10
+        score += statsEvent.onTime.toInt() * 1
+        pm.edit().putInt("points_pm", score).commit()
     }
 
 
