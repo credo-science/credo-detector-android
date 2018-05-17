@@ -5,16 +5,19 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.support.v4.app.Fragment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.CredoApplication
 
 import science.credo.mobiledetector.R
@@ -30,6 +33,13 @@ import java.util.*
 
 class StatusFragment : Fragment() {
 
+    private val DETECTION_OFF_LABEL = 0
+    private val DETECTION_ON_LABEL = 1
+    private val DETECTION_HOLD_LABEL = 2
+
+    private val DETECTOR_BUTTON_ON = 0
+    private val DETECTOR_BUTTON_OFF = 1
+
     private val mReceiver = PowerConnectionReceiver()
     private var detectorState: DetectorStateEvent = DetectorStateEvent()
     private var statsEvent = StatsEvent()
@@ -37,12 +47,55 @@ class StatusFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private fun detectionText() : String {
+    private fun detectionStateLabel() : Int {
         return when (detectorState.running) {
-            false -> context!!.getString(R.string.status_fragment_switched_off)
-            true -> when (detectorState.cameraOn) {
-                true -> context!!.getString(R.string.status_fragment_running)
-                false -> context!!.getString(R.string.status_fragment_hold)
+            false -> DETECTION_OFF_LABEL
+            true -> when (statsEvent.activeDetection && detectorState.cameraOn) {
+                true -> DETECTION_ON_LABEL
+                false -> DETECTION_HOLD_LABEL
+            }
+        }
+    }
+
+    private fun detectionButton() : Int {
+        return when (detectorState.running) {
+            false -> DETECTOR_BUTTON_ON
+            true -> DETECTOR_BUTTON_OFF
+        }
+    }
+
+    private fun showStateLabel(nr: Int) {
+        when(nr) {
+            DETECTION_OFF_LABEL -> {
+                detection_off_label.visibility = View.VISIBLE
+                detection_on_label.visibility = View.GONE
+                detection_hold_label.visibility = View.GONE
+            }
+
+            DETECTION_ON_LABEL -> {
+                detection_off_label.visibility = View.GONE
+                detection_on_label.visibility = View.VISIBLE
+                detection_hold_label.visibility = View.GONE
+            }
+
+            DETECTION_HOLD_LABEL -> {
+                detection_off_label.visibility = View.GONE
+                detection_on_label.visibility = View.GONE
+                detection_hold_label.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun showDetectionButton(nr: Int) {
+        when(nr) {
+            DETECTOR_BUTTON_ON -> {
+                start_button.visibility = View.VISIBLE
+                stop_button.visibility = View.GONE
+            }
+
+            DETECTOR_BUTTON_OFF -> {
+                start_button.visibility = View.GONE
+                stop_button.visibility = View.VISIBLE
             }
         }
     }
@@ -54,12 +107,24 @@ class StatusFragment : Fragment() {
         email_text.text = ui.email
         team_text.text = ui.team
 
-        detection_text.text = detectionText()
+        showStateLabel(detectionStateLabel())
+        showDetectionButton(detectionButton())
+        coverage_label.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+
         detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
+
+        if (detection_stats.visibility == View.GONE && detectorState.running) {
+            show_statistic.visibility = View.VISIBLE
+        }
+
+        working_text.text = timePeriodFormat(statsEvent.onTime, false)
 
         val dm = DataManager.getDefault(context!!)
         detections_text.text = dm.getHitsCount().toString()
         dm.closeDb()
+
+        val pm = PreferenceManager.getDefaultSharedPreferences(context)
+        points_info.text = pm.getInt("points_pm", 0).toString()
 
         start_text.text = if (statsEvent.startDetectionTimestamp > 0)
             dateFormat.format(statsEvent.startDetectionTimestamp)
@@ -132,10 +197,23 @@ class StatusFragment : Fragment() {
         detectorState = (context!!.applicationContext as CredoApplication).detectorState
         EventBus.getDefault().register(this)
         val v = inflater.inflate(R.layout.fragment_status, container, false)
-        v.toggle_detection.setOnClickListener {
-            when (detectorState.running) {
-                true -> mListener?.onStopDetection()
-                false -> mListener?.onStartDetection()
+
+        v.start_button.onClick {
+            mListener!!.onStartDetection()
+            //show_statistic.visibility = View.VISIBLE
+        }
+
+        v.stop_button.onClick {
+            mListener!!.onStopDetection()
+        }
+
+        v.show_statistic.setOnClickListener{
+            if(detection_stats.visibility == View.GONE){
+                detection_stats.visibility = View.VISIBLE
+                show_statistic.visibility = View.GONE
+            }
+            else{
+                detection_stats.visibility = View.GONE
             }
         }
         return v
@@ -174,6 +252,14 @@ class StatusFragment : Fragment() {
     fun onBatteryEvent(batteryEvent: BatteryEvent) {
         batteryState = batteryEvent
         fillInValuesOnPage()
+    }
+
+    private fun count_points(){
+        val pm = PreferenceManager.getDefaultSharedPreferences(context)
+        var score = pm.getInt("points_pm", 0)
+        score += statsEvent.allFrames * 10
+        score += statsEvent.onTime.toInt() * 1
+        pm.edit().putInt("points_pm", score).commit()
     }
 
 

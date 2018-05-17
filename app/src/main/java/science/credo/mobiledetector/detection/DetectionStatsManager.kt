@@ -25,6 +25,11 @@ class DetectionStatsManager {
     }
 
     @Synchronized
+    fun activeDetect(detectionOn:Boolean) {
+        statsForScreen.activeDetect(detectionOn)
+    }
+
+    @Synchronized
     fun frameAchieved(width : Int, height : Int) {
         this.width = width
         this.height = height

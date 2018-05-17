@@ -23,7 +23,6 @@ import science.credo.mobiledetector.fragment.*
 import science.credo.mobiledetector.fragment.detections.DetectionContent
 import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.PowerConnectionReceiver
-import android.provider.Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
@@ -201,7 +200,7 @@ class MainActivity : AppCompatActivity(),
                 mSettingsFlag = true
            }
             R.id.nav_statistics -> {
-                title = "Detections (last ${DataManager.TRIM_PERIOD_HITS_DAYS} days)"
+                title = getString(R.string.preview_title_activity, DataManager.TRIM_PERIOD_HITS_DAYS)
                 fragment = DetectionFragment.newInstance(1)
             }
             R.id.nav_information -> {

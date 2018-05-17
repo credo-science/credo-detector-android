@@ -19,10 +19,26 @@ class DetectionStats {
     private var average = StatsValueBuilder()
     private var blacks = StatsValueBuilder()
 
+    private var detection = false
+    private var oldDetection = false
+    private var detectionTimestamp = 0L
+    private var oldDetectionTimestamp = 0L
+    private var onTime = 0L
+
     fun updateStats(max: Long, average: Double, zeroes: Double) {
         this.max.addSample(max.toDouble())
         this.average.addSample(average)
         blacks.addSample(zeroes)
+    }
+
+    fun activeDetect(detectionOn:Boolean) {
+        oldDetection = detection
+        oldDetectionTimestamp = detectionTimestamp
+        this.detection=detectionOn
+        detectionTimestamp = System.currentTimeMillis()
+        if (oldDetection && detection) {
+            onTime += (detectionTimestamp - oldDetectionTimestamp)
+        }
     }
 
     fun frameAchieved() {
@@ -52,15 +68,18 @@ class DetectionStats {
         stats.allFrames = allFrames
         stats.performedFrames = performedFrames
 
+        stats.activeDetection = detection
+
         lastFlushTimestamp = System.currentTimeMillis()
-        val period = lastFlushTimestamp - lastCleansTimestamp
-        val fpms = allFrames.toDouble() / period.toDouble()
-        stats.onTime = (performedFrames / fpms).toLong()
+        //val period = lastFlushTimestamp - lastCleansTimestamp
+        //val fpms = allFrames.toDouble() / period.toDouble()
+        stats.onTime = onTime//(performedFrames / fpms).toLong()
 
         if (cleanCounts) {
             lastCleansTimestamp = lastFlushTimestamp
             allFrames = 0
             performedFrames = 0
+            onTime = 0L
         }
 
         max = StatsValueBuilder()

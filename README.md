@@ -47,3 +47,7 @@ When you get issue to resolve you should:
 4. Rebase branch to master.
 5. Respond to the recommendations from maintainer and push to branch and call to him when finish.
 6. When maintainers fully accept then merge to master.
+
+## Acknowledgments
+
+The CREDO Detector code is funded by: Interantional Visegrad Fund, Institute of Nuclear Physics PAN, Carcow University of Technology.

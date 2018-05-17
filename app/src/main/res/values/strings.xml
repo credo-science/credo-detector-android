@@ -58,18 +58,6 @@
     <string name="debug_cached_hits">number of cached hits:</string>
     <string name="debug_to_upload_hits">number of hits to upload:</string>
 
-    <string name="status_fragment_detection">Detection</string>
-    <string name="status_fragment_name">Name:</string>
-    <string name="status_fragment_email">E-mail:</string>
-    <string name="status_fragment_team">Team:</string>
-    <string name="status_fragment_no_team">no team</string>
-    <string name="status_fragment_detections">Detections last %1$d days:</string>
-    <string name="status_fragment_toggle">Toggle Detection</string>
-    <string name="status_fragment_switched_off">SWITCHED OFF</string>
-    <string name="status_fragment_running">ON: RUNNING</string>
-    <string name="status_fragment_hold">ON: ON HOLD</string>
-
-
     <string name="error_camera">Camera error: %1$s</string>
     <string name="error_emulator">Detection is not working on emulator</string>
     <string name="warning_condition_charging">Hold on because you set detection only when charging but currently no charging</string>
@@ -78,25 +66,6 @@
 
     <string name="credo_logo_alt">CREDO logo</string>
     <string name="button_go_to_experiment">Go to experiment</string>
-    <string name="status_fragment_start">Start:</string>
-    <string name="status_fragment_latest">Working:</string>
-    <string name="status_fragment_size">Size:</string>
-    <string name="status_fragment_count">Frames:</string>
-    <string name="status_fragment_performed">Good:</string>
-    <string name="status_fragment_ontime">On time:</string>
-    <string name="status_fragment_bright">Bright:</string>
-    <string name="status_fragment_max">Max:</string>
-    <string name="status_fragment_battery">Charging:</string>
-    <string name="status_fragment_battery_slow">USB</string>
-    <string name="status_fragment_battery_charge">yes</string>
-    <string name="status_fragment_battery_nocharge">no</string>
-    <string name="status_fragment_level">Battery:</string>
-    <string name="status_fragment_temperature">Temp.:</string>
-    <string name="status_fragment_orientation">Azimuth:</string>
-    <string name="status_fragment_acc">Acc.:</string>
-    <string name="status_fragment_hit">Hit:</string>
-    <string name="status_fragment_black">Blacks:</string>
-
 
     <string name="detections_item_size">Crop size: %1$dx%2$d</string>
     <string name="detections_item_pos">Hit position XY: [%1$d, %2$d]</string>
@@ -217,4 +186,48 @@
     <string name="user_message_save_pending">Save account settings&#8230;</string>
     <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
 
+    <!-- Status fragment -->
+    <string name="status_label_off">OFF</string>
+    <string name="status_label_on">ON</string>
+    <string name="status_label_hold">ON, but paused due to:</string>
+    <string name="status_fragment_coverage">Cover camera!</string>
+    <string name="status_label_working">Working :)</string>
+
+    <string name="status_button_on">Start detection!</string>
+    <string name="status_button_off">Stop detection</string>
+
+    <string name="status_fragment_detection">Detection status:</string>
+    <string name="status_fragment_name">Name:</string>
+    <string name="status_fragment_email">E-mail:</string>
+    <string name="status_fragment_team">Team:</string>
+    <string name="status_fragment_no_team">no team</string>
+    <string name="status_working_time">Working time:</string>
+    <string name="status_fragment_detections">Detections last %1$d days:</string>
+    <string name="status_fragment_toggle">Toggle Detection</string>
+    <string name="status_fragment_switched_off">SWITCHED OFF</string>
+    <string name="status_fragment_running">ON: RUNNING</string>
+    <string name="status_fragment_hold">ON: ON HOLD</string>
+    <string name="status_fragment_show_statistic">Show stats</string> <!---Translate-->
+
+    <string name="status_fragment_start">Start:</string>
+    <string name="status_fragment_latest">Working:</string>
+    <string name="status_fragment_size">Size:</string>
+    <string name="status_fragment_count">Frames:</string>
+    <string name="status_fragment_performed">Good:</string>
+    <string name="status_fragment_ontime">On time:</string>
+    <string name="status_fragment_bright">Bright:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Charging:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">yes</string>
+    <string name="status_fragment_battery_nocharge">no</string>
+    <string name="status_fragment_level">Battery:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_orientation">Azimuth:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Hit:</string>
+    <string name="status_fragment_black">Blacks:</string>
+
+    <!-- Preview activity -->
+    <string name="preview_title_activity">Detections (last %1$d days)</string>
 </resources>

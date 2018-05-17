@@ -1,400 +1,477 @@
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="science.credo.mobiledetector.fragment.StatusFragment">
+    tools:context="science.credo.mobiledetector.fragment.StatusFragment"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        android:id="@+id/detection_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/status_fragment_detection"
-        android:textSize="9pt"
-        app:layout_constraintBottom_toTopOf="@+id/detection_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/detection_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="12pt"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/error_text"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detection_label" />
-
-    <TextView
-        android:id="@+id/error_text"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="7pt"
-        android:textStyle="bold"
-        android:textColor="#ff0000"
-        android:singleLine="false"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/login_info"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/detection_text" />
-
-    <GridLayout
-        android:id="@+id/login_info"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:columnCount="2"
-        android:rowCount="3"
-        app:layout_constraintBottom_toTopOf="@+id/detections_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/error_text">
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:layout_gravity="center">
 
         <TextView
+            android:id="@+id/detection_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_name"
-            android:textSize="8pt" />
+            android:text="@string/status_fragment_detection"
+            android:layout_gravity="center"
+            android:textSize="12sp" />
 
         <TextView
-            android:id="@+id/name_text"
+            android:id="@+id/detection_off_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="8pt"
+            android:textSize="32sp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:text="@string/status_label_off"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/detection_on_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_email"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/email_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="8pt"
+            android:textSize="24sp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:text="@string/status_label_on"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/detection_hold_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_team"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/team_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-    </GridLayout>
-
-
-    <TextView
-        android:id="@+id/detections_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:text="@string/status_fragment_detections"
-        android:textSize="10pt"
-        app:layout_constraintBottom_toTopOf="@+id/toggle_detection"
-        app:layout_constraintEnd_toStartOf="@+id/detections_text"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/login_info" />
-
-    <TextView
-        android:id="@+id/detections_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:textSize="12pt"
-        android:textStyle="bold"
-        app:layout_constraintBaseline_toBaselineOf="@+id/detections_label"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/detections_label" />
-
-    <Button
-        android:id="@+id/toggle_detection"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/status_fragment_toggle"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/detection_stats"
-        app:layout_constraintTop_toBottomOf="@+id/detections_label" />
-
-    <GridLayout
-        android:id="@+id/detection_stats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:columnCount="4"
-        android:rowCount="6"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggle_detection">
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_start"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/start_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
+            android:textSize="24sp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:text="@string/status_label_hold"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/coverage_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_latest"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/latest_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
+            android:textColor="@android:color/holo_red_light"
+            android:textSize="32sp"
+            android:text="@string/status_fragment_coverage"
+            android:visibility="gone"
+            android:layout_gravity="center"
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/working_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_hit"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/hit_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
+            android:textColor="@android:color/holo_green_light"
+            android:textSize="32sp"
+            android:text="@string/status_label_working"
+            android:visibility="gone"
+            android:layout_gravity="center"
             android:textStyle="bold" />
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_size"
-            android:textSize="8pt" />
+            android:textSize="7pt"
+            android:textStyle="bold"
+            android:textColor="#ff0000"
+            android:singleLine="false"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:visibility="gone" />
 
         <TextView
-            android:id="@+id/frame_size_text"
+            android:id="@+id/points_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
+            android:textSize="12pt"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:textColor="#e45024" />
+
+        <GridLayout
+            android:id="@+id/login_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:columnCount="2"
+            android:rowCount="3" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_name"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_email"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/email_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_team"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/team_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_working_time"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/working_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+        </GridLayout>
+
+
+        <TextView
+            android:id="@+id/detections_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="center"
+            android:text="@string/status_fragment_detections"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/detections_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="32sp"
             android:textStyle="bold" />
 
-        <TextView
+        <Button
+            android:id="@+id/start_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_count"
-            android:textSize="8pt" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/holo_green_light"
+            android:padding="32dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/status_button_on" />
 
-        <TextView
-            android:id="@+id/frame_count_text"
+        <Button
+            android:id="@+id/show_statistic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="15dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:text="@string/status_fragment_show_statistic" />
 
-
-        <TextView
+        <GridLayout
+            android:id="@+id/detection_stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/status_fragment_performed"
-            android:textSize="8pt" />
+            android:layout_marginTop="32dp"
+            android:columnCount="4"
+            android:rowCount="6"
+            android:layout_gravity="center"
+            android:visibility="gone">
 
-        <TextView
-            android:id="@+id/frame_performed_text"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_start"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/start_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_latest"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/latest_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_hit"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/hit_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_size"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/frame_size_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_count"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/frame_count_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_performed"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/frame_performed_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_ontime"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/ontime_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_black"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/black_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_bright"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/bright_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_max"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/max_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_battery"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/battery_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_level"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/level_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_orientation"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/orientation_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_acc"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/acc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+        </GridLayout>
+
+        <Button
+            android:id="@+id/stop_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:textColor="@android:color/holo_red_light"
+            android:padding="32dp"
+            android:text="@string/status_button_off" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_ontime"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/ontime_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_black"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/black_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_bright"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/bright_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_max"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/max_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_battery"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/battery_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_level"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/level_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_orientation"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/orientation_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/status_fragment_acc"
-            android:textSize="8pt" />
-
-        <TextView
-            android:id="@+id/acc_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginEnd="16dp"
-            android:textSize="8pt"
-            android:textStyle="bold" />
-    </GridLayout>
-
-</android.support.constraint.ConstraintLayout>
+    </LinearLayout>
+</ScrollView>
