@@ -47,6 +47,7 @@ class StatusFragment : Fragment() {
         }
     }
 
+
     private fun fillInValuesOnPage() {
         val ui = UserInfoWrapper(context!!)
 
@@ -56,6 +57,9 @@ class StatusFragment : Fragment() {
 
         detection_text.text = detectionText()
         detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
+
+        coverage_text.text = if(statsEvent.activeDetection) ""
+        else getText(R.string.status_fragment_coverage)
 
         val dm = DataManager.getDefault(context!!)
         detections_text.text = dm.getHitsCount().toString()

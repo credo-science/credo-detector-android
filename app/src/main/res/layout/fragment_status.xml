@@ -6,6 +6,18 @@
     tools:context="science.credo.mobiledetector.fragment.StatusFragment">
 
     <TextView
+        android:id="@+id/coverage_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/holo_red_dark"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/detection_label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
         android:id="@+id/detection_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +26,7 @@
         app:layout_constraintBottom_toTopOf="@+id/detection_text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/coverage_text"
         app:layout_constraintVertical_chainStyle="packed" />
 
     <TextView
@@ -134,12 +146,12 @@
         android:id="@+id/toggle_detection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/status_fragment_toggle"
+        app:layout_constraintBottom_toTopOf="@+id/detection_stats"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/detection_stats"
         app:layout_constraintTop_toBottomOf="@+id/detections_label" />
 
     <GridLayout

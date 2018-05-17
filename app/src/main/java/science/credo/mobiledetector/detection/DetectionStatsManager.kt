@@ -17,11 +17,18 @@ class DetectionStatsManager {
     private var width = 0
     private var height = 0
     private var startDetectionTimestamp = System.currentTimeMillis()
+    private var detectionOn = false
 
     @Synchronized
     fun updateStats(max: Long, average: Double, zeroes: Double) {
         statsForScreen.updateStats(max, average, zeroes)
         statsForServer.updateStats(max, average, zeroes)
+    }
+
+    @Synchronized
+    fun activeDetect(detectionOn:Boolean) {
+        this.detectionOn=detectionOn
+        statsForScreen.activeDetect(detectionOn)
     }
 
     @Synchronized
@@ -50,7 +57,7 @@ class DetectionStatsManager {
         val serverCondition = checkNextTimePeriod(statsForServer.lastFlushTimestamp, 600000L)
 
         if (force || screenCondition) {
-            val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
+            val statsEvent = StatsEvent(width, height, startDetectionTimestamp,detectionOn)
             statsForScreen.flush(statsEvent, false)
             EventBus.getDefault().post(statsEvent)
         }
