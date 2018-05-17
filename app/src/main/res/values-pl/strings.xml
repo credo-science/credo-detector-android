@@ -20,7 +20,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_status">Stan</string>
-    <string name="title_statistics">Odkrycia</string>
+    <string name="title_statistics">Wykrycia</string>
     <string name="title_login">Login</string>
     <string name="title_settings">Ustawienia</string>
     <string name="title_information">credo.science</string>
@@ -74,19 +74,6 @@
     <string name="debug_cached_hits">number of cached hits:</string>
     <string name="debug_to_upload_hits">number of hits to upload:</string>
 
-    <string name="status_fragment_detection">Detektor</string>
-    <string name="status_fragment_switched_off">OFF</string>
-    <string name="status_fragment_running">ON: DZIAŁA</string>
-    <string name="status_fragment_hold">ON: ZATRZYMANY</string>
-
-    <string name="status_fragment_name">Nick:</string>
-    <string name="status_fragment_email">E-mail:</string>
-    <string name="status_fragment_team">Drużyna:</string>
-
-    <string name="status_fragment_no_team">brak drużyny</string>
-    <string name="status_fragment_detections">Wykrycia w ciągu ostatnich %1$d dni:</string>
-    <string name="status_fragment_toggle">Włącz/wyłącz detektor</string>
-
     <string name="error_camera">Błąd kamery: %1$s</string>
     <string name="error_emulator">Detektor nie będzie działał na emulatorze</string>
     <string name="warning_condition_charging">
@@ -100,22 +87,7 @@
     </string>
 
     <string name="credo_logo_alt">Logo CREDO</string>
-    <string name="button_go_to_experiment">Uruchom eksperyment</string>
-    <string name="status_fragment_start">Start:</string>
-    <string name="status_fragment_latest">Działa:</string>
-    <string name="status_fragment_size">Obraz:</string>
-    <string name="status_fragment_count">Klatki:</string>
-    <string name="status_fragment_bright">Jasność:</string>
-    <string name="status_fragment_max">Max:</string>
-    <string name="status_fragment_battery">Ładowanie:</string>
-    <string name="status_fragment_battery_slow">USB</string>
-    <string name="status_fragment_battery_charge">tak</string>
-    <string name="status_fragment_battery_nocharge">nie</string>
-    <string name="status_fragment_level">Bateria:</string>
-    <string name="status_fragment_temperature">Temp.:</string>
-    <string name="status_fragment_acc">Acc.:</string>
-    <string name="status_fragment_hit">Wykrycie:</string>
-    <string name="status_fragment_black">Czarne:</string>
+    <string name="button_go_to_experiment">Uruchom eksperyment!</string>
 
 
     <string name="detections_item_size">Rozmiar wycinka obrazu: %1$dx%2$d</string>
@@ -219,5 +191,47 @@
     <string name="user_toast_save_failed">Błąd zapisywania ustawień konta użytkownika</string>
     <string name="user_message_save_pending">Zapisywanie ustawień konta użytkownika&#8230;</string>
     <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
+
+    <!-- Status fragment -->
+    <string name="status_label_off">OFF</string>
+    <string name="status_label_on">ON</string>
+    <string name="status_label_hold">ON, ale zatrzymany bo:</string>
+    <string name="status_fragment_coverage">Zasłoń kamerę!</string>
+    <string name="status_label_working">Działa :)</string>
+
+    <string name="status_button_on">Start!</string>
+    <string name="status_button_off">Stop</string>
+
+    <string name="status_fragment_detection">Stan detektora:</string>
+    <string name="status_fragment_name">Nick:</string>
+    <string name="status_fragment_email">E-mail:</string>
+    <string name="status_fragment_team">Drużyna:</string>
+    <string name="status_fragment_no_team">brak drużyny</string>
+    <string name="status_working_time">Czas pracy:</string>
+    <string name="status_fragment_detections">Wykrycia w ciągu ostatnich %1$d dni:</string>
+    <string name="status_fragment_toggle">Włącz/wyłącz detektor</string>
+    <string name="status_fragment_switched_off">OFF</string>
+    <string name="status_fragment_running">ON: Działa</string>
+    <string name="status_fragment_hold">ON: Zatrzymany</string>
+    <string name="status_fragment_show_statistic">Statystyki dla nerdów</string> <!---Translate-->
+
+    <string name="status_fragment_start">Start:</string>
+    <string name="status_fragment_latest">Działa:</string>
+    <string name="status_fragment_size">Obraz:</string>
+    <string name="status_fragment_count">Klatki:</string>
+    <string name="status_fragment_performed">Good:</string>
+    <string name="status_fragment_ontime">On time:</string>
+    <string name="status_fragment_bright">Jasność:</string>
+    <string name="status_fragment_max">Max:</string>
+    <string name="status_fragment_battery">Ładowanie:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">tak</string>
+    <string name="status_fragment_battery_nocharge">nie</string>
+    <string name="status_fragment_level">Bateria:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_orientation">Azymut:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Wykrycie:</string>
+    <string name="status_fragment_black">Czarne:</string>
 
 </resources>

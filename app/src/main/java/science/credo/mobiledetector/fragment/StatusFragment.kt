@@ -11,15 +11,16 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import kotlinx.android.synthetic.main.fragment_status.*
 import kotlinx.android.synthetic.main.fragment_status.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.CredoApplication
 
 import science.credo.mobiledetector.R
-import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.events.BatteryEvent
@@ -28,13 +29,16 @@ import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.info.*
 import java.text.SimpleDateFormat
 import java.util.*
-import android.content.Context.MODE_PRIVATE
-import android.R.id.edit
-import android.content.SharedPreferences
-import org.jetbrains.anko.support.v4.defaultSharedPreferences
 
 
 class StatusFragment : Fragment() {
+
+    private val DETECTION_OFF_LABEL = 0
+    private val DETECTION_ON_LABEL = 1
+    private val DETECTION_HOLD_LABEL = 2
+
+    private val DETECTOR_BUTTON_ON = 0
+    private val DETECTOR_BUTTON_OFF = 1
 
     private val mReceiver = PowerConnectionReceiver()
     private var detectorState: DetectorStateEvent = DetectorStateEvent()
@@ -43,16 +47,58 @@ class StatusFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private fun detectionText() : String {
+    private fun detectionStateLabel() : Int {
         return when (detectorState.running) {
-            false -> context!!.getString(R.string.status_fragment_switched_off)
-            true -> when (detectorState.cameraOn) {
-                true -> context!!.getString(R.string.status_fragment_running)
-                false -> context!!.getString(R.string.status_fragment_hold)
+            false -> DETECTION_OFF_LABEL
+            true -> when (statsEvent.activeDetection && detectorState.cameraOn) {
+                true -> DETECTION_ON_LABEL
+                false -> DETECTION_HOLD_LABEL
             }
         }
     }
 
+    private fun detectionButton() : Int {
+        return when (detectorState.running) {
+            false -> DETECTOR_BUTTON_ON
+            true -> DETECTOR_BUTTON_OFF
+        }
+    }
+
+    private fun showStateLabel(nr: Int) {
+        when(nr) {
+            DETECTION_OFF_LABEL -> {
+                detection_off_label.visibility = View.VISIBLE
+                detection_on_label.visibility = View.GONE
+                detection_hold_label.visibility = View.GONE
+            }
+
+            DETECTION_ON_LABEL -> {
+                detection_off_label.visibility = View.GONE
+                detection_on_label.visibility = View.VISIBLE
+                detection_hold_label.visibility = View.GONE
+            }
+
+            DETECTION_HOLD_LABEL -> {
+                detection_off_label.visibility = View.GONE
+                detection_on_label.visibility = View.GONE
+                detection_hold_label.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private fun showDetectionButton(nr: Int) {
+        when(nr) {
+            DETECTOR_BUTTON_ON -> {
+                start_button.visibility = View.VISIBLE
+                stop_button.visibility = View.GONE
+            }
+
+            DETECTOR_BUTTON_OFF -> {
+                start_button.visibility = View.GONE
+                stop_button.visibility = View.VISIBLE
+            }
+        }
+    }
 
     private fun fillInValuesOnPage() {
         val ui = UserInfoWrapper(context!!)
@@ -61,11 +107,17 @@ class StatusFragment : Fragment() {
         email_text.text = ui.email
         team_text.text = ui.team
 
-        detection_text.text = detectionText()
+        showStateLabel(detectionStateLabel())
+        showDetectionButton(detectionButton())
+        coverage_label.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+
         detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
 
-        coverage_text.text = if(statsEvent.activeDetection) ""
-        else getText(R.string.status_fragment_coverage)
+        if (detection_stats.visibility == View.GONE && detectorState.running) {
+            show_statistic.visibility = View.VISIBLE
+        }
+
+        working_text.text = timePeriodFormat(statsEvent.onTime, false)
 
         val dm = DataManager.getDefault(context!!)
         detections_text.text = dm.getHitsCount().toString()
@@ -145,18 +197,23 @@ class StatusFragment : Fragment() {
         detectorState = (context!!.applicationContext as CredoApplication).detectorState
         EventBus.getDefault().register(this)
         val v = inflater.inflate(R.layout.fragment_status, container, false)
-        v.toggle_detection.setOnClickListener {
-            when (detectorState.running) {
-                true -> mListener?.onStopDetection()
-                false -> mListener?.onStartDetection()
-            }
+
+        v.start_button.onClick {
+            mListener!!.onStartDetection()
+            //show_statistic.visibility = View.VISIBLE
         }
+
+        v.stop_button.onClick {
+            mListener!!.onStopDetection()
+        }
+
         v.show_statistic.setOnClickListener{
-            if(detection_stats.visibility == View.INVISIBLE){
+            if(detection_stats.visibility == View.GONE){
                 detection_stats.visibility = View.VISIBLE
+                show_statistic.visibility = View.GONE
             }
             else{
-                detection_stats.visibility = View.INVISIBLE
+                detection_stats.visibility = View.GONE
             }
         }
         return v

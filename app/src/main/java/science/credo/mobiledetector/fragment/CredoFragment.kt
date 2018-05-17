@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.fragment_credo.view.*
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.R
 
 
@@ -16,7 +17,8 @@ class CredoFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val v = inflater.inflate(R.layout.fragment_credo, container, false)
-        v.go_button.setOnClickListener { mListener!!.onGoToExperiment() }
+        v.go_button.onClick { mListener!!.onGoToExperiment() }
+        v.go2_button.onClick { mListener!!.onGoToExperiment() }
         return v
     }
 
