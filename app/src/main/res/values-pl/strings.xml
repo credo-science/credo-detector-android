@@ -234,4 +234,7 @@
     <string name="status_fragment_hit">Wykrycie:</string>
     <string name="status_fragment_black">Czarne:</string>
 
+    <!-- Preview activity -->
+    <string name="preview_title_activity">Wykrycia (ostatnie %1$d dni)"</string>
+
 </resources>
