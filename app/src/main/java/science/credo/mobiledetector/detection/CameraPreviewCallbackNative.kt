@@ -77,9 +77,11 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                 if (averageBrightCondition && blackPixelsCondition) {
                     if (loop == 0) {
                         detectionStatsManager!!.framePerformed()
+                        detectionStatsManager!!.activeDetect(true)
                     }
 
                     if (brightestPixelCondition) {
+
                         val centerX = maxIndex.rem(width).toInt()
                         val centerY = (maxIndex / width).toInt()
 
@@ -124,6 +126,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         break
                     }
                 } else {
+                    detectionStatsManager!!.activeDetect(false)
                     break
                 }
             }

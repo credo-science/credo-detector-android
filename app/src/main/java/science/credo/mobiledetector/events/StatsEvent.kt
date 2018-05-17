@@ -5,6 +5,7 @@ data class StatsEvent(
         var frameHeight: Int = 0,
 
         var startDetectionTimestamp: Long = 0,
+        var activeDetection: Boolean = false,
         var lastFlushTimestamp: Long = 0,
         var lastFrameAchievedTimestamp: Long = 0,
         var lastFramePerformedTimestamp: Long = 0,
@@ -13,6 +14,7 @@ data class StatsEvent(
         var allFrames: Int = 0,
         var performedFrames: Int = 0,
         var onTime: Long = 0,
+
 
         var blacksStats: StatsValue = StatsValue(),
         var averageStats: StatsValue = StatsValue(),
