@@ -184,7 +184,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             Log.i("AutoCalibration", "max: ${ds.maxStats.average}")
             config.averageFactor = minmax((ds.averageStats.average + 20).toInt(), 10, 60)
             config.blackFactor = minmax((ds.averageStats.average + 20).toInt(), 10, 60)
-            config.maxFactor = minmax(max((ds.maxStats.average + 30).toInt(), 80), config.averageFactor, 160)
+            config.maxFactor = minmax(max((ds.maxStats.average * 3).toInt(), 80), config.averageFactor, 160)
             cw.autoCalibrationPerformed = false
         }
     }
