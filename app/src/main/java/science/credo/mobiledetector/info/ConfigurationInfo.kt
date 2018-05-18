@@ -65,7 +65,7 @@ class ConfigurationInfo (context: Context) {
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val batteryLevel: Int
-        get() = parseIntPref(mContext, "level", 60)
+        get() = parseIntPref(mContext, "level", 0)
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val stopAfter: Int
