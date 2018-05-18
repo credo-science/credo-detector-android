@@ -47,6 +47,12 @@ class LoginActivity : AppCompatActivity() {
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
             startActivity(browserIntent)
         }
+
+        val pref = UserInfoWrapper(this)
+        if (!pref.email.isBlank() && !pref.password.isBlank()) {
+            email_input.setText(pref.email)
+            password_input.setText(pref.password)
+        }
     }
 
     override fun onDestroy() {

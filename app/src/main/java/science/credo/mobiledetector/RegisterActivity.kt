@@ -97,6 +97,8 @@ class RegisterActivity : AppCompatActivity() {
             try {
                 ServerInterface.getDefault(baseContext).register(registerRequest)
                 registered = true
+                pref.email = registerRequest.email
+                pref.password = registerRequest.password
 
                 val response = ServerInterface.getDefault(baseContext).login(loginRequest)
 

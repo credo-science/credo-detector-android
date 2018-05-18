@@ -166,6 +166,11 @@ class MainActivity : AppCompatActivity(),
             R.id.action_logout -> {
                 //startRegisterActivity()
                 UserInfoWrapper(this).token = ""
+                UserInfoWrapper(this).email = ""
+                UserInfoWrapper(this).password = ""
+                UserInfoWrapper(this).login = ""
+                UserInfoWrapper(this).displayName = ""
+                UserInfoWrapper(this).team = ""
                 setResult(Activity.RESULT_OK)
                 ConfigurationWrapper(this).endpoint = ConfigurationWrapper.defaultEndpoint
                 finish()
