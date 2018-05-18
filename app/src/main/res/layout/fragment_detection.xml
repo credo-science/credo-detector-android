@@ -11,7 +11,7 @@
         android:id="@+id/hit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scaleType="fitXY"
+        android:scaleType="centerInside"
         android:antialias="false"
         android:layout_marginRight="8dp"
         android:layout_marginEnd="8dp"
