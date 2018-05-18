@@ -69,6 +69,9 @@ class MainActivity : AppCompatActivity(),
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy")
+        if (!ConfigurationWrapper(this).autoRun) {
+            onStopDetection()
+        }
         super.onDestroy()
     }
 

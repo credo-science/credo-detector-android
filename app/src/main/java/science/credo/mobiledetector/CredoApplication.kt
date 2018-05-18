@@ -12,6 +12,7 @@ import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.info.ConfigurationInfo
@@ -35,6 +36,9 @@ class CredoApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         EventBus.getDefault().register(this)
+        if (!ConfigurationWrapper(this).autoRun) {
+            ConfigurationInfo(this).isDetectionOn = false
+        }
         if (ConfigurationInfo(this).isDetectionOn) {
             turnOnDetection()
         }

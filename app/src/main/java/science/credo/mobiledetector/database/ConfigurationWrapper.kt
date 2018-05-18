@@ -28,6 +28,14 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
             setBoolean("auto_calibration", v)
         }
 
+    var autoRun: Boolean
+        get() {
+            return preferences.getBoolean("auto_run", true)
+        }
+        set(v) {
+            setBoolean("auto_run", v)
+        }
+
     companion object {
         val defaultEndpoint = "https://api.credo.science/api/v2"
     }

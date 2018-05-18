@@ -94,6 +94,9 @@
 
     <string name="settings_factors_name">Parametry algorytmu detekcji</string>
 
+    <string name="pref_auto_run_title">Auto run</string>
+    <string name="pref_auto_run_summary">Auruchom detekcję automatycznie po starcie aplikacji</string>
+
     <string name="pref_register_crop_title">Crop size [px]</string>
     <string name="pref_register_crop_summary">Rozmiar wycinka obrazu, który zawiera wykryte zderzenie, domyślnie: 20</string>
 
