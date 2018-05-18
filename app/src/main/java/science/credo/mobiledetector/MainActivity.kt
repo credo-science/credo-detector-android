@@ -27,6 +27,8 @@ import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.imageView
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
 
@@ -119,6 +121,12 @@ class MainActivity : AppCompatActivity(),
             switchFragment(id)
             drawer.closeDrawer(GravityCompat.START)
              true
+        }
+
+        navigationView.imageView {  }.onClick {
+            val href = "https://api.credo.science/"
+            val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
+            startActivity(browserIntent)
         }
 
         if (credoApplication().detectorRunning.get()) {
