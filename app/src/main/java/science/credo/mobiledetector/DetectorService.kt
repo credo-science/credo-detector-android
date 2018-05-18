@@ -103,6 +103,10 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     }
 
     private fun checkConditionsAndEmitState() : Boolean {
+        if (!mConfigurationInfo!!.isDetectionOn) {
+            return false
+        }
+
         if (mConfigurationInfo!!.isChargerOnly && !batteryState.isCharging) {
             setState(DetectorStateEvent.StateType.Warning, getString(R.string.warning_condition_charging))
             return false
@@ -156,11 +160,11 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             state.cameraOn = true
         } catch (e: RuntimeException) {
             if (CredoApplication.isEmulator()) {
-                Toast.makeText(this, R.string.error_emulator, Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, R.string.error_emulator, Toast.LENGTH_LONG).show()
                 setState(DetectorStateEvent.StateType.Error, getString(R.string.error_emulator))
             } else {
                 val msg = getString(R.string.error_camera, e.message)
-                Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                //Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
                 setState(DetectorStateEvent.StateType.Error, msg)
             }
             return

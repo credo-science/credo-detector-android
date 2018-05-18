@@ -52,8 +52,8 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onStopDetection() {
-        credoApplication().turnOffDetection()
         ConfigurationInfo(this).isDetectionOn = false
+        credoApplication().turnOffDetection()
     }
 
     override fun onListFragmentInteraction(item: DetectionContent.HitItem?) {
