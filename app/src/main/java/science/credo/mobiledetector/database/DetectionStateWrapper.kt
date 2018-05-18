@@ -165,8 +165,8 @@ class DetectionStateWrapper(context: Context, val prefix: String) : SharedPrefer
         allFrames += statsEvent.allFrames
         performedFrames += statsEvent.performedFrames
         onTime += statsEvent.onTime
-        blacksStats.merge(statsEvent.blacksStats)
-        averageStats.merge(statsEvent.averageStats)
-        maxStats.merge(statsEvent.maxStats)
+        blacksStats = blacksStats.merge(statsEvent.blacksStats)
+        averageStats = averageStats.merge(statsEvent.averageStats)
+        maxStats = maxStats.merge(statsEvent.maxStats)
     }
 }

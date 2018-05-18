@@ -21,4 +21,8 @@ open class SharedPreferencesWrapper(val context: Context) {
     fun setLong(key: String, value: Long) {
         preferences.edit().putLong(key, value).apply()
     }
+
+    fun setBoolean(key: String, value: Boolean) {
+        preferences.edit().putBoolean(key, value).apply()
+    }
 }

@@ -13,6 +13,7 @@ class CameraSurfaceHolder(private val hCamera: Camera,
     private val callbackBuffer1: ByteArray
     private val callbackBuffer2: ByteArray
     private val callbackBuffer3: ByteArray
+    private val mCameraPreviewCallbackNative = CameraPreviewCallbackNative(hServiceContext)
 
     private val TAG = "CameraSurfaceHolder"
 
@@ -33,15 +34,16 @@ class CameraSurfaceHolder(private val hCamera: Camera,
 
         try {
             hCamera.setPreviewDisplay(holder)
-        } catch (e: IOException) {
-            e.printStackTrace()
+        } catch (e: Exception) {
+            Log.w(TAG, e)
+            return
         }
 
         hCamera.addCallbackBuffer(callbackBuffer1)
         hCamera.addCallbackBuffer(callbackBuffer2)
         hCamera.addCallbackBuffer(callbackBuffer3)
 
-        hCamera.setPreviewCallbackWithBuffer(CameraPreviewCallbackNative(hServiceContext))
+        hCamera.setPreviewCallbackWithBuffer(mCameraPreviewCallbackNative)
 
         hCamera.startPreview()
     }
@@ -52,6 +54,10 @@ class CameraSurfaceHolder(private val hCamera: Camera,
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
         Log.d(TAG, "surfaceDestroyed")
+    }
+
+    fun flush() {
+        mCameraPreviewCallbackNative.flush()
     }
 }
 

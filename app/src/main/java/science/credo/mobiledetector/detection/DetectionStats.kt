@@ -2,6 +2,7 @@ package science.credo.mobiledetector.detection
 
 import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.events.StatsValueBuilder
+import kotlin.math.min
 
 class DetectionStats {
     var lastFlushTimestamp = System.currentTimeMillis()
@@ -37,7 +38,7 @@ class DetectionStats {
         this.detection=detectionOn
         detectionTimestamp = System.currentTimeMillis()
         if (oldDetection && detection) {
-            onTime += (detectionTimestamp - oldDetectionTimestamp)
+            onTime += min(detectionTimestamp - oldDetectionTimestamp, 1000)
         }
     }
 

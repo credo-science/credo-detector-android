@@ -54,6 +54,12 @@
             android:summary="@string/pref_register_crop_summary"
             android:id="@android:id/edit"/>
 
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:key="auto_calibration"
+            android:title="@string/pref_auto_calibration_title"
+            android:summary="@string/pref_auto_calibration_summary" />
+
         <EditTextPreference
             android:key="max"
             android:title="@string/pref_register_max_title"

@@ -8,7 +8,9 @@ import android.util.Log
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.CredoApplication
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
+import science.credo.mobiledetector.database.DetectionStateWrapper
 import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.IdentityInfo
 import science.credo.mobiledetector.info.LocationInfo
@@ -40,17 +42,27 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
         val config = ConfigurationInfo(mContext)
         val sensorsState = (mContext.applicationContext as CredoApplication).detectorState
+        val width: Int
+        val height: Int
+
+        try {
+            val parameters = hCamera.parameters
+            width = parameters.previewSize.width
+            height = parameters.previewSize.height
+        } catch (e: Exception) {
+            Log.w(TAG, e)
+            return
+        }
+
+        val analysisData = LongArray(aDataSize)
 
         doAsync {
 
-            val parameters = hCamera.parameters
-            val width = parameters.previewSize.width
-            val height = parameters.previewSize.height
-            val analysisData = LongArray(aDataSize)
 
             var loop = -1
             detectionStatsManager!!.frameAchieved(width, height)
             val hits = LinkedList<Hit>()
+            val timestamp = System.currentTimeMillis()
 
             while (loop < MAX_HITS_ONE_FRAME) {
                 loop++
@@ -76,8 +88,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
                 if (averageBrightCondition && blackPixelsCondition) {
                     if (loop == 0) {
-                        detectionStatsManager!!.framePerformed()
-                        detectionStatsManager!!.activeDetect(true)
+                        detectionStatsManager!!.framePerformed(max, average, blacks)
                     }
 
                     if (brightestPixelCondition) {
@@ -99,7 +110,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
                         val hit = Hit(
                                 dataString,
-                                System.currentTimeMillis(),
+                                timestamp,
                                 location.latitude,
                                 location.longitude,
                                 location.altitude,
@@ -126,7 +137,9 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         break
                     }
                 } else {
-                    detectionStatsManager!!.activeDetect(false)
+                    if (loop == 0) {
+                        detectionStatsManager!!.activeDetect(false)
+                    }
                     break
                 }
             }
@@ -155,6 +168,34 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                 mDataManager.closeDb()
             }
         }
+        doAutoCallibrationIfNeed()
+    }
+
+    private fun doAutoCallibrationIfNeed() {
+        val cw = ConfigurationWrapper(mContext)
+        val config = ConfigurationInfo(mContext)
+        if (!cw.autoCalibrationPerformed) {
+            return
+        }
+
+        val ds = DetectionStateWrapper.getTotal(mContext)
+        if (ds.performedFrames > 500) {
+            Log.i("AutoCalibration", "average: ${ds.averageStats.average}")
+            Log.i("AutoCalibration", "max: ${ds.maxStats.average}")
+            config.averageFactor = minmax((ds.averageStats.average + 20).toInt(), 10, 60)
+            config.blackFactor = minmax((ds.averageStats.average + 20).toInt(), 10, 60)
+
+            config.maxFactor = minmax((ds.maxStats.average + 30).toInt(), config.averageFactor, 160)
+            cw.autoCalibrationPerformed = false
+        }
+    }
+
+    fun minmax(v: Int, m: Int, a: Int): Int {
+        return max(min(v, a), m)
+    }
+
+    fun flush() {
+        detectionStatsManager?.flush(mContext, true)
     }
 
     external fun calcHistogram(

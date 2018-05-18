@@ -13,6 +13,7 @@ import science.credo.mobiledetector.network.messages.build
 class DetectionStatsManager {
     private val statsForScreen = DetectionStats()
     private val statsForServer = DetectionStats()
+    private val statsForTotal = DetectionStats()
 
     private var width = 0
     private var height = 0
@@ -21,7 +22,7 @@ class DetectionStatsManager {
     @Synchronized
     fun updateStats(max: Long, average: Double, zeroes: Double) {
         statsForScreen.updateStats(max, average, zeroes)
-        statsForServer.updateStats(max, average, zeroes)
+        //statsForServer.updateStats(max, average, zeroes)
     }
 
     @Synchronized
@@ -35,24 +36,33 @@ class DetectionStatsManager {
         this.height = height
         statsForScreen.frameAchieved()
         statsForServer.frameAchieved()
+        statsForTotal.frameAchieved()
     }
 
     @Synchronized
-    fun framePerformed() {
+    fun framePerformed(max: Long, average: Double, zeroes: Double) {
         statsForScreen.framePerformed()
         statsForServer.framePerformed()
+        statsForTotal.framePerformed()
+
+        statsForServer.updateStats(max, average, zeroes)
+        statsForTotal.updateStats(max, average, zeroes)
+
+        statsForScreen.activeDetect(true)
     }
 
     @Synchronized
     fun hitRegistered() {
         statsForScreen.hitRegistered()
         statsForServer.hitRegistered()
+        statsForTotal.hitRegistered()
     }
 
     @Synchronized
     fun flush(context: Context, force : Boolean) {
         val screenCondition = checkNextTimePeriod(statsForScreen.lastFlushTimestamp, 1000L)
         val serverCondition = checkNextTimePeriod(statsForServer.lastFlushTimestamp, 600000L)
+        val totalCondition = checkNextTimePeriod(statsForTotal.lastFlushTimestamp, 60000L)
 
         if (force || screenCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
@@ -70,6 +80,11 @@ class DetectionStatsManager {
             }
 
             DetectionStateWrapper.getLatestSession(context).merge(statsEvent)
+        }
+
+        if (force || totalCondition) {
+            val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
+            statsForTotal.flush(statsEvent,  true)
             DetectionStateWrapper.getTotal(context).merge(statsEvent)
         }
     }

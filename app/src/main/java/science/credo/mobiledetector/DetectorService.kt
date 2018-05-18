@@ -17,6 +17,7 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
+import kotlinx.coroutines.experimental.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import science.credo.mobiledetector.detection.CameraSurfaceHolder
@@ -43,6 +44,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     private val mReceiver = PowerConnectionReceiver()
     private var mConfigurationInfo: ConfigurationInfo? = null
     private var mSensorManager: SensorManager? = null
+
+    private var mCameraSurfaceHolder: CameraSurfaceHolder? = null
 
     override fun onBind(intent: Intent): IBinder? {
         throw UnsupportedOperationException("Not yet implemented")
@@ -190,7 +193,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE + WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT)
 
-        mSurfaceView?.holder?.addCallback(CameraSurfaceHolder(mCamera!!, baseContext))
+        mCameraSurfaceHolder = CameraSurfaceHolder(mCamera!!, baseContext)
+        mSurfaceView?.holder?.addCallback(mCameraSurfaceHolder)
 
         mWindowManager?.addView(mSurfaceView, params)
         mSurfaceView?.setZOrderOnTop(false)
@@ -206,9 +210,10 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         }
 
         state.cameraOn = false
-        mCamera?.setPreviewCallbackWithBuffer(null);
-        mCamera?.stopPreview()
+        mSurfaceView?.holder?.removeCallback(mCameraSurfaceHolder)
         mWindowManager?.removeView(mSurfaceView)
+        mCamera?.stopPreview()
+        mCameraSurfaceHolder?.flush()
         mCamera?.release()
         emitStateChange()
     }

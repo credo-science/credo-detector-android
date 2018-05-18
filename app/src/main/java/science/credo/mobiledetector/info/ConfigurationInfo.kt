@@ -41,16 +41,19 @@ class ConfigurationInfo (context: Context) {
         get() = parseIntPref(mContext, "crop", 60)
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
-    val maxFactor: Int
+    var maxFactor: Int
         get() = parseIntPref(mContext, "max", 80)
+        set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("max", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
-    val averageFactor: Int
+    var averageFactor: Int
         get() = parseIntPref(mContext, "average", 30)
+        set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("average", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
-    val blackFactor: Int
+    var blackFactor: Int
         get() = parseIntPref(mContext, "black", 30)
+        set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("black", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val blackCount: Int

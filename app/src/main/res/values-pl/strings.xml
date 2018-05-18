@@ -97,6 +97,9 @@
     <string name="pref_register_crop_title">Crop size [px]</string>
     <string name="pref_register_crop_summary">Rozmiar wycinka obrazu, który zawiera wykryte zderzenie, domyślnie: 20</string>
 
+    <string name="pref_auto_calibration_title">Autokalibracja</string>
+    <string name="pref_auto_calibration_summary">Przeprowadź autokalibrację</string>
+
     <string name="pref_register_max_title">Max factor [0–255]</string>
     <string name="pref_register_max_summary">Ignoruj klatki obrazu, których najjaśniejszy piksel jest ciemniejszy niż max factor, domyślnie: 120</string>
 
@@ -111,6 +114,9 @@
 
     <string name="pref_register_temperature_title">Max temperature [°C]</string>
     <string name="pref_register_temperature_summary">Zatrzymaj detektor gdy temperatura telefonu wzrośnie powyżej max temperature, domyślnie: 60°C</string>
+
+    <string name="pref_full_frame_title">Uzyj pełnej rozdzielczości</string>
+    <string name="pref_full_frame_summary">Użycie pełnej rozdzielczości kamery może zwiększyć nagrzewanie się urządzenia i tempo wyczerpywania baterii (jeżeli nie jest podłączony do prądu).</string>
 
     <string name="pref_register_level_title">Battery level [0–100%]</string>
     <string name="pref_register_level_summary">Zatrzymaj detektor gdy poziom naładowania baterii będzie niższy niż battery level, domyślnie: 60%</string>
