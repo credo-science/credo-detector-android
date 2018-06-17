@@ -42,17 +42,17 @@ class ConfigurationInfo (context: Context) {
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     var maxFactor: Int
-        get() = parseIntPref(mContext, "max", 80)
+        get() = parseIntPref(mContext, "max", 120)
         set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("max", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     var averageFactor: Int
-        get() = parseIntPref(mContext, "average", 30)
+        get() = parseIntPref(mContext, "average", 40)
         set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("average", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     var blackFactor: Int
-        get() = parseIntPref(mContext, "black", 30)
+        get() = parseIntPref(mContext, "black", 40)
         set(v) { PreferenceManager.getDefaultSharedPreferences(mContext).edit().putString("black", "$v").apply() }
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")

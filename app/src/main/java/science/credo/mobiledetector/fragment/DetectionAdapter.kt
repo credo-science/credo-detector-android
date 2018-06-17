@@ -33,7 +33,7 @@ class DetectionAdapter(
         val img = BitmapFactory.decodeByteArray(dataString, 0, dataString.size)
 
         var scaleFactor = 2
-        while (img.width * scaleFactor < 320) {
+        while (img.width * scaleFactor < 640) {
             scaleFactor *= 2
         }
 
