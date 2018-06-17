@@ -49,6 +49,7 @@ class DetectionStatsManager {
         statsForTotal.updateStats(max, average, zeroes)
 
         statsForScreen.activeDetect(true)
+        statsForServer.activeDetect(true)
     }
 
     @Synchronized
