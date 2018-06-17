@@ -17,7 +17,6 @@ class PowerConnectionReceiver : BroadcastReceiver() {
         fun parseIntent(intent: Intent) : BatteryEvent {
             val battery = BatteryEvent()
             battery.status = intent.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-            battery.isCharging = battery.status == BatteryManager.BATTERY_STATUS_CHARGING || battery.status == BatteryManager.BATTERY_STATUS_FULL
 
             battery.chargePlug = intent.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
             battery.usbCharge = battery.chargePlug == BatteryManager.BATTERY_PLUGGED_USB
@@ -32,6 +31,8 @@ class PowerConnectionReceiver : BroadcastReceiver() {
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
 
             battery.batteryPct = level * 100 / scale
+
+            battery.isCharging = battery.status == BatteryManager.BATTERY_STATUS_CHARGING || battery.status == BatteryManager.BATTERY_STATUS_FULL || battery.usbCharge || battery.acCharge || battery.batteryPct > 90
 
             return battery
         }
