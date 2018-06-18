@@ -101,7 +101,7 @@ fun build(timestamp: Long, deviceInfo: IdentityInfo.IdentityData, stats: StatsEv
             deviceInfo.device_model,
             deviceInfo.system_version,
             deviceInfo.app_version,
-            stats.onTime,
+            timestamp - stats.lastFlushTimestamp,
             timestamp,
             stats.frameWidth,
             stats.frameHeight,
