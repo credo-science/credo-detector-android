@@ -34,15 +34,15 @@
   "max_stats_samples": 29
 }
 ```
-* `device_id` - unique ID of hardware
-* `device_type` - device type (TODO: what for non Android smartphones),
-* `device_model": device model  (TODO: what for non Android smartphones),
-* `system_version": "26-8.0.0",
-* `app_version` - "6",
-* `delta_time` - 1025,
-* `timestamp` - 1526290053096,
-* `frame_width` - 720,
-* `frame_height` - 480,
+* `device_id:string` - unique ID of hardware
+* `device_type:string` - device type (TODO: what for non Android smartphones),
+* `device_model:string` - device model (TODO: what for non Android smartphones),
+* `system_version:string` - version of OS (TODO: what for non Android smartphones),
+* `app_version:int` - version of app (TODO: what for non Android smartphones uses other app),
+* `delta_time:long` - time in ms from start of detection of sent previous `ping` frame,
+* `timestamp:long` - timestamp of this frame creation,
+* `frame_width:int` - width of camera frame in pixels,
+* `frame_height:int` - height of camera frame in pixels,
 * `start_detection_timestamp` - 1526290045757,
 * `last_flush_timestamp` - 1526290052067,
 * `last_frame_achieved_timestamp` - 1526290053081,
