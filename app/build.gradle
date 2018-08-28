@@ -9,8 +9,8 @@ android {
         applicationId "science.credo.mobiledetector"
         minSdkVersion 14
         targetSdkVersion 22
-        versionCode 9
-        versionName "1.0.5"
+        versionCode 10
+        versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
