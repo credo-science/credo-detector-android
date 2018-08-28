@@ -36,6 +36,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
 
+        val timestamp = System.currentTimeMillis()
+
         if (detectionStatsManager == null) {
             detectionStatsManager = DetectionStatsManager()
         }
@@ -62,7 +64,6 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             var loop = -1
             detectionStatsManager!!.frameAchieved(width, height)
             val hits = LinkedList<Hit>()
-            val timestamp = System.currentTimeMillis()
 
             while (loop < MAX_HITS_ONE_FRAME) {
                 loop++
