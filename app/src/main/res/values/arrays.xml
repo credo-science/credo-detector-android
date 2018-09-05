@@ -10,4 +10,16 @@
         <item>20</item>
         <item>30</item>
     </string-array>
+    <string-array name="slider_title">
+        <item>Witaj badaczu!</item>
+        <item>Zakryj kamere</item>
+        <item>Włącz detekcje</item>
+        <item>Podlacz do ladowania</item>
+    </string-array>
+    <string-array name="slider_description">
+        <item>Krok dzieli Cię od wzięcia udziału w międzynarodowych badaniach kosmosu!</item>
+        <item>Dzieki temu bedziemy mogli wychwycic takie rozblyski</item>
+        <item>Za pomoca tego przycisku staniesz się odkrywcą kosmosu!</item>
+        <item>Aplikacja wtedy sama uruchomi detekcje!</item>
+    </string-array>
 </resources>

@@ -68,6 +68,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".LauncherActivity" />
         </activity>
+        <activity
+            android:name=".SliderActivity"
+            android:label="@string/login_title_activity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".LauncherActivity" />
+        </activity>
 
         <!--
     <receiver android:name=".info.PowerConnectionReceiver">

@@ -13,6 +13,13 @@ import kotlinx.android.synthetic.main.activity_launcher.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
+import android.R.id.edit
+import android.preference.PreferenceManager
+import android.R.id.edit
+import android.content.SharedPreferences
+
+
+
 
 const val REQUEST_MAIN = 1
 const val REQUEST_SIGN = 2
@@ -26,6 +33,38 @@ class LauncherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
+
+        /* SliderActivity */
+        //  Declare a new thread to do a preference check
+        val t = Thread(Runnable {
+            //  Initialize SharedPreferences
+            val getPrefs = PreferenceManager
+                    .getDefaultSharedPreferences(baseContext)
+
+            //  Create a new boolean and preference and set it to true
+            val isFirstStart = getPrefs.getBoolean("firstStart", true)
+
+            //  If the activity has never started before...
+            if (isFirstStart) {
+
+                //  Launch app intro
+                val i = Intent(this@LauncherActivity, SliderActivity::class.java)
+
+                runOnUiThread { startActivity(i) }
+
+                //  Make a new preferences editor
+                val e = getPrefs.edit()
+
+                //  Edit preference to make it false because we don't want this to run again
+                e.putBoolean("firstStart", false)
+
+                //  Apply changes
+                e.apply()
+            }
+        })
+        // Start the thread
+        t.start()
+        /* **** */
 
         login_button.onClick {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
