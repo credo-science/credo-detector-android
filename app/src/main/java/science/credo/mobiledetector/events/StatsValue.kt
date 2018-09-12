@@ -12,7 +12,11 @@ data class StatsValue (
         Log.i("MERGE before", "${min} vs ${v.min}, ${max} vs ${v.max}, ${average} vs ${v.average}, ${samples} vs ${v.samples}")
         min = Math.min(min, v.min)
         max = Math.max(max, v.max)
-        average = (average * samples + v.average * v.samples)/(samples + v.samples).toDouble()
+        if (samples + v.samples == 0) {
+            average = v.average
+        } else {
+            average = (average * samples + v.average * v.samples) / (samples + v.samples).toDouble()
+        }
         samples += v.samples
         Log.i("MERGE after", "${min} vs ${v.min}, ${max} vs ${v.max}, ${average} vs ${v.average}, ${samples} vs ${v.samples}")
         return this
