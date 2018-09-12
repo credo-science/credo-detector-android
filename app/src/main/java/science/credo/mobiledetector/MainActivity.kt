@@ -67,9 +67,6 @@ class MainActivity : AppCompatActivity(),
 
     companion object {
         val TAG = "MainActivity"
-        init {
-            System.loadLibrary("native-lib")
-        }
     }
 
     override fun onDestroy() {

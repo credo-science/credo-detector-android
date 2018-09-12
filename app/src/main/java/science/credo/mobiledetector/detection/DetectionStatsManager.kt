@@ -23,7 +23,7 @@ class DetectionStatsManager {
      * Call for update stats for pixels brights.
      */
     @Synchronized
-    fun updateStats(max: Long, average: Double, zeroes: Double) {
+    fun updateStats(max: Int, average: Double, zeroes: Double) {
         statsForScreen.updateStats(max, average, zeroes)
         //statsForServer and statsForTotal is not updated because it will be updated in  framePerformed
     }
@@ -51,7 +51,7 @@ class DetectionStatsManager {
      * Call for update count and pixels brights stats for
      */
     @Synchronized
-    fun framePerformed(max: Long, average: Double, zeroes: Double) {
+    fun framePerformed(max: Int, average: Double, zeroes: Double) {
         statsForScreen.framePerformed()
         statsForServer.framePerformed()
         statsForTotal.framePerformed()

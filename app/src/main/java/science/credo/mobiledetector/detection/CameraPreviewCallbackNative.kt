@@ -67,12 +67,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
             while (loop < MAX_HITS_ONE_FRAME) {
                 loop++
-                calcHistogram(data, analysisData, width, height, config.blackFactor)
+                val (max, maxIndex, sum, zeroes) = calcHistogram(data, width, height, config.blackFactor)
 
-                val max = analysisData[aDataSize - 1]
-                val maxIndex = analysisData[aDataSize - 2]
-                val sum = analysisData[aDataSize - 3]
-                val zeroes = analysisData[aDataSize - 4]
                 val average: Double = sum.toDouble() / (width * height).toDouble()
                 val blacks: Double = zeroes * 1000 / (width * height).toDouble()
 
@@ -198,13 +194,38 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         detectionStatsManager?.flush(mContext, true)
     }
 
-    external fun calcHistogram(
+    fun Byte.toPositiveInt() = toInt() and 0xFF
+
+    data class CalcHistogramResult(val max: Int, val maxIndex: Int, val sum: Long, val zeroes: Int)
+    fun calcHistogram(
         data: ByteArray,
-        analysisData: LongArray,
         width: Int,
         height: Int,
         black: Int
-    )
+    ) : CalcHistogramResult {
+        var sum: Long = 0
+        var max: Int = 0
+        var maxIndex: Int = 0
+        var zeros: Int = 0
+        //var histogram = ByteArray(256)
+
+        for (i in 0..(width*height - 1)) {
+            val byte = data[i].toPositiveInt()
+            //histogram[byte]++
+            if (byte > 0) {
+                sum += byte
+                if (byte > max) {
+                    max = byte
+                    maxIndex = i
+                }
+            }
+            if (byte <= black) {
+                zeros++
+            }
+        }
+
+        return CalcHistogramResult(max, maxIndex, sum, zeros)
+    }
 
     fun bitmap2png (bitmap: Bitmap) : ByteArray {
         val pngData = ByteArrayOutputStream()

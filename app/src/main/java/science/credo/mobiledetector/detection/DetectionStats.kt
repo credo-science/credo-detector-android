@@ -26,7 +26,7 @@ class DetectionStats {
     private var oldDetectionTimestamp = 0L
     private var onTime = 0L
 
-    fun updateStats(max: Long, average: Double, zeroes: Double) {
+    fun updateStats(max: Int, average: Double, zeroes: Double) {
         this.max.addSample(max.toDouble())
         this.average.addSample(average)
         blacks.addSample(zeroes)
