@@ -5,14 +5,23 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.SharedPreferences
+import android.content.res.Configuration
+import android.graphics.ImageFormat
 import android.graphics.PixelFormat
+import android.graphics.SurfaceTexture
 import android.hardware.*
+import android.hardware.camera2.*
+import android.hardware.camera2.params.StreamConfigurationMap
+import android.media.ImageReader
+import android.media.MediaRecorder
 import android.net.ConnectivityManager
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.preference.PreferenceManager
 import android.util.Log
+import android.util.Size
+import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
@@ -20,18 +29,24 @@ import android.widget.Toast
 import kotlinx.coroutines.experimental.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import science.credo.mobiledetector.detection.BaseCameraSurfaceHolder
+import science.credo.mobiledetector.detection.Camera2SurfaceHolder
 import science.credo.mobiledetector.detection.CameraSurfaceHolder
 import science.credo.mobiledetector.events.BatteryEvent
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.PowerConnectionReceiver
+import java.util.HashMap
 import java.util.concurrent.Executors
+import java.util.concurrent.Semaphore
+import java.util.concurrent.TimeUnit
 
 
 class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeListener, SensorEventListener {
     companion object {
         val TAG = "DetectorService"
         var count = 0
+        var cameraApi = 2
     }
 
     private val state = DetectorStateEvent(false)
@@ -39,13 +54,21 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
 
     private var mWakeLock: PowerManager.WakeLock? = null;
     private var mCamera: Camera? = null;
+
+    // Camera2
+    private var mCameraDevice: CameraDevice? = null
+    private val mCameraOpenCloseLock = Semaphore(1)
+    private var mSensorOrientation: Int? = null
+    private var mPreviewBuilder: CaptureRequest.Builder? = null
+    private var mVideoSize: Size? = null
+
     private var mSurfaceView: SurfaceView? = null
     private var mWindowManager: WindowManager? = null
     private val mReceiver = PowerConnectionReceiver()
     private var mConfigurationInfo: ConfigurationInfo? = null
     private var mSensorManager: SensorManager? = null
 
-    private var mCameraSurfaceHolder: CameraSurfaceHolder? = null
+    private var mCameraSurfaceHolder: BaseCameraSurfaceHolder? = null
 
     override fun onBind(intent: Intent): IBinder? {
         throw UnsupportedOperationException("Not yet implemented")
@@ -153,35 +176,37 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             return
         }
 
-        Log.d(TAG, "startCamera: starting camera")
-        try {
-            state.cameraOn = false
-            mCamera = Camera.open()
-            state.cameraOn = true
-        } catch (e: RuntimeException) {
-            if (CredoApplication.isEmulator()) {
-                //Toast.makeText(this, R.string.error_emulator, Toast.LENGTH_LONG).show()
-                setState(DetectorStateEvent.StateType.Error, getString(R.string.error_emulator))
-            } else {
-                val msg = getString(R.string.error_camera, e.message)
-                //Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
-                setState(DetectorStateEvent.StateType.Error, msg)
+        if (cameraApi == 1) {
+            Log.d(TAG, "startCamera: starting camera")
+            try {
+                state.cameraOn = false
+                mCamera = Camera.open()
+                state.cameraOn = true
+            } catch (e: RuntimeException) {
+                if (CredoApplication.isEmulator()) {
+                    //Toast.makeText(this, R.string.error_emulator, Toast.LENGTH_LONG).show()
+                    setState(DetectorStateEvent.StateType.Error, getString(R.string.error_emulator))
+                } else {
+                    val msg = getString(R.string.error_camera, e.message)
+                    //Toast.makeText(this, msg, Toast.LENGTH_LONG).show()
+                    setState(DetectorStateEvent.StateType.Error, msg)
+                }
+                return
             }
-            return
-        }
-        val parameters: Camera.Parameters = mCamera!!.parameters;
-        parameters.setRecordingHint(true)
-        val sizes = parameters.supportedPreviewSizes
-        //val index = sizes.size/2 // ~medium resolution
-        val index = if (ConfigurationInfo(this).isFullFrame) 0 else sizes.size/2
-        for (size in sizes) {
-            Log.d(TAG, "width: ${size.width}, height: ${size.height}")
-        }
-        Log.d(TAG,"will use: ${sizes[index].width}, height: ${sizes[index].height}")
-        parameters.setPreviewSize(sizes[index].width, sizes[index].height)
-        //parameters.previewFormat =
-        mCamera?.parameters = parameters;
+            val parameters: Camera.Parameters = mCamera!!.parameters;
+            parameters.setRecordingHint(true)
+            val sizes = parameters.supportedPreviewSizes
+            //val index = sizes.size/2 // ~medium resolution
+            val index = if (ConfigurationInfo(this).isFullFrame) 0 else sizes.size / 2
+            for (size in sizes) {
+                Log.d(TAG, "width: ${size.width}, height: ${size.height}")
+            }
+            Log.d(TAG, "will use: ${sizes[index].width}, height: ${sizes[index].height}")
+            parameters.setPreviewSize(sizes[index].width, sizes[index].height)
+            //parameters.previewFormat =
+            mCamera?.parameters = parameters;
 
+        }
         mSurfaceView = SurfaceView(this)
         mWindowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
@@ -197,7 +222,12 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE + WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
             PixelFormat.TRANSLUCENT)
 
-        mCameraSurfaceHolder = CameraSurfaceHolder(mCamera!!, baseContext)
+        if (cameraApi == 1) {
+            mCameraSurfaceHolder = CameraSurfaceHolder(mCamera!!, baseContext)
+        } else {
+            state.cameraOn = true
+            mCameraSurfaceHolder = Camera2SurfaceHolder(baseContext)
+        }
         mSurfaceView?.holder?.addCallback(mCameraSurfaceHolder)
 
         mWindowManager?.addView(mSurfaceView, params)
@@ -216,9 +246,13 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         state.cameraOn = false
         mSurfaceView?.holder?.removeCallback(mCameraSurfaceHolder)
         mWindowManager?.removeView(mSurfaceView)
-        mCamera?.stopPreview()
-        mCameraSurfaceHolder?.flush()
-        mCamera?.release()
+        if (cameraApi == 1) {
+            mCamera?.stopPreview()
+            mCameraSurfaceHolder?.flush()
+            mCamera?.release()
+        } else if (cameraApi == 2) {
+            mCameraSurfaceHolder?.flush()
+        }
         emitStateChange()
     }
 

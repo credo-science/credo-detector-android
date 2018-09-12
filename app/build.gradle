@@ -7,9 +7,9 @@ android {
     buildToolsVersion "27.0.3"
     defaultConfig {
         applicationId "science.credo.mobiledetector"
-        minSdkVersion 14
+        minSdkVersion 21
         targetSdkVersion 22
-        versionCode 10
+        versionCode 11
         versionName "1.0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 16

@@ -8,7 +8,7 @@ import java.io.IOException
 
 
 class CameraSurfaceHolder(private val hCamera: Camera,
-                          private val hServiceContext: Context) : SurfaceHolder.Callback {
+                          private val hServiceContext: Context) : BaseCameraSurfaceHolder {
 
     private val callbackBuffer1: ByteArray
     private val callbackBuffer2: ByteArray
@@ -56,7 +56,7 @@ class CameraSurfaceHolder(private val hCamera: Camera,
         Log.d(TAG, "surfaceDestroyed")
     }
 
-    fun flush() {
+    override fun flush() {
         mCameraPreviewCallbackNative.flush()
     }
 }
