@@ -6,7 +6,12 @@ import android.preference.PreferenceManager
 class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context) {
     var endpoint : String
         get() {
-            return preferences.getString("endpoint", defaultEndpoint)
+            val v = preferences.getString("endpoint", defaultEndpoint)
+            if (v == null || v.trim().isEmpty()) {
+                return defaultEndpoint
+            } else {
+                return v
+            }
         }
         set(v) {
             setString("endpoint", v)
