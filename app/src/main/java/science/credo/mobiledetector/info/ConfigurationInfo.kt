@@ -78,7 +78,7 @@ class ConfigurationInfo (context: Context) {
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val isFullFrame: Boolean
         get() = PreferenceManager.getDefaultSharedPreferences(mContext)
-                .getBoolean("full_frame",true)
+                .getBoolean("full_frame", false)
 
 
     val isCharging: Boolean
