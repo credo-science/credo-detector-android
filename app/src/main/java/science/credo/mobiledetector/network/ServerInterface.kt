@@ -64,6 +64,7 @@ class ServerInterface(val context: Context) {
         }
 
         return when(response.code) {
+            0 -> ServerException(response.code, "Connection error $message")
             400 -> BadRequestException(message)
             401 -> UnauthorizedException(message)
             403 -> ForbiddenException(message)
