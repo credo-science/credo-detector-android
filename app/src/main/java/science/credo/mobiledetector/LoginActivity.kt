@@ -115,6 +115,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             } catch (e: ServerException) {
+                Log.e(TAG, "Server error: ", e)
                 // TODO: support response from server i.e. login/email already exists, no connection etc.
                 uiThread {
                     if (!isClosed) {
@@ -123,6 +124,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }
             } catch (e: Exception) {
+                Log.e(TAG, "Other error: ", e)
                 uiThread {
                     if (!isClosed) {
                         progressDialog.dismiss()
