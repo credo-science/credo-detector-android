@@ -29,47 +29,47 @@ class DetectionStatsManager {
     }
 
     @Synchronized
-    fun activeDetect(detectionOn:Boolean) {
-        statsForScreen.activeDetect(detectionOn)
-        statsForServer.activeDetect(detectionOn)
-        statsForTotal.activeDetect(detectionOn)
+    fun activeDetect(detectionOn:Boolean, timestamp: Long) {
+        statsForScreen.activeDetect(detectionOn, timestamp)
+        statsForServer.activeDetect(detectionOn, timestamp)
+        statsForTotal.activeDetect(detectionOn, timestamp)
     }
 
     /**
      * Call for update count of all frames.
      */
     @Synchronized
-    fun frameAchieved(width : Int, height : Int) {
+    fun frameAchieved(width : Int, height : Int, timestamp: Long) {
         this.width = width
         this.height = height
-        statsForScreen.frameAchieved()
-        statsForServer.frameAchieved()
-        statsForTotal.frameAchieved()
+        statsForScreen.frameAchieved(timestamp)
+        statsForServer.frameAchieved(timestamp)
+        statsForTotal.frameAchieved(timestamp)
     }
 
     /**
      * Call for update count and pixels brights stats for
      */
     @Synchronized
-    fun framePerformed(max: Int, average: Double, zeroes: Double) {
-        statsForScreen.framePerformed()
-        statsForServer.framePerformed()
-        statsForTotal.framePerformed()
+    fun framePerformed(max: Int, average: Double, zeroes: Double, timestamp: Long) {
+        statsForScreen.framePerformed(timestamp)
+        statsForServer.framePerformed(timestamp)
+        statsForTotal.framePerformed(timestamp)
 
         //statsForScreen - not updated because is just updated in updateStats
         statsForServer.updateStats(max, average, zeroes)
         statsForTotal.updateStats(max, average, zeroes)
 
-        statsForScreen.activeDetect(true)
-        statsForServer.activeDetect(true)
-        statsForTotal.activeDetect(true)
+        statsForScreen.activeDetect(true, timestamp)
+        statsForServer.activeDetect(true, timestamp)
+        statsForTotal.activeDetect(true, timestamp)
     }
 
     @Synchronized
-    fun hitRegistered() {
-        statsForScreen.hitRegistered()
-        statsForServer.hitRegistered()
-        statsForTotal.hitRegistered()
+    fun hitRegistered(timestamp: Long) {
+        statsForScreen.hitRegistered(timestamp)
+        statsForServer.hitRegistered(timestamp)
+        statsForTotal.hitRegistered(timestamp)
     }
 
     /**
@@ -78,7 +78,7 @@ class DetectionStatsManager {
      * @param force - no check time condition before publish
      */
     @Synchronized
-    fun flush(context: Context, force : Boolean) {
+    fun flush(context: Context, force : Boolean, timestamp: Long) {
 
         // time to publish for screen condition
         val screenCondition = checkNextTimePeriod(statsForScreen.lastFlushTimestamp, 1000L)
@@ -91,17 +91,17 @@ class DetectionStatsManager {
 
         if (force || screenCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
-            statsForScreen.flush(statsEvent, false)
+            statsForScreen.flush(statsEvent, false, timestamp)
             EventBus.getDefault().post(statsEvent)
         }
 
         if (force || serverCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
-            statsForServer.flush(statsEvent,  true)
+            statsForServer.flush(statsEvent,  true, timestamp)
 
             val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getDefault(context).getIdentityData()
             doAsync {
-                ServerInterface.getDefault(context).ping(build(System.currentTimeMillis(), deviceInfo, statsEvent))
+                ServerInterface.getDefault(context).ping(build(statsForServer.lastFlushTimestamp, deviceInfo, statsEvent))
             }
 
             DetectionStateWrapper.getLatestSession(context).merge(statsEvent)
@@ -109,7 +109,7 @@ class DetectionStatsManager {
 
         if (force || totalCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
-            statsForTotal.flush(statsEvent,  true)
+            statsForTotal.flush(statsEvent,  true, timestamp)
             DetectionStateWrapper.getTotal(context).merge(statsEvent)
         }
     }

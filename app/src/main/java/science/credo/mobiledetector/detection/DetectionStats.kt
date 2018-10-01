@@ -21,9 +21,9 @@ class DetectionStats {
     private var blacks = StatsValueBuilder()
 
     private var detection = false
-    private var oldDetection = false
-    private var detectionTimestamp = 0L
-    private var oldDetectionTimestamp = 0L
+    //private var oldDetection = false
+    private var detectionTimestamp = 0L // TODO: rename to frameTimestamp
+    private var oldDetectionTimestamp = 0L // TODO: rename to oldFrameTimestamp
     private var onTime = 0L
 
     fun updateStats(max: Int, average: Double, zeroes: Double) {
@@ -32,31 +32,33 @@ class DetectionStats {
         blacks.addSample(zeroes)
     }
 
-    fun activeDetect(detectionOn:Boolean) {
-        oldDetection = detection
+    fun activeDetect(detectionOn:Boolean, timestamp: Long) { // TODO: detectionOn -> gccFilterResult, activeDetect -> assumeOnTime
+        //oldDetection = detection
         oldDetectionTimestamp = detectionTimestamp
-        this.detection=detectionOn
-        detectionTimestamp = System.currentTimeMillis()
-        if (oldDetection && detection) {
+        this.detection = detectionOn
+        detectionTimestamp = timestamp
+
+        // no add to onTime when gccFilterResult is false or oldFrameTimestamp is not initialized
+        if (detection && oldDetectionTimestamp != 0L) {
             onTime += min(detectionTimestamp - oldDetectionTimestamp, 1000)
         }
     }
 
-    fun frameAchieved() {
+    fun frameAchieved(timestamp: Long) {
         allFrames++
-        lastFrameAchievedTimestamp = System.currentTimeMillis()
+        lastFrameAchievedTimestamp = timestamp
     }
 
-    fun framePerformed() {
+    fun framePerformed(timestamp: Long) {
         performedFrames++
-        lastFramePerformedTimestamp = System.currentTimeMillis()
+        lastFramePerformedTimestamp = timestamp
     }
 
-    fun hitRegistered() {
-        lastHitTimestamp = System.currentTimeMillis()
+    fun hitRegistered(timestamp: Long) {
+        lastHitTimestamp = timestamp
     }
 
-    fun flush(stats : StatsEvent, cleanCounts : Boolean) {
+    fun flush(stats : StatsEvent, cleanCounts : Boolean, timestamp: Long) {
         stats.lastFlushTimestamp = lastFlushTimestamp
         stats.lastFrameAchievedTimestamp = lastFrameAchievedTimestamp
         stats.lastFramePerformedTimestamp = lastFramePerformedTimestamp
@@ -71,7 +73,7 @@ class DetectionStats {
 
         stats.activeDetection = detection
 
-        lastFlushTimestamp = System.currentTimeMillis()
+        lastFlushTimestamp = timestamp
         //val period = lastFlushTimestamp - lastCleansTimestamp
         //val fpms = allFrames.toDouble() / period.toDouble()
         stats.onTime = onTime//(performedFrames / fpms).toLong()

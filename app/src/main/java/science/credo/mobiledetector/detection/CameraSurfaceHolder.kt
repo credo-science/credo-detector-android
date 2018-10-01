@@ -57,7 +57,7 @@ class CameraSurfaceHolder(private val hCamera: Camera,
     }
 
     fun flush() {
-        mCameraPreviewCallbackNative.flush()
+        mCameraPreviewCallbackNative.flush(System.currentTimeMillis())
     }
 }
 

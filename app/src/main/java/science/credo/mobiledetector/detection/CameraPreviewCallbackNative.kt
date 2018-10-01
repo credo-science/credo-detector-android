@@ -62,7 +62,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
 
             var loop = -1
-            detectionStatsManager!!.frameAchieved(width, height)
+            detectionStatsManager!!.frameAchieved(width, height, timestamp)
             val hits = LinkedList<Hit>()
 
             while (loop < MAX_HITS_ONE_FRAME) {
@@ -85,7 +85,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
                 if (averageBrightCondition && blackPixelsCondition) {
                     if (loop == 0) {
-                        detectionStatsManager!!.framePerformed(max, average, blacks)
+                        detectionStatsManager!!.framePerformed(max, average, blacks, timestamp)
                     }
 
                     if (brightestPixelCondition) {
@@ -100,7 +100,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         val endY = min(height, centerY + margin)
 
                         val cropBitmap = ImageConversion.yuv2rgb(data, width, height, offsetX, offsetY, endX, endY)
-                        detectionStatsManager!!.hitRegistered()
+                        detectionStatsManager!!.hitRegistered(timestamp)
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
                         val location = mLocationInfo.getLocationData()
@@ -135,7 +135,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                     }
                 } else {
                     if (loop == 0) {
-                        detectionStatsManager!!.activeDetect(false)
+                        detectionStatsManager!!.activeDetect(false, timestamp)
                     }
                     break
                 }
@@ -144,7 +144,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             uiThread {
                 hCamera.addCallbackBuffer(data)
             }
-            detectionStatsManager!!.flush(mContext, false)
+            detectionStatsManager!!.flush(mContext, false, timestamp)
 
             if (hits.size > 0) {
                 val mDataManager: DataManager = DataManager.getDefault(mContext)
@@ -190,8 +190,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         return max(min(v, a), m)
     }
 
-    fun flush() {
-        detectionStatsManager?.flush(mContext, true)
+    fun flush(timestamp: Long) {
+        detectionStatsManager?.flush(mContext, true, timestamp)
     }
 
     fun Byte.toPositiveInt() = toInt() and 0xFF
