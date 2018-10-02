@@ -222,7 +222,7 @@
     <string name="status_fragment_switched_off">OFF</string>
     <string name="status_fragment_running">ON: Działa</string>
     <string name="status_fragment_hold">ON: Zatrzymany</string>
-    <string name="status_fragment_show_statistic">Statystyki dla nerdów</string> <!---Translate-->
+    <string name="status_fragment_show_statistic">Statystyki dla nerdów</string>
 
     <string name="status_fragment_start">Start:</string>
     <string name="status_fragment_latest">Działa:</string>
