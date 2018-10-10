@@ -5,11 +5,14 @@ import android.os.Build
 
 class IdentityInfo (mContext: Context) {
 
-    private val device_id: String = if (Build.VERSION.SDK_INT >= 26) {
+    // FIXME: Build.SERIAL is deprecated bu Build.getSerial() needs
+    // controversial privilege Manifest.permission.READ_PHONE_STATE
+    private val device_id: String = Build.SERIAL
+    /*if (Build.VERSION.SDK_INT >= 26) {
         Build.getSerial()
     } else {
         Build.SERIAL
-    }
+    }*/
 
     private val deviceType: String = Build.DEVICE
     private val deviceModel: String = Build.MODEL

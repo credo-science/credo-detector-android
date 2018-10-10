@@ -29,7 +29,6 @@ class LauncherActivity : AppCompatActivity() {
 
     companion object {
         private val CAMERA_PERMISSIONS = arrayOf(
-                Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.INTERNET,
