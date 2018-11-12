@@ -4,6 +4,7 @@ import android.content.Context
 import android.hardware.Camera
 import android.util.Log
 import android.view.SurfaceHolder
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import java.io.IOException
 
 
@@ -13,7 +14,7 @@ class CameraSurfaceHolder(private val hCamera: Camera,
     private val callbackBuffer1: ByteArray
     private val callbackBuffer2: ByteArray
     private val callbackBuffer3: ByteArray
-    private val mCameraPreviewCallbackNative = CameraPreviewCallbackNative(hServiceContext)
+    private val mCameraPreviewCallbackNative: CameraPreview
 
     private val TAG = "CameraSurfaceHolder"
 
@@ -25,7 +26,11 @@ class CameraSurfaceHolder(private val hCamera: Camera,
         callbackBuffer1 = ByteArray(size)
         callbackBuffer2 = ByteArray(size)
         callbackBuffer3 = ByteArray(size)
-
+        if (ConfigurationWrapper(hServiceContext).detectionAlgorithm == 2) {
+            mCameraPreviewCallbackNative = CameraPreviewAlgorithm2(hServiceContext)
+        } else {
+            mCameraPreviewCallbackNative = CameraPreviewCallbackNative(hServiceContext)
+        }
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {

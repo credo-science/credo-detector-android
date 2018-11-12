@@ -19,7 +19,7 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
 
     var dbSchema : String
         get() {
-            return preferences.getString("db_schema", "")
+            return preferences.getString("db_schema", "")!!
         }
         set(v) {
             setString("db_schema", v)
@@ -39,6 +39,62 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
         }
         set(v) {
             setBoolean("auto_run", v)
+        }
+
+    var cameraNumber: Int
+        get() {
+            return preferences.getInt("camera_number", 0)
+        }
+        set(v) {
+            setInt("camera_number", v)
+        }
+
+    var detectionAlgorithm: Int
+        get() {
+            return preferences.getInt("detection_algorithm", 2)
+        }
+        set(v) {
+            setInt("detection_algorithm", v)
+        }
+
+    var preferedWidth: Int
+        get() {
+            return preferences.getInt("prefered_width", 1280)
+        }
+        set(v) {
+            setInt("prefered_width", v)
+        }
+
+    var preferedHeight: Int
+        get() {
+            return preferences.getInt("prefered_height", 720)
+        }
+        set(v) {
+            setInt("prefered_height", v)
+        }
+
+    var calibrationFrequency: Int
+        get() {
+            return preferences.getInt("calibration_frequency", 20 * 60 * 1000)
+        }
+        set(v) {
+            setInt("calibration_frequency", v)
+        }
+
+    var calibrationFrames: Int
+        get() {
+            return preferences.getInt("calibration_frames", 100)
+        }
+        set(v) {
+            setInt("calibration_frames", v)
+        }
+
+    var calibrationStages: Int
+        get() {
+            return preferences.getInt("calibration_stages", 10)
+        }
+        set(v) {
+            setInt("calibration_stages", v)
         }
 
     companion object {

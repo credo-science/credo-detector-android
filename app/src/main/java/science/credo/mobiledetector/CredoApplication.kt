@@ -23,6 +23,9 @@ import java.util.concurrent.atomic.AtomicBoolean
         httpMethod = HttpSender.Method.POST)
 class CredoApplication : Application() {
 
+    val globalDeviceState = GlobalDeviceState()
+
+    @Deprecated("TODO: migrate to state from globalDeviceState")
     val detectorRunning = AtomicBoolean(false)
     var detectorState: DetectorStateEvent = DetectorStateEvent(false)
 
@@ -35,6 +38,7 @@ class CredoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        System.loadLibrary("native-lib")
         EventBus.getDefault().register(this)
         if (!ConfigurationWrapper(this).autoRun) {
             ConfigurationInfo(this).isDetectionOn = false

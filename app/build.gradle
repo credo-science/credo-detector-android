@@ -40,6 +40,12 @@ android {
         exclude 'META-INF/LGPL2.1'
     }
 
+    externalNativeBuild {
+        cmake {
+            path 'CMakeLists.txt'
+        }
+    }
+
     lintOptions {
         checkReleaseBuilds false
         abortOnError false

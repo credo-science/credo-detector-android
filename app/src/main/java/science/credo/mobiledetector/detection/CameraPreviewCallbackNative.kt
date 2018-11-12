@@ -24,7 +24,7 @@ import kotlin.math.min
 const val MAX_HITS_ONE_FRAME = 5
 
 
-class CameraPreviewCallbackNative(private val mContext: Context) : Camera.PreviewCallback {
+class CameraPreviewCallbackNative(private val mContext: Context) : CameraPreview() {
     private val mServerInterface = ServerInterface.getDefault(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
 
@@ -190,7 +190,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         return max(min(v, a), m)
     }
 
-    fun flush() {
+    override fun flush() {
         detectionStatsManager?.flush(mContext, true)
     }
 

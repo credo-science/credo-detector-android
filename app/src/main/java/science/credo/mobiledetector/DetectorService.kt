@@ -17,9 +17,9 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import kotlinx.coroutines.experimental.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.detection.CameraSurfaceHolder
 import science.credo.mobiledetector.events.BatteryEvent
 import science.credo.mobiledetector.events.DetectorStateEvent
@@ -34,6 +34,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         var count = 0
     }
 
+    private var globalDeviceState: GlobalDeviceState? = null
     private val state = DetectorStateEvent(false)
     private var batteryState = BatteryEvent()
 
@@ -42,6 +43,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     private var mSurfaceView: SurfaceView? = null
     private var mWindowManager: WindowManager? = null
     private val mReceiver = PowerConnectionReceiver()
+    private var mConfigurationWrapper: ConfigurationWrapper? = null
+    @Deprecated("TODO: migrate to mConfigurationWrapper")
     private var mConfigurationInfo: ConfigurationInfo? = null
     private var mSensorManager: SensorManager? = null
 
@@ -54,25 +57,29 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     override fun onCreate() {
         Log.d(TAG,"onCreate: " + ++count)
         super.onCreate()
+        globalDeviceState = (applicationContext as CredoApplication).globalDeviceState
         state.running = true
         EventBus.getDefault().register(this)
         emitStateChange()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        globalDeviceState!!.detector.running = true
+
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+        mConfigurationWrapper = ConfigurationWrapper(baseContext)
         mConfigurationInfo = ConfigurationInfo(baseContext)
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO_LOCK")
+        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO:CREDO_LOCK")
         mWakeLock?.acquire()
 
         startCamera()
-        Log.d(TAG,"onStartCommand " + count)
+        Log.d(TAG,"onStartCommand $count")
 
         val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
         filter.addAction(Intent.ACTION_BATTERY_CHANGED)
         filter.addAction(Intent.ACTION_POWER_CONNECTED)
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        batteryState = PowerConnectionReceiver.parseIntent(registerReceiver(mReceiver, filter))
+        batteryState = PowerConnectionReceiver.parseIntent(registerReceiver(mReceiver, filter)!!)
 
         mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
@@ -99,6 +106,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         state.running = false
         emitStateChange()
         EventBus.getDefault().unregister(this)
+
+        globalDeviceState!!.detector.running = false
         super.onDestroy()
     }
 
@@ -129,7 +138,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         return true
     }
 
-    fun startStopOnConditionChange() {
+    private fun startStopOnConditionChange() {
         val canProcess = checkConditionsAndEmitState()
         Log.d(TAG,"startStopOnConditionChange: canProcess: $canProcess")
         when {
@@ -142,7 +151,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         startStopOnConditionChange()
     }
 
-    fun startCamera() {
+    private fun startCamera() {
         Log.d(TAG, "startCamera: " + count)
         if (!checkConditionsAndEmitState()) {
             Log.d(TAG, "startCamera: start not allowed")
@@ -156,7 +165,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         Log.d(TAG, "startCamera: starting camera")
         try {
             state.cameraOn = false
-            mCamera = Camera.open()
+            mCamera = Camera.open(mConfigurationWrapper!!.cameraNumber)
+            globalDeviceState!!.detector.working = true
             state.cameraOn = true
         } catch (e: RuntimeException) {
             if (CredoApplication.isEmulator()) {
