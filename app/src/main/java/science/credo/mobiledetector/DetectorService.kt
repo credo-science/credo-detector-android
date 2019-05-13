@@ -17,7 +17,6 @@ import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
-import kotlinx.coroutines.experimental.delay
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import science.credo.mobiledetector.detection.CameraSurfaceHolder
@@ -37,7 +36,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     private val state = DetectorStateEvent(false)
     private var batteryState = BatteryEvent()
 
-    private var mWakeLock: PowerManager.WakeLock? = null;
+    //private var mWakeLock: PowerManager.WakeLock? = null;
     private var mCamera: Camera? = null;
     private var mSurfaceView: SurfaceView? = null
     private var mWindowManager: WindowManager? = null
@@ -62,8 +61,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
         mConfigurationInfo = ConfigurationInfo(baseContext)
-        mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO_LOCK")
-        mWakeLock?.acquire()
+        //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO_LOCK")
+        //mWakeLock?.acquire()
 
         startCamera()
         Log.d(TAG,"onStartCommand " + count)
@@ -89,7 +88,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
 
     override fun onDestroy() {
         mSensorManager?.unregisterListener(this)
-        mWakeLock?.release()
+        //mWakeLock?.release()
         stopCamera()
         Log.d(TAG,"onDestroy: " + --count)
 

@@ -198,6 +198,19 @@
             android:text="@string/status_button_on" />
 
         <Button
+            android:id="@+id/blank_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:textSize="24sp"
+            android:textColor="@android:color/holo_orange_light"
+            android:padding="32dp"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:text="@string/status_button_blank" />
+
+        <Button
             android:id="@+id/show_statistic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -37,6 +37,7 @@ class LauncherActivity : AppCompatActivity() {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
+                //Manifest.permission.WAKE_LOCK
         )
 
         private val REQUEST_PERMISSION_PHONE_STATE = 1
