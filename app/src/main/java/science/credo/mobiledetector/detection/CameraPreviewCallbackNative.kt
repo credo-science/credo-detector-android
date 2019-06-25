@@ -5,8 +5,11 @@ import android.graphics.Bitmap
 import android.hardware.Camera
 import android.util.Base64
 import android.util.Log
+import okhttp3.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import org.json.JSONException
+import org.json.JSONObject
 import science.credo.mobiledetector.CredoApplication
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
@@ -17,6 +20,7 @@ import science.credo.mobiledetector.info.LocationInfo
 import science.credo.mobiledetector.network.ServerInterface
 import science.credo.mobiledetector.network.messages.DetectionRequest
 import java.io.ByteArrayOutputStream
+import java.io.IOException
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -104,6 +108,49 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
                         val location = mLocationInfo.getLocationData()
+
+
+                        val jsonObject = JSONObject()
+                        try {
+                            jsonObject.put("dataString", dataString)
+                            jsonObject.put("timestamp", timestamp)
+                            jsonObject.put("location.latitude", location.latitude)
+                            jsonObject.put("location.longitude", location.longitude)
+                            jsonObject.put("location.altitude", location.altitude)
+                            jsonObject.put("location.accuracy", location.accuracy)
+                            jsonObject.put("location.provider", location.provider)
+                            jsonObject.put("width", width)
+                            jsonObject.put("height", height)
+                            jsonObject.put("centerX", centerX)
+                            jsonObject.put("centerY", centerY)
+                            jsonObject.put("max", max.toInt())
+                            jsonObject.put("average", average)
+                            jsonObject.put("blacks", blacks)
+                            jsonObject.put("config.blackFactor", config.blackFactor)
+                            jsonObject.put("sensorsState.accX", sensorsState.accX)
+                            jsonObject.put("sensorsState.accY", sensorsState.accY)
+                            jsonObject.put("sensorsState.accZ", sensorsState.accZ)
+                            jsonObject.put("sensorsState.orientation", sensorsState.orientation)
+                            jsonObject.put("sensorsState.temperature", sensorsState.temperature)
+                        } catch (e: JSONException) {
+                            e.printStackTrace()
+                        }
+                        val client = OkHttpClient()
+                        val JSON = MediaType.parse("application/json; charset=utf-8")
+                        val body = RequestBody.create(JSON, jsonObject.toString())
+                        val request = Request.Builder()
+                                .url("http://10.0.0.1/")
+                                .post(body)
+                                .build()
+
+                        var response: Response? = null
+                        try {
+                            response = client.newCall(request).execute()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        }
+
+
 
                         val hit = Hit(
                                 dataString,
