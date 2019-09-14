@@ -18,6 +18,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.support.v4.startActivity
+import science.credo.mobiledetector.BlankActivity
 import science.credo.mobiledetector.CredoApplication
 
 import science.credo.mobiledetector.R
@@ -110,6 +112,7 @@ class StatusFragment : Fragment() {
         showStateLabel(detectionStateLabel())
         showDetectionButton(detectionButton())
         coverage_label.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+        blank_button.visibility = if (statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
 
         detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
 
@@ -198,13 +201,17 @@ class StatusFragment : Fragment() {
         EventBus.getDefault().register(this)
         val v = inflater.inflate(R.layout.fragment_status, container, false)
 
-        v.start_button.onClick {
+        v.start_button.setOnClickListener {
             mListener!!.onStartDetection()
             //show_statistic.visibility = View.VISIBLE
         }
 
-        v.stop_button.onClick {
+        v.stop_button.setOnClickListener {
             mListener!!.onStopDetection()
+        }
+
+        v.blank_button.setOnClickListener {
+            startActivity(Intent(context, BlankActivity::class.java))
         }
 
         v.show_statistic.setOnClickListener{
