@@ -1,0 +1,239 @@
+<resources>
+    <string name="app_name">Detector CREDO</string>
+    <string name="app_name_short">Detector</string>
+    <string name="app_title">Observatorio de Rayos Cósmicos Extremadamente Distribuido (CREDO)</string>
+    <string name="app_description">El proyecto CREDO está buscando cascadas de partículas provenientes del espacio profundo en un esfuerzo por responder algunas de las preguntas fundamentales sobre nuestro universo. Sus detecciones de partículas contribuirá directamente en esta nueva àrea pionera de investigación científica. También puede participar en el análisis de las detecciones que usted, ciudadano científico, y observatorios profesionales de todo el mundo están realizando a través del experimento de bienvenida del Universo Oscuro.</string>
+    <string name="app_homepage">Para saber más visita el sitio web de CREDO:</string>
+
+    <string name="navigation_drawer_open">Abrir pestaña de navegación</string>
+    <string name="navigation_drawer_close">Cerrar pestaña de navegación</string>
+
+    <string name="credo_name">CREDO</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hola, fragmento en blanco</string>
+    <string name="title_status">Estado</string>
+    <string name="title_statistics">Detecciones</string>
+    <string name="title_login">Iniciar sesión</string>
+    <string name="title_settings">Ajustes</string>
+    <string name="title_information">api.credo.science</string>
+    <string name="title_activity_settings">Ajustes</string>
+
+    <string name="title_register">Registrarse</string>
+    <string name="msg_no_network_connection">Sin conexión a internet</string>
+    <string name="msg_network_connection_problem">Problema de conexión a internet, por favor inténtelo nuevamente más tarde</string>
+    <string name="login_button_text">Iniciar sesión</string>
+    <string name="register_button_text">Registrarse</string>
+
+    <string name="stats_generate">Generar</string>
+    <string name="stats_upload">Subir</string>
+    <string name="stats_clear_db">Limpiar base de datos</string>
+    <string name="stats_clear_cache_db">Limpiar caché de base de datos</string>
+
+    <string name="settings_detection_name">Detección</string>
+    <string name="settings_detection_title">Detectar únicamente mientras se carga la batería</string>
+    <string name="settings_detecion_summary">Realizar la detección de partículas sólo cuando se esté cargando el dispositivo. Dado que la detección es intensiva y puede agotar la batería rápidamente, se recomienda dejar esta opción configurada. </string>
+
+    <string name="settings_upload_name">Transferir datos</string>
+    <string name="settings_upload_title">Subir datos solo con WIFI</string>
+    <string name="settings_upload_summary">Subir datos solo al estar conectado en una red WIFI.</string>
+
+    <string name="pref_cat_login">Inicio de sesión con nombre de usuario</string>
+    <string name="pref_login_title">Contraseña de usuario</string>
+    <string name="pref_login_summary">Identificación del usuario generada (y enviada por correo electrónico) después del registro del usuario</string>
+
+    <string name="pref_cat_register">Inicio de sesión de usuario y registro de membresía de equipo</string>
+    <string name="pref_register_name_summary">Nombre de usuario o apodo</string>
+    <string name="pref_register_name_title">Nombre</string>
+
+    <string name="pref_register_email_title">E-mail</string>
+    <string name="pref_register_email_summary">Dirección de correo electrónico del usuario</string>
+
+    <string name="pref_register_team_title">Equipo</string>
+    <string name="pref_register_team_summary">Nombre del equipo al que pertenece el usuario</string>
+
+    <string name="hit_make_details">Detalles acerca de la detección:</string>
+    <string name="hit_make_details_foot">Más información aquí.</string>
+    <string name="debug_upload_hits">Número de detecciones para subir:</string>
+    <string name="debug_cached_hits">Número de detecciones almacenados en el caché:</string>
+    <string name="debug_to_upload_hits">número de detecciones para subir:</string>
+
+    <string name="error_camera">Error de la cámara: %1$s</string>
+    <string name="error_emulator">La detección no funciona en un emulador.</string>
+    <string name="warning_condition_charging">Espere porque configuró solo detectar cuando se está cargando la batería y actualmente no lo está.</string>
+    <string name="warning_condition_low_battery">Espere porque su porcentaje de batería es menor al que configuró</string>
+    <string name="warning_condition_too_heat">Espere porque su teléfono está demasiado caliente</string>
+
+    <string name="credo_logo_alt">logo de CREDO</string>
+    <string name="button_go_to_experiment">Experimentar</string>
+
+    <string name="detections_item_size">Tamaño de recorte: %1$dx%2$d</string>
+    <string name="detections_item_pos">Posición de detección XY: [%1$d, %2$d]</string>
+    <string name="detections_item_max">Más brillante: %1$d</string>
+    <string name="detections_item_average">Promedios: %1$.1f</string>
+    <string name="detections_item_blacks">Negros: %1$.1f&#8240; (%2$d)</string>
+    <string name="detections_item_acc">Gravedad: X:%1$.1f Y:%2$.1f Z:%3$.1f</string>
+    <string name="detections_item_orientation">Azimut: %1$.1f°</string>
+
+    <string name="settings_factors_name">Factores de algoritmo</string>
+
+    <string name="pref_auto_run_title">Ejecución automática</string>
+    <string name="pref_auto_run_summary">Ejecute la detección automáticamente después de iniciar la aplicación</string>
+
+    <string name="pref_register_crop_title">Tamaño de recorte [px]</string>
+    <string name="pref_register_crop_summary">Tamaño del margen de la imagen que se cortará del fotograma de la cámara, predeterminado: 20</string>
+
+    <string name="pref_auto_calibration_title">Calibración automática</string>
+    <string name="pref_auto_calibration_summary">Realizar autocalibración</string>
+
+    <string name="pref_register_max_title">Factor máximo [0–255]</string>
+    <string name="pref_register_max_summary">Ignorar fotograma cuando cualquier píxel sea más brillante que el factor máximo, predeterminado: 120</string>
+
+    <string name="pref_register_average_title">Factor promedio [0–255]</string>
+    <string name="pref_register_average_summary">Ignorar fotograma cuando el promedio de píxeles brillantes es menor que el factor promedio, por defecto: 30</string>
+
+    <string name="pref_register_black_title">Factor negro [0–255]</string>
+    <string name="pref_register_black_summary">Píxeles más oscuros que el factor negro son considerados píxeles negros, default: 0</string>
+
+    <string name="pref_register_count_title">Conteo negro [0–1000&#8240;]</string>
+    <string name="pref_register_count_summary">Ignorar fotograma cuando &#8240; del píxel negro es menor que el conteo negro, predeterminado: 0&#8240;</string>
+
+    <string name="pref_register_temperature_title">Temperatura máxima [°C]</string>
+    <string name="pref_register_temperature_summary">Detener la detección cuando la temperatura es mayor que la temperatura máxima, por defecto: 60°C</string>
+
+    <string name="pref_full_frame_title">Usar la resolución máxima de la cámara</string>
+    <string name="pref_full_frame_summary">La resolución máxima de la cámara (generalmente FullHD) puede consumir más batería y generar mayor calentamiento.</string>
+
+    <string name="pref_register_level_title">Nivel de bateria [0–100%]</string>
+    <string name="pref_register_level_summary">Detener la detección cuando el nivel de batería sea menor a, predeterminado: 60%</string>
+
+    <string name="pref_register_stop_after_title">Tiempo máximo con la cámara activa[min]</string>
+    <string name="pref_register_stop_after_summary">Cuando la cámara funcione más tiempo que el tiempo máximo con la cámara activa, apaga la cámara y espera el tiempo de pausa de la cámara, predeterminado: 0min</string>
+
+    <string name="pref_register_pause_time_title">Pausa el tiempo de la cámara [min]</string>
+    <string name="pref_register_pause_time_summary">Después de la pausa, encienda la cámara nuevamente, predeterminado: 0min</string>
+
+
+    <string name="input_email">E-mail</string>
+
+    <string name="action_register">Crear una cuenta</string>
+    <string name="link_signin">¿Ya eres usuario? Inicia sesión</string>
+
+    <string name="forgot_password_text">Haga click en el botón si no recuerda la contraseña</string>
+
+    <!-- Launcher Activity -->
+    <string name="launcher_text_logo">@string/app_name</string>
+    <string name="launcher_button_login">Iniciar sesión</string>
+    <string name="launcher_button_register">Registrarse</string>
+    <string name="launcher_button_remember_password">Olvidé mi contraseña</string>
+    <string name="launcher_input_endpoint">Ingresar la API personalizada Endpoint</string>
+    <string name="launcher_toast_debug_activating">Toque %1$d veces más para activar el modo de depuración!</string>
+    <string name="launcher_toast_debug_activated">Si, el modo de depuración está activado :)</string>
+    <string name="launcher_button_turnoff_debug">Desactivar el modo de depuración</string>
+    <string name="launcher_activate_email_message">Verifique el correo electrónico para ver el enlace de activación de su cuenta</string>
+
+    <!-- Login Activity -->
+    <string name="login_title_activity">Iniciar sesión</string>
+    <string name="login_text_logo">@string/launcher_text_logo</string>
+    <string name="login_input_login">Nombre de usuario o correo electrónico</string>
+    <string name="login_input_password">Contraseña</string>
+    <string name="login_button_login">@string/launcher_button_login</string>
+    <string name="login_button_remember_password">@string/launcher_button_remember_password</string>
+    <string name="login_input_login_validation">Al menos 3 caracteres o ingrese una dirección de correo electrónico válida</string>
+    <string name="login_input_password_validation">Al menos 4 caracteres alfanuméricos</string>
+    <string name="login_toast_login_failed">Error de inicio de sesión</string>
+    <string name="login_message_login_pending">Autenticando&#8230;</string>
+    <string name="login_message_validation_failed">Validación fallida</string>
+
+    <!-- Register Activity -->
+    <string name="register_title_activity">Registrarse</string>
+    <string name="register_text_logo">@string/launcher_text_logo</string>
+    <string name="register_input_login">Iniciar sesión</string>
+    <string name="register_input_email">E-mail</string>
+    <string name="register_input_password">@string/login_input_password</string>
+    <string name="register_input_confirm">Confirmar contraseña</string>
+    <string name="register_input_display_name">Nombre para mostrar</string>
+    <string name="register_input_team">Equipo</string>
+    <string name="register_input_language">Lenguaje</string>
+    <string name="register_input_accept_rules">Aceptar reglas</string>
+    <string name="register_button_view_rules">(ver reglas)</string>
+    <string name="register_button_register">Registro</string>
+    <string name="register_input_login_validation">al menos 3 caracteres</string>
+    <string name="register_input_email_validation">Ingresar un correo electrónico válido</string>
+    <string name="register_input_password_validation">@string/login_input_password_validation</string>
+    <string name="register_input_password2_validation">La contraseña no coincide</string>
+    <string name="register_input_accept_rules_validation">Debes leer y aceptar las reglas</string>
+    <string name="register_toast_register_failed">Fallo en crear cuenta</string>
+    <string name="register_message_register_pending">Creando cuenta &#8230;</string>
+    <string name="register_message_validation_failed">@string/login_message_validation_failed</string>
+
+    <!-- Register Activity -->
+    <string name="rules_title_activity">Reglas</string>
+    <string name="rules_content_file">reglas</string>
+
+    <!-- Main Activity -->
+    <string name="main_action_settings">Ajustes</string>
+    <string name="main_action_account">Cuenta</string>
+    <string name="main_action_logout">Cerrar sesión</string>
+
+    <!-- User account Activity -->
+    <string name="user_title_activity">Configuraciones de cuenta de usuario</string>
+    <string name="user_input_email">@string/register_input_email</string>
+    <string name="user_input_password">Contraseña (déjalo vacío si no quieres cambiar)</string>
+    <string name="user_input_confirm">@string/register_input_confirm</string>
+    <string name="user_input_display_name">@string/register_input_display_name</string>
+    <string name="user_input_team">@string/register_input_team</string>
+    <string name="user_input_language">@string/register_input_language</string>
+    <string name="user_button_save">Guardar</string>
+    <string name="user_input_email_validation">@string/register_input_email_validation</string>
+    <string name="user_input_password_validation">@string/register_input_password_validation</string>
+    <string name="user_input_password2_validation">@string/register_input_password2_validation</string>
+    <string name="user_toast_save_failed">Guardar la configuración de la cuenta ha fallado</string>
+    <string name="user_message_save_pending">Guardar configuración de la cuenta &#8230;</string>
+    <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
+
+    <!-- Status fragment -->
+    <string name="status_label_off">Apagado</string>
+    <string name="status_label_on">Encendido</string>
+    <string name="status_label_hold">Encendido, pero pausado por:</string>
+    <string name="status_fragment_coverage">Cubre la cámara!</string>
+    <string name="status_label_working">Funcionando :)</string>
+
+    <string name="status_button_on">Comenzar detección!</string>
+    <string name="status_button_off">Pausar detección</string>
+
+    <string name="status_fragment_detection">Estado de detección:</string>
+    <string name="status_fragment_name">Nombre:</string>
+    <string name="status_fragment_email">E-mail:</string>
+    <string name="status_fragment_team">Equipo:</string>
+    <string name="status_fragment_no_team">sin equipo</string>
+    <string name="status_working_time">Tiempo de trabajo:</string>
+    <string name="status_fragment_detections">Detecciones de los últimos %1$d días:</string>
+    <string name="status_fragment_toggle">Alternar detección</string>
+    <string name="status_fragment_switched_off">APAGADO</string>
+    <string name="status_fragment_running">ENCENDIDO: EJECUTANDO</string>
+    <string name="status_fragment_hold">ENCENDIDO: EN ESPERA</string>
+    <string name="status_fragment_show_statistic">Mostrar estadísticas</string> <!---Translate-->
+
+    <string name="status_fragment_start">Comienzo:</string>
+    <string name="status_fragment_latest">Trabajando:</string>
+    <string name="status_fragment_size">Tamaño:</string>
+    <string name="status_fragment_count">Fotogramas:</string>
+    <string name="status_fragment_performed">Bueno:</string>
+    <string name="status_fragment_ontime">Detectando hace:</string>
+    <string name="status_fragment_bright">Brillante:</string>
+    <string name="status_fragment_max">Máximo:</string>
+    <string name="status_fragment_battery">Cargando:</string>
+    <string name="status_fragment_battery_slow">USB</string>
+    <string name="status_fragment_battery_charge">si</string>
+    <string name="status_fragment_battery_nocharge">no</string>
+    <string name="status_fragment_level">Bateria:</string>
+    <string name="status_fragment_temperature">Temp.:</string>
+    <string name="status_fragment_orientation">Azimut:</string>
+    <string name="status_fragment_acc">Acc.:</string>
+    <string name="status_fragment_hit">Detección</string>
+    <string name="status_fragment_black">Negros:</string>
+
+    <!-- Preview activity -->
+    <string name="preview_title_activity">Detecciones (últimos %1$d días)</string>
+</resources>
