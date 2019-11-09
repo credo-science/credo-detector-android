@@ -3,6 +3,7 @@ package science.credo.mobiledetector.detection
 import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.instacart.library.truetime.TrueTime
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
 
@@ -84,7 +85,7 @@ class Hit (frameContent: String,
     var serverId = 0L
 
     @JsonIgnore
-    val detectionTimestamp = (System.currentTimeMillis() / 10000L).toInt() // PultusORM less condition walkaround
+    val detectionTimestamp = (TrueTime.now().time / 10000L).toInt()
 
     constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
 }

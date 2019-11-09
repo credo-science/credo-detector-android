@@ -3,6 +3,7 @@ package science.credo.mobiledetector.database
 import android.content.Context
 import android.util.Log
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.instacart.library.truetime.TrueTime
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.Ignore
 import ninja.sakib.pultusorm.annotations.PrimaryKey
@@ -133,7 +134,7 @@ class DataManager private constructor(val context: Context) {
      * Trims hits that are older than pre-defined live period.
      */
     fun trimHitsDb() {
-        val threshold = ((System.currentTimeMillis() - TRIM_PERIOD_HITS) / 10000L).toInt() // PultusORM less condition walkaround
+        val threshold = ((TrueTime.now().time - TRIM_PERIOD_HITS) / 10000L).toInt() // PultusORM less condition walkaround
 
         val condition: PultusORMCondition = PultusORMCondition.Builder()
                 .eq("toSent", 0)

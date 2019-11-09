@@ -85,4 +85,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     implementation "ch.acra:acra-http:$acraVersion"
     implementation 'com.android.support:multidex:1.0.3'
+
+    implementation "com.github.instacart.truetime-android:library:3.4"
+
 }

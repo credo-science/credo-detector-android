@@ -26,6 +26,7 @@ import science.credo.mobiledetector.info.PowerConnectionReceiver
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
+import com.instacart.library.truetime.TrueTime
 import kotlinx.android.synthetic.main.nav_header_status.*
 import kotlinx.android.synthetic.main.nav_header_status.view.*
 import org.jetbrains.anko.doAsync
@@ -48,7 +49,7 @@ class MainActivity : AppCompatActivity(),
         ConfigurationInfo(this).isDetectionOn = true
         credoApplication().turnOnDetection()
         DetectionStateWrapper.getLatestSession(this).clear()
-        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = System.currentTimeMillis()
+        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = TrueTime.now().time
     }
 
     override fun onStopDetection() {

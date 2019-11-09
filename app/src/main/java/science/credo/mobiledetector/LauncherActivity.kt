@@ -20,6 +20,8 @@ import android.content.DialogInterface
 import android.os.Build
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
+import com.instacart.library.truetime.TrueTime
+import org.jetbrains.anko.doAsync
 
 
 const val REQUEST_MAIN = 1
@@ -51,6 +53,10 @@ class LauncherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
+
+        doAsync {
+            TrueTime.build().initialize()
+        }
 
         login_button.onClick {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)

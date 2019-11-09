@@ -3,6 +3,7 @@ package science.credo.mobiledetector.info
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
+import com.instacart.library.truetime.TrueTime
 
 /**
  * Created by poznan on 25/08/2017.
@@ -39,7 +40,7 @@ class LocationInfo(mContext: Context) {
 
     fun getLocationData(): LocationData {
         val loc = getLocation()
-        val time = System.currentTimeMillis()
+        val time = TrueTime.now().time
         return if (loc == null) LocationData(0.0, 0.0, 0.0, 0.0f, "none", time)
         else LocationData(
             loc.latitude,

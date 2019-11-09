@@ -1,18 +1,19 @@
 package science.credo.mobiledetector.detection
 
+import com.instacart.library.truetime.TrueTime
 import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.events.StatsValueBuilder
 import kotlin.math.min
 
 class DetectionStats {
-    var lastFlushTimestamp = System.currentTimeMillis()
+    var lastFlushTimestamp = TrueTime.now().time
         private set
 
     private var lastFrameAchievedTimestamp = 0L
     private var lastFramePerformedTimestamp = 0L
     private var lastHitTimestamp = 0L
 
-    private var lastCleansTimestamp = System.currentTimeMillis()
+    private var lastCleansTimestamp = TrueTime.now().time
     private var allFrames = 0
     private var performedFrames = 0
 
@@ -44,16 +45,16 @@ class DetectionStats {
 
     fun frameAchieved() {
         allFrames++
-        lastFrameAchievedTimestamp = System.currentTimeMillis()
+        lastFrameAchievedTimestamp = TrueTime.now().time
     }
 
     fun framePerformed() {
         performedFrames++
-        lastFramePerformedTimestamp = System.currentTimeMillis()
+        lastFramePerformedTimestamp = TrueTime.now().time
     }
 
     fun hitRegistered() {
-        lastHitTimestamp = System.currentTimeMillis()
+        lastHitTimestamp = TrueTime.now().time
     }
 
     fun flush(stats : StatsEvent, cleanCounts : Boolean) {
