@@ -26,6 +26,7 @@ import science.credo.mobiledetector.info.PowerConnectionReceiver
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
+import android.widget.Toast
 import com.instacart.library.truetime.TrueTime
 import kotlinx.android.synthetic.main.nav_header_status.*
 import kotlinx.android.synthetic.main.nav_header_status.view.*
@@ -35,6 +36,9 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.view
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 
 const val REQUEST_SIGNUP = 1
@@ -50,6 +54,14 @@ class MainActivity : AppCompatActivity(),
         credoApplication().turnOnDetection()
         DetectionStateWrapper.getLatestSession(this).clear()
         DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = TrueTime.now().time
+        val time_diffrence_millis = System.currentTimeMillis() - TrueTime.now().time
+        val time_diffrence_result = String.format("%02d:%02d:%02d",
+                TimeUnit.MILLISECONDS.toHours(time_diffrence_millis),
+                TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis) -
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_diffrence_millis)), // The change is in this line
+                TimeUnit.MILLISECONDS.toSeconds(time_diffrence_millis) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis)));
+        Toast.makeText(this@MainActivity, "Difference between local time and ntp time " + time_diffrence_result , Toast.LENGTH_LONG).show()
     }
 
     override fun onStopDetection() {
