@@ -55,12 +55,14 @@ class MainActivity : AppCompatActivity(),
         DetectionStateWrapper.getLatestSession(this).clear()
         DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = TrueTime.now().time
         val time_diffrence_millis = System.currentTimeMillis() - TrueTime.now().time
-        val time_diffrence_result = String.format("%02d:%02d:%02d",
+        val time_diffrence_result = String.format("%02d:%02d:%02d:%04d",
                 TimeUnit.MILLISECONDS.toHours(time_diffrence_millis),
                 TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_diffrence_millis)), // The change is in this line
+                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_diffrence_millis)),
                 TimeUnit.MILLISECONDS.toSeconds(time_diffrence_millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis)));
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis)),
+                TimeUnit.MILLISECONDS.toMillis(time_diffrence_millis) -
+                        TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(time_diffrence_millis)))
         Toast.makeText(this@MainActivity, "Difference between local time and ntp time " + time_diffrence_result , Toast.LENGTH_LONG).show()
     }
 
