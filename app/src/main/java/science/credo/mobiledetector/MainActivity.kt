@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity(),
         DetectionStateWrapper.getLatestSession(this).clear()
         DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = TrueTime.now().time
         val time_diffrence_millis = System.currentTimeMillis() - TrueTime.now().time
-        val time_diffrence_result = String.format("%02d:%02d:%02d:%04d",
+        val time_diffrence_result = String.format("%02dh:%02dm:%02ds:%04dms",
                 TimeUnit.MILLISECONDS.toHours(time_diffrence_millis),
                 TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis) -
                         TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_diffrence_millis)),
