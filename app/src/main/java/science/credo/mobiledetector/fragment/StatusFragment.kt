@@ -144,6 +144,12 @@ class StatusFragment : Fragment() {
         else
             ""
 
+        old_timestamp_hit_text.text = if (statsEvent.OldTimestampHit > 0)
+            dateFormat.format(statsEvent.OldTimestampHit)
+        else
+            ""
+
+
         frame_size_text.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
 
         frame_count_text.text = statsEvent.allFrames.toString()
@@ -173,7 +179,6 @@ class StatusFragment : Fragment() {
         level_text.text = "%d%%".format(batteryState.batteryPct)
         orientation_text.text = "%.2f°".format(detectorState.orientation)
         acc_text.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
-        last_timestamp_hit_text.text = timePeriodFormat(statsEvent.lastHitTimestamp, false)
     }
 
     override fun onResume() {

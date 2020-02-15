@@ -12,6 +12,7 @@ class DetectionStats {
     private var lastFrameAchievedTimestamp = 0L
     private var lastFramePerformedTimestamp = 0L
     private var lastHitTimestamp = 0L
+    private var oldHitTimestamp = 0L
 
     private var lastCleansTimestamp = TrueTime.now().time
     private var allFrames = 0
@@ -54,6 +55,7 @@ class DetectionStats {
     }
 
     fun hitRegistered() {
+        oldHitTimestamp = lastHitTimestamp
         lastHitTimestamp = TrueTime.now().time
     }
 

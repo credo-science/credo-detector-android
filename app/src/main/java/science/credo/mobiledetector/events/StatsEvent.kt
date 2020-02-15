@@ -10,6 +10,7 @@ data class StatsEvent(
         var lastFrameAchievedTimestamp: Long = 0,
         var lastFramePerformedTimestamp: Long = 0,
         var lastHitTimestamp: Long = 0,
+        var OldTimestampHit: Long = 0,
 
         var allFrames: Int = 0,
         var performedFrames: Int = 0,

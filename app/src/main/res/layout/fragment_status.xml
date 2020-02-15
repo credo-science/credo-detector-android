@@ -475,11 +475,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/status_fragment_last_timestamp_hit"
+                android:text="@string/status_fragment_old_timestamp_hit"
                 android:textSize="8pt" />
 
             <TextView
-                android:id="@+id/last_timestamp_hit_text"
+                android:id="@+id/old_timestamp_hit_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

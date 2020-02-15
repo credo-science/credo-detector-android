@@ -77,7 +77,7 @@
             android:textAppearance="?attr/textAppearanceListItemSmall" />
 
         <TextView
-            android:id="@+id/timestampLastHit"
+            android:id="@+id/oldTimestampHit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?attr/textAppearanceListItemSmall" />
