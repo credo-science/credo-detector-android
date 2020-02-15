@@ -173,6 +173,7 @@ class StatusFragment : Fragment() {
         level_text.text = "%d%%".format(batteryState.batteryPct)
         orientation_text.text = "%.2f°".format(detectorState.orientation)
         acc_text.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
+        last_timestamp_hit_text.text = timePeriodFormat(statsEvent.lastHitTimestamp, false)
     }
 
     override fun onResume() {
