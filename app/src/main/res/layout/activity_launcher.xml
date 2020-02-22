@@ -14,12 +14,12 @@
 
         <ImageView
             android:id="@+id/logo_image"
-            android:src="@drawable/logo_credo"
             android:layout_width="wrap_content"
-            android:contentDescription="@string/launcher_text_logo"
-            android:layout_height="72dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
+            android:contentDescription="@string/launcher_text_logo"
+            android:src="@drawable/logo_credo" />
 
         <TextView android:id="@+id/activate_email_message"
             android:layout_width="fill_parent"

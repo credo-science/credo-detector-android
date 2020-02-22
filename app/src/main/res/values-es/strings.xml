@@ -12,11 +12,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hola, fragmento en blanco</string>
-    <string name="title_status">Estado</string>
+    <string name="title_status">Detector</string>
     <string name="title_statistics">Detecciones</string>
     <string name="title_login">Iniciar sesión</string>
     <string name="title_settings">Ajustes</string>
-    <string name="title_information">api.credo.science</string>
+    <string name="title_information">Información</string>
     <string name="title_activity_settings">Ajustes</string>
 
     <string name="title_register">Registrarse</string>

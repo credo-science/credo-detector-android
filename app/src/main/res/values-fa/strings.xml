@@ -13,12 +13,12 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">سلام</string>
-    <string name="title_status">وضعیت</string>
+    <string name="title_status">وب سایت</string>
     <string name="title_statistics">ردیابی ها</string>
     <string name="title_login">ورود به سیستم</string>
     <string name="title_settings">تنظیمات</string>
-    <string name="title_information">وب سایت</string>
-    <string name="title_activity_settings">تنظیمات</string>
+    <string name="title_information">اطلاعات</string>
+    <string name="title_activity_settings">ردیاب</string>
     <string name="login_title_activity">ثبت نام</string>
 
     <string name="title_register">ثبت نام</string>

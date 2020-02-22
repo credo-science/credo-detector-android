@@ -19,11 +19,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_status">Stan</string>
+    <string name="title_status">Detektor</string>
     <string name="title_statistics">Wykrycia</string>
     <string name="title_login">Login</string>
     <string name="title_settings">Ustawienia</string>
-    <string name="title_information">api.credo.science</string>
+    <string name="title_information">Informacje</string>
     <string name="title_activity_settings">Ustawienia</string>
 
     <string name="title_register">Rejestracja</string>

@@ -10,11 +10,11 @@
 	<string name="main_action_settings">Configurações</string>
 	<string name="credo_name">CREDO</string>
 	<string name="hello_blank_fragment">Olá fragmento branco</string>
-	<string name="title_status">Status</string>
+	<string name="title_status">Detetor</string>
 	<string name="title_statistics">Detecções</string>
 	<string name="title_login">Login</string>
 	<string name="title_settings">Configurações</string>
-	<string name="title_information">api.credo.science</string>
+	<string name="title_information">Informação</string>
 	<string name="title_activity_settings">Configurações</string>
 	<string name="login_title_activity">Registro</string>
 

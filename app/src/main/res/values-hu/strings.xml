@@ -14,11 +14,11 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hiányzó részek</string>
-    <string name="title_status">Státusz</string>
+    <string name="title_status">Detektor</string>
     <string name="title_statistics">Detektálások</string>
     <string name="title_login">Login</string>
     <string name="title_settings">Beállítások</string>
-    <string name="title_information">api.credo.science</string>
+    <string name="title_information">Információ</string>
     <string name="title_activity_settings">Beállítások</string>
     <string name="login_title_activity">Regisztráció</string>
 
