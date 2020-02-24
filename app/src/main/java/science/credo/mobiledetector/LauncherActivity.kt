@@ -8,7 +8,6 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.text.Html
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -16,8 +15,8 @@ import kotlinx.android.synthetic.main.activity_launcher.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
-import android.content.DialogInterface
 import android.os.Build
+import android.preference.PreferenceManager
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
 
@@ -51,6 +50,11 @@ class LauncherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
+
+        val pm = PreferenceManager.getDefaultSharedPreferences(this)
+        if (pm.getBoolean("showIntro", true)){
+            startActivity(Intent(this, IntroActivity::class.java))
+        }
 
         login_button.onClick {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
