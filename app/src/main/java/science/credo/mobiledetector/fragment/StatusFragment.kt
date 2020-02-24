@@ -140,12 +140,12 @@ class StatusFragment : Fragment() {
             ""
 
         hit_text.text = if (statsEvent.lastHitTimestamp > 0)
-            dateFormat.format(statsEvent.lastHitTimestamp)
+            dateFormatWithMs.format(statsEvent.lastHitTimestamp)
         else
             ""
 
         old_timestamp_hit_text.text = if (statsEvent.OldTimestampHit > 0)
-            dateFormat.format(statsEvent.OldTimestampHit)
+            dateFormatWithMs.format(statsEvent.OldTimestampHit)
         else
             ""
 
@@ -285,6 +285,7 @@ class StatusFragment : Fragment() {
 
         val TAG = "StatusFragment"
         val dateFormat = SimpleDateFormat("HH:mm:ss", Locale.ENGLISH)
+        val dateFormatWithMs = SimpleDateFormat("HH:mm:ss:SSS", Locale.ENGLISH)
 
         fun newInstance(): StatusFragment {
             val fragment = StatusFragment()
