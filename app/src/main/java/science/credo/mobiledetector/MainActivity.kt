@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.AsyncTask
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.support.design.widget.NavigationView
@@ -36,6 +37,7 @@ import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.view
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.TimeUnit
@@ -112,6 +114,8 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
 
+        initTrueTime()
+
         if (UserInfoWrapper(this).token.isEmpty()) {
             setResult(Activity.RESULT_OK)
             finish()
@@ -151,6 +155,35 @@ class MainActivity : AppCompatActivity(),
         }
 
         toggle.syncState()
+    }
+
+    private fun initTrueTime() {
+        InitTrueTimeAsyncTask().execute()
+
+    }
+
+
+    private inner class InitTrueTimeAsyncTask : AsyncTask<Void, Void, Void>() {
+
+        override fun doInBackground(vararg params: Void): Void? {
+            try {
+                Log.i("MainActivity", "start the initialization of the TrueTime")
+
+                TrueTime.build()
+                        .withNtpHost("time.google.com")
+                        .withLoggingEnabled(false)
+                        .withSharedPreferencesCache(this@MainActivity)
+                        .withConnectionTimeout(31428)
+                        .initialize()
+                Log.i("MainActivity", "finish the initialization of the TrueTime")
+
+            } catch (e: IOException) {
+                e.printStackTrace()
+                Log.e("MainActivity", "something went wrong when trying to initialize TrueTime", e)
+            }
+
+            return null
+        }
     }
 
     override fun onBackPressed() {

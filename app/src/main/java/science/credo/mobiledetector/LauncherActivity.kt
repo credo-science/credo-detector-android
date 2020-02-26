@@ -8,7 +8,6 @@ import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.text.Html
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -16,16 +15,9 @@ import kotlinx.android.synthetic.main.activity_launcher.*
 import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
-import android.content.DialogInterface
 import android.os.Build
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
-import com.instacart.library.truetime.TrueTime
-import org.jetbrains.anko.doAsync
-import android.os.AsyncTask
-import android.support.v4.app.FragmentActivity
-import android.util.Log
-import java.io.IOException
 
 
 const val REQUEST_MAIN = 1
@@ -57,8 +49,6 @@ class LauncherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launcher)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
-        initTrueTime()
-
 
         login_button.onClick {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
@@ -104,34 +94,6 @@ class LauncherActivity : AppCompatActivity() {
         }
     }
 
-    private fun initTrueTime() {
-        InitTrueTimeAsyncTask().execute()
-    }
-
-
-    private inner class InitTrueTimeAsyncTask : AsyncTask<Void, Void, Void>() {
-
-        override fun doInBackground(vararg params: Void): Void? {
-            try {
-                Log.i("LauncherActivity", "start the initialization of the TrueTime")
-
-                TrueTime.build()
-                        .withNtpHost("time.google.com")
-                        .withLoggingEnabled(false)
-                        .withSharedPreferencesCache(this@LauncherActivity)
-                        .withConnectionTimeout(31428)
-                        .initialize()
-                Log.i("LauncherActivity", "finish the initialization of the TrueTime")
-
-            } catch (e: IOException) {
-                e.printStackTrace()
-                Log.e("LauncherActivity", "something went wrong when trying to initialize TrueTime", e)
-            }
-
-            return null
-        }
-    }
-
     override fun onPostResume() {
         super.onPostResume()
         if (hasAllPermissionsGranted()) {
@@ -171,7 +133,6 @@ class LauncherActivity : AppCompatActivity() {
             }
         }
     }
-
 
     /**
      * Requests permissions necessary to use camera and save pictures.
