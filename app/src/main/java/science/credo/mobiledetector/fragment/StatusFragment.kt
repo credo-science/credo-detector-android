@@ -206,6 +206,7 @@ class StatusFragment : Fragment() {
         val v = inflater.inflate(R.layout.fragment_status, container, false)
 
         v.start_button.setOnClickListener {
+            updateTrueTime()
             mListener!!.onStartDetection()
             //show_statistic.visibility = View.VISIBLE
         }
