@@ -202,6 +202,7 @@
     <string name="status_button_on">Start detection!</string>
     <string name="status_button_off">Stop detection</string>
     <string name="status_button_blank">Extinguish the screen!</string>
+    <string name="status_fragment_update_true_time">Synchronize time with server!</string>
 
     <string name="status_fragment_detection">Detection status:</string>
     <string name="status_fragment_name">Name:</string>

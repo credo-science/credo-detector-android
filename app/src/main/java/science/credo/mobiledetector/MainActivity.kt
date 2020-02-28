@@ -26,15 +26,12 @@ import science.credo.mobiledetector.info.PowerConnectionReceiver
 import android.os.PowerManager
 import android.os.Build
 import android.provider.Settings
-import kotlinx.android.synthetic.main.nav_header_status.*
-import kotlinx.android.synthetic.main.nav_header_status.view.*
+import com.instacart.library.truetime.TrueTimeRx
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.view
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
-
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 const val REQUEST_SIGNUP = 1
 
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity(),
         ConfigurationInfo(this).isDetectionOn = true
         credoApplication().turnOnDetection()
         DetectionStateWrapper.getLatestSession(this).clear()
-        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = System.currentTimeMillis()
+        DetectionStateWrapper.getLatestSession(this).startDetectionTimestamp = TrueTimeRx.now().time
     }
 
     override fun onStopDetection() {
@@ -97,6 +94,8 @@ class MainActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
 
+        initRxTrueTime()
+
         if (UserInfoWrapper(this).token.isEmpty()) {
             setResult(Activity.RESULT_OK)
             finish()
@@ -136,6 +135,22 @@ class MainActivity : AppCompatActivity(),
         }
 
         toggle.syncState()
+    }
+
+    private fun initRxTrueTime() {
+        val disposable = TrueTimeRx.build()
+                .withConnectionTimeout(31428)
+                .withRetryCount(100)
+                .withSharedPreferencesCache(this)
+                .withLoggingEnabled(true)
+                .initializeRx("time.google.com")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ date ->
+                    Log.d(TAG, "Success initialized TrueTime :$date")
+                }, {
+                    Log.e(TAG, "something went wrong when trying to initializeRx TrueTime", it)
+                })
     }
 
     override fun onBackPressed() {

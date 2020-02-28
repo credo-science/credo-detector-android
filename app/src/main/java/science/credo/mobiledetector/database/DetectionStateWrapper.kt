@@ -1,6 +1,7 @@
 package science.credo.mobiledetector.database
 
 import android.content.Context
+import com.instacart.library.truetime.TrueTimeRx
 import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.events.StatsValue
 
@@ -158,7 +159,7 @@ class DetectionStateWrapper(context: Context, val prefix: String) : SharedPrefer
     fun merge(statsEvent: StatsEvent) {
         frameWidth = statsEvent.frameWidth
         frameHeight = statsEvent.frameHeight
-        lastFlushTimestamp = System.currentTimeMillis()
+        lastFlushTimestamp = TrueTimeRx.now().time
         lastFrameAchievedTimestamp = statsEvent.lastFrameAchievedTimestamp
         lastFramePerformedTimestamp = statsEvent.lastFramePerformedTimestamp
         lastHitTimestamp = statsEvent.lastHitTimestamp

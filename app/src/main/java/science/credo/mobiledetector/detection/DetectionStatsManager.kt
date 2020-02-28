@@ -1,6 +1,7 @@
 package science.credo.mobiledetector.detection
 
 import android.content.Context
+import com.instacart.library.truetime.TrueTimeRx
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.database.DetectionStateWrapper
@@ -17,7 +18,7 @@ class DetectionStatsManager {
 
     private var width = 0
     private var height = 0
-    private var startDetectionTimestamp = System.currentTimeMillis()
+    private var startDetectionTimestamp = TrueTimeRx.now().time
 
     /**
      * Call for update stats for pixels brights.
@@ -116,7 +117,7 @@ class DetectionStatsManager {
 
     companion object {
         fun checkNextTimePeriod(last : Long, period : Long) : Boolean {
-            return last + period < System.currentTimeMillis()
+            return last + period < TrueTimeRx.now().time
         }
     }
 }
