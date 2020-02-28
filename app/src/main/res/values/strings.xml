@@ -237,4 +237,16 @@
 
     <!-- Preview activity -->
     <string name="preview_title_activity">Detections (last %1$d days)</string>
+
+    <!-- Intro Fragment -->
+    <string name="fragment_intro_text_top_1">Welcome in Credo Mobile Detector!</string>
+    <string name="fragment_intro_text_top_2">First Sign in or Register to our community</string>
+    <string name="fragment_intro_text_top_3">Next you need to cover smartphone camera</string>
+    <string name="fragment_intro_text_top_4">Ready to deep dive into the Astrophysics particle river?</string>
+    <string name="fragment_intro_text_bottom_1">Swipe right to start your journey</string>
+    <string name="fragment_intro_text_bottom_2"> </string>
+    <string name="fragment_intro_text_bottom_3">And click "Run detection" on the main screen</string>
+    <string name="fragment_intro_text_bottom_4">Some text that introduce app</string>
+
+    <string name="fragment_intro_btn_4">Start using the app!</string>
 </resources>

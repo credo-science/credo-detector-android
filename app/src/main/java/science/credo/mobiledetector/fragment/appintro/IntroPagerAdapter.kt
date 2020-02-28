@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter
 
 class IntroPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
 
-    private val COUNT_FRAGMENT = 3
+    private val COUNT_FRAGMENT = 4
 
     override fun getItem(position: Int): Fragment? {
         var fragment: Fragment? = null
@@ -15,6 +15,7 @@ class IntroPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager
             0 -> fragment = Intro1Fragment()
             1 -> fragment = Intro2Fragment()
             2 -> fragment = Intro3Fragment()
+            3 -> fragment = Intro4Fragment()
         }
         return fragment
     }

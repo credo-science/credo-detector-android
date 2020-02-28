@@ -13,47 +13,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/img_slider_1"
-            android:layout_width="342dp"
-            android:layout_height="161dp"
-            android:src="@mipmap/logotypcredo"
+
+        <Button
+            android:id="@+id/finish_intro_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/fab_margin"
+            android:background="@drawable/intro_fragment_button"
+            android:text="@string/fragment_intro_btn_4"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.315" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/text_margin"
-            android:text="@string/fragment_intro_text_top_1"
+            android:text="@string/fragment_intro_text_top_4"
             android:textColor="@android:color/white"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/img_slider_1"
+            app:layout_constraintBottom_toTopOf="@+id/finish_intro_button"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.494"
+            app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <TextView
-            android:id="@+id/introDescriptionFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/text_margin"
-            android:text="@string/fragment_intro_text_bottom_1"
-            android:textColor="@android:color/white"
-            android:textSize="17sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_slider_1"
-            app:layout_constraintVertical_bias="0.301" />
+            app:layout_constraintVertical_bias="0.637" />
     </android.support.constraint.ConstraintLayout>
 
 

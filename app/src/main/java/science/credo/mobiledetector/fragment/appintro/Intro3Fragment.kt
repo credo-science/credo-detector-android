@@ -18,18 +18,6 @@ class Intro3Fragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val view = inflater.inflate(R.layout.fragment_intro3, container, false)
-        val textView = view.findViewById<TextView>(R.id.introDescriptionFragment)
-        textView.setText("I am working on some image and txt that introduce user into our app :) ")
-
-        val imageView = view.findViewById<ImageView>(R.id.imgMain)
-        imageView.setImageResource(R.mipmap.ic_launcher)
-
-        val finishIntroButton = view.findViewById<Button>(R.id.finish_intro_button)
-        finishIntroButton.setOnClickListener{
-            startActivity(Intent(context, LauncherActivity::class.java))
-
-        }
-
         return view
     }
 }
