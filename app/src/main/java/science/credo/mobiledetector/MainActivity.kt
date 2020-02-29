@@ -1,6 +1,9 @@
 package science.credo.mobiledetector
 
 import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -25,13 +28,21 @@ import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.PowerConnectionReceiver
 import android.os.PowerManager
 import android.os.Build
+import android.os.SystemClock
 import android.provider.Settings
+import android.widget.Toast
 import com.instacart.library.truetime.TrueTimeRx
 import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import kotlinx.android.synthetic.main.fragment_status.*
+import org.jetbrains.anko.alarmManager
+import org.jetbrains.anko.toast
+import science.credo.mobiledetector.synchronization.UpdateTimeBroadcastReceiver
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 const val REQUEST_SIGNUP = 1
 
@@ -40,6 +51,8 @@ class MainActivity : AppCompatActivity(),
         CredoFragment.OnFragmentInteractionListener,
         SettingsFragment.OnFragmentInteractionListener,
         DetectionFragment.OnListFragmentInteractionListener {
+
+    val mUpdateTimeBroadcastReceiver = UpdateTimeBroadcastReceiver()
 
     override fun onStartDetection() {
         ConfigurationInfo(this).isDetectionOn = true
@@ -61,6 +74,7 @@ class MainActivity : AppCompatActivity(),
 
     var mSettingsFlag = false;
     val mReceiver: PowerConnectionReceiver = PowerConnectionReceiver()
+
 
     companion object {
         val TAG = "MainActivity"
@@ -92,9 +106,10 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG,"onCreate")
+        Log.d(TAG, "onCreate")
 
         initRxTrueTime()
+        initRxTrueTimeScheduler()
 
         if (UserInfoWrapper(this).token.isEmpty()) {
             setResult(Activity.RESULT_OK)
@@ -115,11 +130,11 @@ class MainActivity : AppCompatActivity(),
 
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
         navigationView.setNavigationItemSelectedListener {
-            Log.d(TAG,"onNavigationItemSelected")
+            Log.d(TAG, "onNavigationItemSelected")
             val id = it.itemId
             switchFragment(id)
             drawer.closeDrawer(GravityCompat.START)
-             true
+            true
         }
 
         /*navigationView.view().imageView.onClick {
@@ -137,24 +152,40 @@ class MainActivity : AppCompatActivity(),
         toggle.syncState()
     }
 
+    private fun initRxTrueTimeScheduler(){
+        mUpdateTimeBroadcastReceiver.setAlarm(this)
+
+    }
+
     private fun initRxTrueTime() {
+
+//        ToDo 1. Check if internet if not get prompt to turn on.
+//        ToDo 2. Start synchronize service.
+//        ToDo 2. Check inside if internet is on if not get Flag NO_SYNCH and use local time instead. repeat
+//        ToDo 2. Check if alarm is ON already
+
         val disposable = TrueTimeRx.build()
                 .withConnectionTimeout(31428)
                 .withRetryCount(100)
                 .withSharedPreferencesCache(this)
-                .withLoggingEnabled(true)
                 .initializeRx("time.google.com")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ date ->
-                    Log.d(TAG, "Success initialized TrueTime :$date")
+                    Log.d(TAG, "initRxTrueTime - Success initialized TrueTime :$date")
                 }, {
                     Log.e(TAG, "something went wrong when trying to initializeRx TrueTime", it)
                 })
     }
 
+    override fun updateTrueTime() {
+        initRxTrueTime()
+        mUpdateTimeBroadcastReceiver.logTrueTime("updateTrueTime")
+        mUpdateTimeBroadcastReceiver.toastTrueTime(this)
+    }
+
     override fun onBackPressed() {
-        Log.d(TAG,"onBackPressed")
+        Log.d(TAG, "onBackPressed")
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START)
@@ -165,13 +196,13 @@ class MainActivity : AppCompatActivity(),
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        Log.d(TAG,"onCreateOptionsMenu")
+        Log.d(TAG, "onCreateOptionsMenu")
         menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(TAG,"onOptionsItemSelected")
+        Log.d(TAG, "onOptionsItemSelected")
 
         return when (item.itemId) {
             R.id.action_settings -> {
@@ -218,10 +249,10 @@ class MainActivity : AppCompatActivity(),
                 fragment = StatusFragment.newInstance()
             }
 
-           /* R.id.nav_debug -> {
-                title = "$lead ${getString(R.string.title_statistics)}"
-                fragment = DebugFragment.newInstance(getString(R.string.title_statistics), "")
-            }*/
+            /* R.id.nav_debug -> {
+                 title = "$lead ${getString(R.string.title_statistics)}"
+                 fragment = DebugFragment.newInstance(getString(R.string.title_statistics), "")
+             }*/
             R.id.nav_settings -> {
                 startSettingsActivity()
                 mSettingsFlag = true
@@ -229,7 +260,7 @@ class MainActivity : AppCompatActivity(),
             R.id.nav_register -> {
                 //startRegisterActivity()
                 mSettingsFlag = true
-           }
+            }
             R.id.nav_statistics -> {
                 title = getString(R.string.preview_title_activity, DataManager.TRIM_PERIOD_HITS_DAYS)
                 fragment = DetectionFragment.newInstance(1)
@@ -256,7 +287,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onResume() {
-        Log.d(TAG,"onResume")
+        Log.d(TAG, "onResume")
         super.onResume()
         mSettingsFlag = false;
         disableDoze()
@@ -278,7 +309,7 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun onPause() {
-        Log.d(TAG,"onPause")
+        Log.d(TAG, "onPause")
 //        restartService()
         super.onPause()
     }
@@ -302,5 +333,5 @@ class MainActivity : AppCompatActivity(),
         switchFragment(R.id.nav_status)
     }
 
-    private fun credoApplication() : CredoApplication = application as CredoApplication
+    private fun credoApplication(): CredoApplication = application as CredoApplication
 }

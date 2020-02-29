@@ -206,9 +206,9 @@ class StatusFragment : Fragment() {
         val v = inflater.inflate(R.layout.fragment_status, container, false)
 
         v.start_button.setOnClickListener {
-            updateTrueTime()
+            mListener!!.updateTrueTime()
             mListener!!.onStartDetection()
-            //show_statistic.visibility = View.VISIBLE
+            show_statistic.visibility = View.VISIBLE
         }
 
         v.stop_button.setOnClickListener {
@@ -230,7 +230,7 @@ class StatusFragment : Fragment() {
         }
 
         v.update_true_time_button.setOnClickListener {
-            updateTrueTime()
+            mListener!!.updateTrueTime()
         }
 
 
@@ -279,36 +279,12 @@ class StatusFragment : Fragment() {
         score += statsEvent.onTime.toInt() * 1
         pm.edit().putInt("points_pm", score).commit()
     }
-    private fun updateTrueTime() {
-        if (!TrueTimeRx.isInitialized()) {
-            Log.e("updateTrueTime", " TrueTime not yet initialized.")
-            return
-        }
-        update_true_time_button.isEnabled = true
-        val trueTime = TrueTimeRx.now()
-        val deviceTime = Date()
 
-        Log.d("updateTrueTime", String.format(
-                        " [trueTime: %d] [devicetime: %d] [drift_sec: %f]",
-                        trueTime.time,
-                        deviceTime.time,
-                        (trueTime.time - deviceTime.time) / 1000f
-                )
-        )
-        val time_diffrence_millis = System.currentTimeMillis() - TrueTimeRx.now().time
-        val time_diffrence_result = String.format("%02dh:%02dm:%02ds:%04dms",
-                TimeUnit.MILLISECONDS.toHours(time_diffrence_millis),
-                TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis) -
-                        TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(time_diffrence_millis)),
-                TimeUnit.MILLISECONDS.toSeconds(time_diffrence_millis) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(time_diffrence_millis)),
-                TimeUnit.MILLISECONDS.toMillis(time_diffrence_millis) -
-                        TimeUnit.SECONDS.toMillis(TimeUnit.MILLISECONDS.toSeconds(time_diffrence_millis)))
-        Toast.makeText(activity, "Difference between local time and ntp time " + time_diffrence_result , Toast.LENGTH_LONG).show()    }
 
     interface OnFragmentInteractionListener {
         fun onStartDetection()
         fun onStopDetection()
+        fun updateTrueTime()
     }
 
     companion object {

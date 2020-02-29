@@ -93,6 +93,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="science.credo.mobiledetector.MainActivity" />
         </activity>
+
+        <receiver android:name=".synchronization.UpdateTimeBroadcastReceiver"/>
     </application>
+
 
 </manifest>
