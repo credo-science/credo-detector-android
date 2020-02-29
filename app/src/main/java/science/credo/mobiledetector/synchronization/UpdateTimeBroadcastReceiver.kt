@@ -27,6 +27,7 @@ class UpdateTimeBroadcastReceiver : BroadcastReceiver() {
                     Log.e("UpdateTimeReceiver", "something went wrong when trying to initializeRx TrueTime", it)
                 })
         logTrueTime("UpdateTimeReceiver")
+        toastTrueTime(contxt)
         setAlarm(contxt)
     }
 
