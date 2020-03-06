@@ -1,240 +1,49 @@
 <resources>
-    <string name="app_name">CREDO Detector</string>
-    <string name="app_name_short">Detector</string>
-    <string name="app_title">Cosmic-Ray Extremely Distributed Observatory (CREDO)</string>
-    <string name="app_description">The CREDO project is hunting for particle cascades from deep space in an effort to answer some of the fundamental questions about our Universe. Your particle detections will feed directly into this pioneering new area of scientific research. You can also engage in the analysis of the detections that you, your fellow citizen scientists and professional observatories from around the world are making though the Dark Universe Welcome experiment.</string>
-    <string name="app_homepage">To learn more please visit the CREDO website at:</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="credo_name">CREDO</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_status">Status</string>
-    <string name="title_statistics">Detections</string>
-    <string name="title_login">Login</string>
-    <string name="title_settings">Settings</string>
-    <string name="title_information">api.credo.science</string>
-    <string name="title_activity_settings">Settings</string>
-
-    <string name="title_register">Register</string>
-    <string name="msg_no_network_connection">no network connection</string>
-    <string name="msg_network_connection_problem">network connection problem, please try again later</string>
-    <string name="login_button_text">login</string>
-    <string name="register_button_text">register</string>
-
-    <string name="stats_generate">Generate</string>
-    <string name="stats_upload">Upload</string>
-    <string name="stats_clear_db">Clear DB</string>
-    <string name="stats_clear_cache_db">Clear Cache DB</string>
-
-    <string name="settings_detection_name">Detection</string>
-    <string name="settings_detection_title">Detect Only When Charging</string>
-    <string name="settings_detecion_summary">Perform particle detection only when charging. Since detection is computing intensive and can drain battery quickly, it is strongly advised to leave this option set.</string>
-
-    <string name="settings_upload_name">Data Transfer</string>
-    <string name="settings_upload_title">Data Upload WiFI Only</string>
-    <string name="settings_upload_summary">Upload data only when connected to WiFi network.</string>
-
-    <string name="pref_cat_login">User Login with User Id</string>
-    <string name="pref_login_title">User Key</string>
-    <string name="pref_login_summary">User Identification generated (and sent by email) after user registration</string>
-
-    <string name="pref_cat_register">User Login and Team Membership Registration</string>
-    <string name="pref_register_name_summary">User name or nickname</string>
-    <string name="pref_register_name_title">Name</string>
-
-    <string name="pref_register_email_title">E-mail</string>
-    <string name="pref_register_email_summary">User e-mail address</string>
-
-    <string name="pref_register_team_title">Team</string>
-    <string name="pref_register_team_summary">Name of the team to which the user belongs</string>
-
-    <string name="hit_make_details">Details about Item:</string>
-    <string name="hit_make_details_foot">More details information here.</string>
-    <string name="debug_upload_hits">number of hits to upload:</string>
-    <string name="debug_cached_hits">number of cached hits:</string>
-    <string name="debug_to_upload_hits">number of hits to upload:</string>
-
-    <string name="error_camera">Camera error: %1$s</string>
-    <string name="error_emulator">Detection is not working on emulator</string>
-    <string name="warning_condition_charging">Hold on because you set detection only when charging but currently no charging</string>
-    <string name="warning_condition_low_battery">Hold on because battery is lower than you set</string>
-    <string name="warning_condition_too_heat">Hold on because phone is too heat</string>
-
-    <string name="credo_logo_alt">CREDO logo</string>
-    <string name="button_go_to_experiment">Go to experiment</string>
-
-    <string name="detections_item_size">Crop size: %1$dx%2$d</string>
-    <string name="detections_item_pos">Hit position XY: [%1$d, %2$d]</string>
-    <string name="detections_item_max">Brightest: %1$d</string>
-    <string name="detections_item_average">Average: %1$.1f</string>
-    <string name="detections_item_blacks">Blacks: %1$.1f&#8240; (%2$d)</string>
-    <string name="detections_item_acc">Gravity: X:%1$.1f Y:%2$.1f Z:%3$.1f</string>
-    <string name="detections_item_orientation">Azimuth: %1$.1f°</string>
-
-    <string name="settings_factors_name">Algorithm factors</string>
-
-    <string name="pref_auto_run_title">Auto run</string>
-    <string name="pref_auto_run_summary">Run detection after start app automatically</string>
-
-    <string name="pref_register_crop_title">Crop size [px]</string>
-    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 20</string>
-
-    <string name="pref_auto_calibration_title">Auto Calibration</string>
-    <string name="pref_auto_calibration_summary">Perform auto calibration</string>
-
-    <string name="pref_register_max_title">Max factor [0–255]</string>
-    <string name="pref_register_max_summary">Ignore frame when any pixel is more bright than max factor, default: 120</string>
-
-    <string name="pref_register_average_title">Average factor [0–255]</string>
-    <string name="pref_register_average_summary">Ignore frame when average of pixel bright is less than average factor, default: 30</string>
-
-    <string name="pref_register_black_title">Black factor [0–255]</string>
-    <string name="pref_register_black_summary">Pixels darkness than black factor is black pixels, default: 0</string>
-
-    <string name="pref_register_count_title">Black count [0–1000&#8240;]</string>
-    <string name="pref_register_count_summary">Ignore frame when &#8240; of black pixel is less than black count, default: 0&#8240;</string>
-
-    <string name="pref_register_temperature_title">Max temperature [°C]</string>
-    <string name="pref_register_temperature_summary">Stop detection when temperature is greater than max temperature, default: 60°C</string>
-
-    <string name="pref_full_frame_title">Use max camera resolution</string>
-    <string name="pref_full_frame_summary">Max camera resolution (usually FullHD) may be more drain battery and heating</string>
-
-    <string name="pref_register_level_title">Battery level [0–100%]</string>
-    <string name="pref_register_level_summary">Stop detection when temperature is lesser than battery level, default: 60%</string>
-
-    <string name="pref_register_stop_after_title">Max camera on time [min]</string>
-    <string name="pref_register_stop_after_summary">When camera works longer than max camera on time then turn off and wait pause camera time, default: 0min</string>
-
-    <string name="pref_register_pause_time_title">Pause camera time [min]</string>
-    <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
-
-
-    <string name="input_email">Email</string>
-
-    <string name="action_register">Create Account</string>
-    <string name="link_signin">Already a member? Login</string>
-
-    <string name="forgot_password_text">Click on button if you don`t remember password</string>
-
-    <!-- Launcher Activity -->
-    <string name="launcher_text_logo">@string/app_name</string>
-    <string name="launcher_button_login">Login</string>
-    <string name="launcher_button_register">Register</string>
-    <string name="launcher_button_remember_password">Forgot Password</string>
-    <string name="launcher_input_endpoint">Enter custom API Endpoint</string>
-    <string name="launcher_toast_debug_activating">Tap %1$d more times to turn on debug mode!</string>
-    <string name="launcher_toast_debug_activated">Yeah, debug mode are activated :)</string>
-    <string name="launcher_button_turnoff_debug">Turnoff debug mode</string>
-    <string name="launcher_activate_email_message">Check e-mail for activation link</string>
-
-    <!-- Login Activity -->
-    <string name="login_title_activity">Login</string>
-    <string name="login_text_logo">@string/launcher_text_logo</string>
-    <string name="login_input_login">Login or e-mail</string>
-    <string name="login_input_password">Password</string>
-    <string name="login_button_login">@string/launcher_button_login</string>
-    <string name="login_button_remember_password">@string/launcher_button_remember_password</string>
-    <string name="login_input_login_validation">at least 3 characters or enter a valid email address</string>
-    <string name="login_input_password_validation">at least 4 alphanumeric characters</string>
-    <string name="login_toast_login_failed">Login failed</string>
-    <string name="login_message_login_pending">Authenticating&#8230;</string>
-    <string name="login_message_validation_failed">Validation failed</string>
-
-    <!-- Register Activity -->
-    <string name="register_title_activity">Register</string>
-    <string name="register_text_logo">@string/launcher_text_logo</string>
-    <string name="register_input_login">Login</string>
-    <string name="register_input_email">E-mail</string>
-    <string name="register_input_password">@string/login_input_password</string>
-    <string name="register_input_confirm">Confirm password</string>
-    <string name="register_input_display_name">Display name</string>
-    <string name="register_input_team">Team</string>
-    <string name="register_input_language">Language</string>
-    <string name="register_input_accept_rules">Accept rules</string>
-    <string name="register_button_view_rules">(view rules)</string>
-    <string name="register_button_register">Register</string>
-    <string name="register_input_login_validation">at least 3 characters</string>
-    <string name="register_input_email_validation">enter valid email address</string>
-    <string name="register_input_password_validation">@string/login_input_password_validation</string>
-    <string name="register_input_password2_validation">password not match</string>
-    <string name="register_input_accept_rules_validation">You must read and accept rules</string>
-    <string name="register_toast_register_failed">Create account failed</string>
-    <string name="register_message_register_pending">Creating account&#8230;</string>
-    <string name="register_message_validation_failed">@string/login_message_validation_failed</string>
-
-    <!-- Register Activity -->
-    <string name="rules_title_activity">Rules</string>
-    <string name="rules_content_file">rules</string>
-
-    <!-- Main Activity -->
-    <string name="main_action_settings">Settings</string>
-    <string name="main_action_account">Account</string>
-    <string name="main_action_logout">Logout</string>
-
-    <!-- User account Activity -->
-    <string name="user_title_activity">User account settings</string>
-    <string name="user_input_email">@string/register_input_email</string>
-    <string name="user_input_password">Password (leave empty if you don\'t want to change)</string>
-    <string name="user_input_confirm">@string/register_input_confirm</string>
-    <string name="user_input_display_name">@string/register_input_display_name</string>
-    <string name="user_input_team">@string/register_input_team</string>
-    <string name="user_input_language">@string/register_input_language</string>
-    <string name="user_button_save">Save</string>
-    <string name="user_input_email_validation">@string/register_input_email_validation</string>
-    <string name="user_input_password_validation">@string/register_input_password_validation</string>
-    <string name="user_input_password2_validation">@string/register_input_password2_validation</string>
-    <string name="user_toast_save_failed">Save account settings failed</string>
-    <string name="user_message_save_pending">Save account settings&#8230;</string>
-    <string name="user_message_validation_failed">@string/register_message_validation_failed</string>
-
-    <!-- Status fragment -->
-    <string name="status_label_off">OFF</string>
-    <string name="status_label_on">ON</string>
-    <string name="status_label_hold">ON, but paused due to:</string>
-    <string name="status_fragment_coverage">Cover camera!</string>
-    <string name="status_label_working">Working :)</string>
-
-    <string name="status_button_on">Start detection!</string>
-    <string name="status_button_off">Stop detection</string>
-    <string name="status_button_blank">Extinguish the screen!</string>
-
-    <string name="status_fragment_detection">Detection status:</string>
-    <string name="status_fragment_name">Name:</string>
-    <string name="status_fragment_email">E-mail:</string>
-    <string name="status_fragment_team">Team:</string>
-    <string name="status_fragment_no_team">no team</string>
-    <string name="status_working_time">Working time:</string>
-    <string name="status_fragment_detections">Detections last %1$d days:</string>
-    <string name="status_fragment_toggle">Toggle Detection</string>
-    <string name="status_fragment_switched_off">SWITCHED OFF</string>
-    <string name="status_fragment_running">ON: RUNNING</string>
-    <string name="status_fragment_hold">ON: ON HOLD</string>
-    <string name="status_fragment_show_statistic">Show stats</string> <!---Translate-->
-
-    <string name="status_fragment_start">Start:</string>
-    <string name="status_fragment_latest">Working:</string>
-    <string name="status_fragment_size">Size:</string>
-    <string name="status_fragment_count">Frames:</string>
-    <string name="status_fragment_performed">Good:</string>
-    <string name="status_fragment_ontime">On time:</string>
-    <string name="status_fragment_bright">Bright:</string>
-    <string name="status_fragment_max">Max:</string>
-    <string name="status_fragment_battery">Charging:</string>
-    <string name="status_fragment_battery_slow">USB</string>
-    <string name="status_fragment_battery_charge">yes</string>
-    <string name="status_fragment_battery_nocharge">no</string>
-    <string name="status_fragment_level">Battery:</string>
-    <string name="status_fragment_temperature">Temp.:</string>
-    <string name="status_fragment_orientation">Azimuth:</string>
-    <string name="status_fragment_acc">Acc.:</string>
-    <string name="status_fragment_hit">Hit:</string>
-    <string name="status_fragment_black">Blacks:</string>
-
-    <!-- Preview activity -->
-    <string name="preview_title_activity">Detections (last %1$d days)</string>
+    <string name="app_name">Credo Detector 2</string>
+    <string name="sign_in">Sign in</string>
+    <string name="register">Register</string>
+    <string name="login_hint">login/email</string>
+    <string name="password_hint">password</string>
+    <string name="forgot_password"><u>forgot password?</u></string>
+    <string name="email_hint">email address</string>
+    <string name="password_confirm_hint">confirm password</string>
+    <string name="login_register_hint">login</string>
+    <string name="display_name_hint">display name</string>
+    <string name="team_hint">team</string>
+    <string name="checkbox_accept_terms"><u>Akceptuję regulamin</u></string>
+    <string name="button_register">register</string>
+    <string name="settings_choose_camera_api">Choose camera API:</string>
+    <string name="settings_old_api">Camera</string>
+    <string name="settings_camera2_api">Camera 2</string>
+    <string name="settings_save">save</string>
+    <string name="settings_cancel">cancel</string>
+    <string name="settings_preview_format">Preview format:</string>
+    <string name="settings_frames_per_second">FPS:</string>
+    <string name="settings_frames_per_second_range">FPS range:</string>
+    <string name="settings_preview_size">Frame size:</string>
+    <string name="settings_image_format">Image format</string>
+    <string name="settings_frame_size">Frame size:</string>
+    <string name="settings_exposure_time">Exposure time:</string>
+    <string name="settings_hardware_camera">Camera:</string>
+    <string name="settings_camera_front">front</string>
+    <string name="settings_camera_back">back</string>
+    <string name="settings_camera_external">external</string>
+    <string name="settings_processing_method">Processing method:</string>
+    <string name="menu_detector">Run Detector</string>
+    <string name="menu_item_filters">Settings</string>
+    <string name="menu_logout">Logout</string>
+    <string name="settings_title">Settings</string>
+    <string name="settings_send_hits_to_server">Send hits to server</string>
+    <string name="settings_save_hits_to_memory">Save hits to phone memory</string>
+    <string name="settings_save_frame_data">Save frame byte data (frames could be quite big (~20mb))</string>
+    <string name="menu_item_statistics">Statistics</string>
+    <string name="settings_last_calibration">Last calibration</string>
+    <string name="settings_no_calibration_yet">Calibration wasn\'t run yet.</string>
+    <string name="detector_state_calibration">Calibration in progress</string>
+    <string name="detector_state_running">Running</string>
+    <string name="detector_state_not_covered">Please cover your camera</string>
+    <string name="detector_state_disabled">Off</string>
+    <string name="no_settings_warning">No saved settings found. Do you want to use default settings, or choose the settings by yourself?</string>
+    <string name="detector_no_detections_yet">no detections yet</string>
+    <string name="detector_cant_calibrate_warning">Cannot calibrate device, please use Old Camera Api</string>
 </resources>

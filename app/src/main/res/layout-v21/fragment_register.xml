@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/credo_background"
+        android:scaleType="centerCrop"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTransparentDark"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="30dp"
+        android:orientation="vertical">
+
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/login_register_hint"
+            android:padding="10dp"
+            android:id="@+id/etLogin"
+            android:elevation="3dp"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/email_hint"
+            android:elevation="3dp"
+            android:id="@+id/etEmail"
+            android:padding="10dp"
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionNext"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_hint"
+            android:elevation="3dp"
+            android:id="@+id/etPassword"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/password_confirm_hint"
+            android:elevation="3dp"
+            android:id="@+id/etPasswordConfirm"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:imeOptions="actionNext"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/display_name_hint"
+            android:elevation="3dp"
+            android:id="@+id/etDisplayName"
+            android:padding="10dp"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+        <EditText
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/team_hint"
+            android:elevation="3dp"
+            android:id="@+id/etTeam"
+            android:padding="10dp"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/colorTransparentWhite"
+            android:padding="10dp"
+            android:id="@+id/cbTerms"
+            android:textStyle="bold"
+            android:buttonTint="@color/colorTransparentWhite"
+            android:text="@string/checkbox_accept_terms"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/button_register"
+            android:textAllCaps="true"
+            android:paddingStart="25dp"
+            android:paddingEnd="25dp"
+            android:elevation="3dp"
+            android:layout_gravity="end"
+            android:id="@+id/btRegister"
+            android:paddingLeft="25dp"
+            android:paddingRight="25dp"
+            android:paddingTop="15dp"
+            android:textStyle="bold"
+            android:paddingBottom="15dp"
+            android:textColorHint="@color/colorTransparentWhite"
+            android:textColor="@color/colorTransparentWhite"
+            android:background="@drawable/bg_button"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/viewProgress"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorTransparentDark">
+
+
+        <ProgressBar
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center" />
+
+    </FrameLayout>
+
+
+
+</RelativeLayout>

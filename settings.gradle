@@ -1,1 +1,2 @@
 include ':app'
+rootProject.name='Credo Detector 2'

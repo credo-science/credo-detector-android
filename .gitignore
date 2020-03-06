@@ -4,3 +4,6 @@
 /build
 .externalNativeBuild
 .idea
+app/.cxx
+app/release
+app/debug

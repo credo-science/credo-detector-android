@@ -1,0 +1,149 @@
+package science.credo.mobiledetector.detector.old
+
+import android.graphics.Bitmap
+import android.util.Base64
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import science.credo.mobiledetector.detector.Frame
+import science.credo.mobiledetector.detector.FrameResult
+import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.utils.LocationHelper
+import science.credo.mobiledetector.utils.SensorHelper
+import java.io.ByteArrayOutputStream
+import kotlin.math.max
+import kotlin.math.min
+
+
+object OldFrameAnalyzer {
+
+        const val HIT_BITMAP_SIZE = 60
+
+
+
+    suspend fun checkHit(
+        frame : Frame,
+        frameResult : FrameResult,
+        calibration: OldCalibrationResult
+    ): Hit? {
+        if (frameResult.max > calibration.max) {
+
+            val margin = HIT_BITMAP_SIZE / 2
+            val centerX = frameResult.maxIndex.rem(frame.width)
+            val centerY = frameResult.maxIndex / frame.width
+
+            val offsetX = max(0, centerX - margin)
+            val offsetY = max(0, centerY - margin)
+            val endX = min(frame.width, centerX + margin)
+            val endY = min(frame.height, centerY + margin)
+
+            val cropBitmap = yuv2rgb(
+                frame.byteArray,
+                frame.width,
+                frame.height,
+                offsetX,
+                offsetY,
+                endX,
+                endY
+            )
+            val cropDataPNG = bitmap2png(cropBitmap)
+            val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
+
+            val hit = Hit()
+            hit.frameContent = dataString
+            hit.timestamp = frame.timestamp
+            hit.latitude = LocationHelper.location?.latitude
+            hit.longitude = LocationHelper.location?.longitude
+            hit.altitude = LocationHelper.location?.altitude
+            hit.accuracy = LocationHelper.location?.accuracy
+            hit.provider = LocationHelper.location?.provider
+            hit.width = frame.width
+            hit.height = frame.height
+            hit.x = centerX
+            hit.y = centerY
+            hit.maxValue = frameResult.max
+            hit.blackThreshold = calibration.blackThreshold
+            hit.average = frameResult.avg.toFloat()
+            hit.blacksPercentage = frameResult.blacksPercentage
+            hit.ax = SensorHelper.accX
+            hit.ay = SensorHelper.accY
+            hit.az = SensorHelper.accZ
+            hit.temperature = SensorHelper.temperature
+
+            return hit
+        } else {
+            return null
+        }
+    }
+
+
+    suspend fun yuv2rgb(
+        yuv: ByteArray,
+        width: Int,
+        height: Int,
+        offsetX: Int,
+        offsetY: Int,
+        endX: Int,
+        endY: Int
+    ): Bitmap {
+        return GlobalScope.async {
+            val total = width * height
+            val outWidth = endX - offsetX
+            val outHeight = endY - offsetY
+
+            val rgb = IntArray(outWidth * outHeight)
+
+            var Y: Int
+            var Cb = 0
+            var Cr = 0
+
+            var index = 0
+
+            var R: Int
+            var G: Int
+            var B: Int
+
+            for (y in offsetY until endY) {
+                for (x in offsetX until endX) {
+                    Y = yuv[y * width + x].toInt()
+                    if (Y < 0) Y += 255
+
+                    if (x and 1 == 0) {
+                        Cr = yuv[(y shr 1) * width + x + total].toInt()
+                        Cb = yuv[(y shr 1) * width + x + total + 1].toInt()
+
+                        if (Cb < 0) Cb += 127 else Cb -= 128
+                        if (Cr < 0) Cr += 127 else Cr -= 128
+                    }
+
+                    R = Y + Cr + (Cr shr 2) + (Cr shr 3) + (Cr shr 5)
+                    G =
+                        Y - (Cb shr 2) + (Cb shr 4) + (Cb shr 5) - (Cr shr 1) + (Cr shr 3) + (Cr shr 4) + (Cr shr 5)
+                    B = Y + Cb + (Cb shr 1) + (Cb shr 2) + (Cb shr 6)
+
+                    // Approximation
+                    //				R = (int) (Y + 1.40200 * Cr);
+                    //			    G = (int) (Y - 0.34414 * Cb - 0.71414 * Cr);
+                    //				B = (int) (Y + 1.77200 * Cb);
+
+                    if (R < 0) R = 0 else if (R > 255) R = 255
+                    if (G < 0) G = 0 else if (G > 255) G = 255
+                    if (B < 0) B = 0 else if (B > 255) B = 255
+
+                    rgb[index++] = -0x1000000 + (R shl 16) + (G shl 8) + B
+                }
+            }
+
+            return@async Bitmap.createBitmap(rgb, outWidth, outHeight, Bitmap.Config.ARGB_8888)
+        }.await()
+
+    }
+
+    suspend fun bitmap2png(bitmap: Bitmap): ByteArray {
+        return GlobalScope.async {
+            val pngData = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngData)
+            return@async pngData.toByteArray()
+        }.await()
+    }
+
+}
