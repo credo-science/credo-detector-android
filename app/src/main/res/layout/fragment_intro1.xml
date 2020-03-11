@@ -9,7 +9,7 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -54,7 +54,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/img_slider_1"
             app:layout_constraintVertical_bias="0.301" />
-    </android.support.constraint.ConstraintLayout>
 
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>

@@ -32,6 +32,10 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         viewProgress.visibility = View.VISIBLE
 
+        if (!Prefs.get(this, String::class.java, "showIntro").equals("False")){
+            startActivity(Intent(this, IntroActivity::class.java))
+        }
+
         btRegister.setOnClickListener {
             addFragment(RegisterFragment.newInstance())
         }
@@ -54,9 +58,6 @@ class LoginActivity : AppCompatActivity() {
             viewProgress.visibility = View.GONE
         }
 
-        if (!Prefs.get(this, String::class.java, "showIntro").equals("False")){
-            startActivity(Intent(this, IntroActivity::class.java))
-        }
 
     }
 
