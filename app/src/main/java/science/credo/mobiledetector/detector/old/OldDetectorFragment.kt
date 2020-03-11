@@ -84,7 +84,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
 
     override fun onFrameReceived(frame: Frame) {
         GlobalScope.async {
-            val ts = System.currentTimeMillis()
+            val ts = TrueTimeRx.now().time
 
 
 //            val frameResult = frameAnalyzer.baseCalculation(calibrationResult)
@@ -95,14 +95,14 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                 calibrationResult?.blackThreshold ?: 40
             )
             val frameResult = FrameResult.fromJniStringData(stringDataResult)
-            println("===$this====t1 = ${System.currentTimeMillis() - ts}  ${frameResult.avg}  ${frameResult.blacksPercentage}")
+            println("===$this====t1 = ${TrueTimeRx.now().time - ts}  ${frameResult.avg}  ${frameResult.blacksPercentage}")
 
             if (frameResult.avg < calibrationResult?.avg ?: 40
                 && frameResult.blacksPercentage >= 99.9
             ) {
                 if (calibrationResult == null) {
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
-                    println("===$this====t2 = ${System.currentTimeMillis() - ts}")
+                    println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     if (calibrationResult != null) {
                         Prefs.put(context!!, calibrationResult!!)
                     }
@@ -114,7 +114,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                         frameResult,
                         calibrationResult!!
                     )
-                    println("===$this====t3 = ${System.currentTimeMillis() - ts} $hit")
+                    println("===$this====t3 = ${TrueTimeRx.now().time - ts} $hit")
                     hit?.send(context!!)
                     updateState(State.RUNNING, frame, hit)
                 }

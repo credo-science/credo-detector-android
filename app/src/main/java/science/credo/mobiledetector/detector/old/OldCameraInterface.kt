@@ -8,6 +8,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
+import com.instacart.library.truetime.TrueTimeRx
 import science.credo.mobiledetector.detector.CameraInterface
 import science.credo.mobiledetector.detector.Frame
 import science.credo.mobiledetector.settings.OldCameraSettings
@@ -53,7 +54,7 @@ class OldCameraInterface(
                 mCamera?.setPreviewDisplay(holder)
                 mCamera?.setPreviewCallback(this@OldCameraInterface)
                 mCamera?.startPreview()
-                startTS = System.currentTimeMillis()
+                startTS = TrueTimeRx.now().time
             }
 
             override fun surfaceChanged(
@@ -84,9 +85,9 @@ class OldCameraInterface(
 
     override fun onPreviewFrame(data: ByteArray?, camera: Camera?) {
 
-        val ts = System.currentTimeMillis()
+        val ts = TrueTimeRx.now().time
         counter++
-        val exposure = 1000 / (counter / ((System.currentTimeMillis() - startTS) / 1000))
+        val exposure = 1000 / (counter / ((TrueTimeRx.now().time - startTS) / 1000))
         if (data != null) {
             frameCallback.onFrameReceived(
                 Frame(
