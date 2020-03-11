@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -168,7 +169,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                         tvDetectionCount.visibility = View.VISIBLE
                         if (hit != null) {
                             tvDetectionCount.text =
-                                "Detections in this run : ${tvDetectionCount.tag}\nLast detection ${(System.currentTimeMillis() - hit.timestamp!!) / 1000f / 60f} minutes ago"
+                                "Detections in this run : ${tvDetectionCount.tag}\nLast detection ${(TrueTimeRx.now().time - hit.timestamp!!) / 1000f / 60f} minutes ago"
                         }
                         progressAnimation?.start()
 
