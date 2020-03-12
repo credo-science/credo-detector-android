@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.SystemClock
 import android.view.Surface
 import androidx.annotation.RequiresApi
+import com.instacart.library.truetime.TrueTimeRx
 import science.credo.mobiledetector.detector.Frame
 import science.credo.mobiledetector.settings.Camera2ApiSettings
 import science.credo.mobiledetector.utils.SynchronizedTimeUtils
@@ -22,7 +23,7 @@ class Camera2PostConfigurationInterface(
     var lastFrameTimestamp: Long = 0
 
     override fun onImageAvailable(p0: ImageReader?) {
-        val timestamp = SynchronizedTimeUtils.getTimestamp()
+        val timestamp = TrueTimeRx.now().time
 
         val exposure = timestamp - lastFrameTimestamp
         lastFrameTimestamp = timestamp
@@ -35,7 +36,7 @@ class Camera2PostConfigurationInterface(
 
 
         println("=====================ts image ${image.timestamp}")
-        println("=====================ts elapsed realtime  ${SystemClock.elapsedRealtimeNanos()}")
+        println("=====================ts elapsed realtime  ${TrueTimeRx.now().time}")
 
 //        val d = image.timestamp / 1000 - SntpClient.ntpTimeReference
 
@@ -162,7 +163,7 @@ class Camera2PostConfigurationInterface(
                     timestamp: Long,
                     frameNumber: Long
                 ) {
-                    println("==============capture starded ${System.currentTimeMillis() - ((SystemClock.elapsedRealtimeNanos() - timestamp) / 1000)} ")
+                    println("==============capture starded ${TrueTimeRx.now().time - (timestamp / 1000)} ")
                     super.onCaptureStarted(session, request, timestamp, frameNumber)
                 }
 
@@ -171,7 +172,7 @@ class Camera2PostConfigurationInterface(
                     request: CaptureRequest,
                     result: TotalCaptureResult
                 ) {
-                    println("==============capture completed  ${System.currentTimeMillis()}    $result ")
+                    println("==============capture completed  ${TrueTimeRx.now().time}    $result ")
                     super.onCaptureCompleted(session, request, result)
                 }
             }, getBackgroundHandler()

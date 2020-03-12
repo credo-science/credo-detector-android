@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.view.menu.MenuBuilder
@@ -21,6 +22,9 @@ import science.credo.mobiledetector.settings.SettingsActivity
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.SynchronizedTimeUtils
+import com.instacart.library.truetime.TrueTimeRx
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 
 class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
@@ -62,19 +66,31 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
     }
 
     fun startNtpSynchronization() {
-
         sntpSynchronizationJob = GlobalScope.launch {
             while (true) {
-                SynchronizedTimeUtils.SntpClient.requestTime("0.pl.pool.ntp.org", 3000)
+                initRxTrueTime()
                 delay(300000)
             }
         }
 
     }
 
+    private fun initRxTrueTime() {
+        val disposable = TrueTimeRx.build()
+            .withConnectionTimeout(31428)
+            .withRetryCount(100)
+            .withSharedPreferencesCache(this)
+            .initializeRx("time.google.com")
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ date ->
+                Log.d("initRxTrueTime", "initRxTrueTime - Success initialized TrueTime :$date")
+            }, {
+                Log.e("initRxTrueTime", "something went wrong when trying to initializeRx TrueTime", it)
+            })
+    }
 
     fun setupDrawer() {
-
         val drawerMenu = MenuBuilder(this)
         menuInflater.inflate(R.menu.drawer, drawerMenu)
         rvDrawerMenu.layoutManager = LinearLayoutManager(this)

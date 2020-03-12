@@ -1,5 +1,6 @@
 package science.credo.mobiledetector.detector.old
 
+import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import science.credo.mobiledetector.detector.FrameResult
@@ -23,7 +24,7 @@ object JniWrapper {
         scaledHeight: Int,
         pixelPrecision: Int
     ): FrameResult {
-        val time = System.currentTimeMillis()
+        val time = TrueTimeRx.now().time
         isBusy = true
         return GlobalScope.async {
             val stringDataResult = calculateRawFrame(
@@ -35,7 +36,7 @@ object JniWrapper {
                 pixelPrecision
             )
             isBusy = false
-            println("===============calc time ${System.currentTimeMillis() - time}")
+            println("===============calc time ${TrueTimeRx.now().time - time}")
             return@async FrameResult.fromJniStringData(stringDataResult)
         }.await()
     }
