@@ -12,6 +12,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
+import science.credo.mobiledetector.intro.IntroActivity
 import science.credo.mobiledetector.main.MainActivity
 import science.credo.mobiledetector.network.RestInterface
 import science.credo.mobiledetector.utils.Prefs
@@ -30,6 +31,10 @@ class LoginActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_login)
         viewProgress.visibility = View.VISIBLE
+
+        if (!Prefs.get(this, String::class.java, "showIntro").equals("False")){
+            startActivity(Intent(this, IntroActivity::class.java))
+        }
 
         btRegister.setOnClickListener {
             addFragment(RegisterFragment.newInstance())
