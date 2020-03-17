@@ -35,6 +35,7 @@ android {
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
+    ndkVersion "20.0.5594570"
 }
 
 dependencies {

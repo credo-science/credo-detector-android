@@ -4,12 +4,15 @@ import android.graphics.Bitmap
 import android.util.Base64
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import science.credo.mobiledetector.detector.BaseCalibrationResult
 import science.credo.mobiledetector.detector.Frame
 import science.credo.mobiledetector.detector.FrameResult
 import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
 import java.io.ByteArrayOutputStream
+import java.lang.IllegalStateException
 import kotlin.math.max
 import kotlin.math.min
 
@@ -23,9 +26,20 @@ object OldFrameAnalyzer {
     suspend fun checkHit(
         frame : Frame,
         frameResult : FrameResult,
-        calibration: OldCalibrationResult
+        calibration: BaseCalibrationResult
     ): Hit? {
-        if (frameResult.max > calibration.max) {
+        val max = when (calibration) {
+            is OldCalibrationResult -> {
+                calibration.max
+            }
+            is RawFormatCalibrationResult -> {
+                calibration.detectionThreshold
+            }
+            else -> {
+                throw IllegalStateException()
+            }
+        }
+        if (frameResult.max > max) {
 
             val margin = HIT_BITMAP_SIZE / 2
             val centerX = frameResult.maxIndex.rem(frame.width)
@@ -61,7 +75,9 @@ object OldFrameAnalyzer {
             hit.x = centerX
             hit.y = centerY
             hit.maxValue = frameResult.max
-            hit.blackThreshold = calibration.blackThreshold
+            if(calibration is OldCalibrationResult){
+                hit.blackThreshold = calibration.blackThreshold
+            }
             hit.average = frameResult.avg.toFloat()
             hit.blacksPercentage = frameResult.blacksPercentage
             hit.ax = SensorHelper.accX

@@ -20,8 +20,8 @@ object JniWrapper {
         bytes: ByteArray,
         width: Int,
         height: Int,
-        scaledWidth: Int,
-        scaledHeight: Int,
+        scaledWidthFactor: Int,
+        scaledHeightFactor: Int,
         pixelPrecision: Int
     ): FrameResult {
         val time = TrueTimeRx.now().time
@@ -31,8 +31,8 @@ object JniWrapper {
                 bytes,
                 width,
                 height,
-                scaledWidth,
-                scaledHeight,
+                width / scaledWidthFactor,
+                height / scaledHeightFactor,
                 pixelPrecision
             )
             isBusy = false

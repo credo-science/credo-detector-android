@@ -50,8 +50,9 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
     lateinit var tvDetectionCount: TextView
 
     var progressAnimation: AnimationDrawable? = null
+    var settings: Camera2ApiSettings? = null
 
-    var calibrationResult: OldCalibrationResult? = null
+    var calibrationResult: BaseCalibrationResult? = null
     val calibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
 
     override fun onCreateView(
@@ -73,16 +74,18 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
             progressAnimation = ivProgress.background as AnimationDrawable
         }
 
-        val settings = Prefs.get(context!!, Camera2ApiSettings::class.java)!!
+        settings = Prefs.get(context!!, Camera2ApiSettings::class.java)
         tvInterface.text = "Camera interface: Camera2\n" +
-                "Image format: ${ConstantsNamesHelper.getFormatName(settings.imageFormat)}\n" +
-                "Processing method: ${settings.processingMethod}"
-        if (settings.imageFormat == ImageFormat.RAW_SENSOR &&
-            settings.processingMethod == ProcessingMethod.EXPERIMENTAL
+                "Image format: ${ConstantsNamesHelper.getFormatName(settings!!.imageFormat)}\n" +
+                "Processing method: ${settings!!.processingMethod}"
+
+
+        if (settings!!.imageFormat == ImageFormat.RAW_SENSOR &&
+            settings!!.processingMethod == ProcessingMethod.EXPERIMENTAL
         ) {
             RawFormatCalibrationFinder(
                 context!!,
-                settings,
+                settings!!,
                 object : RawFormatCalibrationFinder.CalibrationCallback {
                     override fun onStatusChanged(
                         state: State,
@@ -96,7 +99,9 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
 
                     override fun onCalibrationSuccess(calibrationResult: RawFormatCalibrationResult) {
 
-                        println("==========calibration found !!")
+                        println("==========calibration found !! ${calibrationResult.clusterFactorWidth}")
+                        this@Camera2DetectorFragment.calibrationResult = calibrationResult
+                        start(settings!!)
 
                     }
 
@@ -110,11 +115,8 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
                 }
             ).start()
         } else {
-            start(settings)
+            start(settings!!)
         }
-
-
-
 
 
         return v
@@ -132,29 +134,38 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
         GlobalScope.async {
             val ts = TrueTimeRx.now().time
 
+            val frameResult = when (settings!!.processingMethod) {
+                ProcessingMethod.OFFICIAL -> {
+                    FrameResult.fromJniStringData(
+                        JniWrapper.calculateFrame(
+                            frame.byteArray,
+                            frame.width,
+                            frame.height,
+                            (calibrationResult as OldCalibrationResult?)?.blackThreshold
+                                ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD
+                        )
+                    )
+                }
+                ProcessingMethod.EXPERIMENTAL -> {
+                    JniWrapper.calculateFrame(
+                        frame.byteArray,
+                        frame.width,
+                        frame.height,
+                        (calibrationResult as RawFormatCalibrationResult).clusterFactorWidth,
+                        (calibrationResult as RawFormatCalibrationResult).clusterFactorHeight,
+                        if (settings!!.imageFormat == ImageFormat.RAW_SENSOR) 2 else 1
+                    )
+                }
+            }
 
-//            val frameResult = frameAnalyzer.baseCalculation(calibrationResult)
-            val stringDataResult = JniWrapper.calculateFrame(
-                frame.byteArray,
-                frame.width,
-                frame.height,
-                calibrationResult?.blackThreshold ?: 40
-            )
-            val frameResult = FrameResult.fromJniStringData(stringDataResult)
-            println("===$this====t1 = ${TrueTimeRx.now().time - ts}  ${frameResult.avg}  ${frameResult.blacksPercentage}")
 
-            if (frameResult.avg < calibrationResult?.avg ?: 40
-                && frameResult.blacksPercentage >= 99.9
-            ) {
+            if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
-                    if (calibrationResult != null) {
-                        Prefs.put(context!!, calibrationResult!!)
-                    }
+                    calibrationResult?.save(context!!)
                     updateState(State.CALIBRATION, frame)
                 } else {
-
                     val hit = OldFrameAnalyzer.checkHit(
                         frame,
                         frameResult,
@@ -167,10 +178,7 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
             } else {
                 updateState(State.NOT_COVERED, frame)
             }
-//
-
         }
-
     }
 
 
@@ -227,7 +235,6 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
 
         }
     }
-
 
 
 }

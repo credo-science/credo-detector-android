@@ -41,7 +41,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
     lateinit var tvFrameSize: TextView
     lateinit var tvState: TextView
     lateinit var tvDetectionCount: TextView
-    lateinit var tvInterface : TextView
+    lateinit var tvInterface: TextView
 
     var progressAnimation: AnimationDrawable? = null
 
@@ -95,20 +95,14 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                 calibrationResult?.blackThreshold ?: 40
             )
             val frameResult = FrameResult.fromJniStringData(stringDataResult)
-            println("===$this====t1 = ${TrueTimeRx.now().time - ts}  ${frameResult.avg}  ${frameResult.blacksPercentage}")
 
-            if (frameResult.avg < calibrationResult?.avg ?: 40
-                && frameResult.blacksPercentage >= 99.9
-            ) {
+            if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
-                    if (calibrationResult != null) {
-                        Prefs.put(context!!, calibrationResult!!)
-                    }
+                    calibrationResult?.save(context!!)
                     updateState(State.CALIBRATION, frame)
                 } else {
-
                     val hit = OldFrameAnalyzer.checkHit(
                         frame,
                         frameResult,
@@ -181,9 +175,6 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
 
         }
     }
-
-
-
 
 
 }
