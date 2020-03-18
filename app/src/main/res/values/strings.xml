@@ -5,6 +5,7 @@
     <string name="login_hint">login/email</string>
     <string name="password_hint">password</string>
     <string name="forgot_password"><u>forgot password?</u></string>
+    <string name="send_forgot">confirm</string>
     <string name="email_hint">email address</string>
     <string name="password_confirm_hint">confirm password</string>
     <string name="login_register_hint">login</string>

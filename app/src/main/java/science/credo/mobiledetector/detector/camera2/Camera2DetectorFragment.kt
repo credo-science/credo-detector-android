@@ -1,7 +1,5 @@
 package science.credo.mobiledetector.detector.camera2
 
-import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.graphics.ImageFormat
 import android.graphics.drawable.AnimationDrawable
 import android.os.Build
@@ -9,10 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -26,7 +21,6 @@ import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.settings.ProcessingMethod
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
-import java.lang.IllegalStateException
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
@@ -41,18 +35,12 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
     }
 
 
-    lateinit var ivProgress: ImageView
-    lateinit var tvExposure: TextView
-    lateinit var tvFormat: TextView
-    lateinit var tvFrameSize: TextView
-    lateinit var tvState: TextView
-    lateinit var tvInterface: TextView
-    lateinit var tvDetectionCount: TextView
+    var settings: Camera2ApiSettings? = null
 
-    var progressAnimation: AnimationDrawable? = null
-
-    var calibrationResult: OldCalibrationResult? = null
-    val calibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
+    var calibrationResult: BaseCalibrationResult? = null
+    val oldCalibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
+    var rawCalibrationFinder: RawFormatCalibrationFinder? = null
+    lateinit var frameAnalyzer : BaseFrameAnalyzer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -62,27 +50,30 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
         val v = inflater.inflate(R.layout.fragment_detector, container, false)
 
         ivProgress = v.findViewById(R.id.ivProgress)
-        tvExposure = v.findViewById(R.id.tvExposure)
         tvFormat = v.findViewById(R.id.tvFormat)
         tvFrameSize = v.findViewById(R.id.tvFrameSize)
         tvState = v.findViewById(R.id.tvState)
         tvInterface = v.findViewById(R.id.tvInterface)
         tvDetectionCount = v.findViewById(R.id.tvDetectionCount)
-        ivProgress.setBackgroundResource(R.drawable.anim_progress)
-        ivProgress.post {
-            progressAnimation = ivProgress.background as AnimationDrawable
+        ivProgress?.setBackgroundResource(R.drawable.anim_progress)
+        tvRunningTime = v.findViewById(R.id.tvRunningTime)
+        ivProgress?.post {
+            progressAnimation = ivProgress?.background as AnimationDrawable
         }
 
-        val settings = Prefs.get(context!!, Camera2ApiSettings::class.java)!!
-        tvInterface.text = "Camera interface: Camera2\n" +
-                "Image format: ${ConstantsNamesHelper.getFormatName(settings.imageFormat)}\n" +
-                "Processing method: ${settings.processingMethod}"
-        if (settings.imageFormat == ImageFormat.RAW_SENSOR &&
-            settings.processingMethod == ProcessingMethod.EXPERIMENTAL
+        settings = Prefs.get(context!!, Camera2ApiSettings::class.java)
+        tvInterface?.text = "Camera interface: Camera2\n" +
+                "Image format: ${ConstantsNamesHelper.getFormatName(settings!!.imageFormat)}\n" +
+                "Processing method: ${settings!!.processingMethod}"
+
+
+        if (settings!!.imageFormat == ImageFormat.RAW_SENSOR &&
+            settings!!.processingMethod == ProcessingMethod.EXPERIMENTAL
         ) {
-            RawFormatCalibrationFinder(
+            frameAnalyzer = RawFormatFrameAnalyzer
+            rawCalibrationFinder = RawFormatCalibrationFinder(
                 context!!,
-                settings,
+                settings!!,
                 object : RawFormatCalibrationFinder.CalibrationCallback {
                     override fun onStatusChanged(
                         state: State,
@@ -90,13 +81,16 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
                         progress: Int,
                         avgNoise: Int
                     ) {
-                        println("==========on status chaged $state")
-                        updateState(state, null)
+                        println("==========on status chaged $state  $msg   $progress")
+                        updateState(state, "$msg - $progress%")
                     }
 
                     override fun onCalibrationSuccess(calibrationResult: RawFormatCalibrationResult) {
 
-                        println("==========calibration found !!")
+                        println("==========calibration found !! ${calibrationResult.detectionThreshold}  ${calibrationResult.avgNoise}")
+                        this@Camera2DetectorFragment.calibrationResult = calibrationResult
+                        rawCalibrationFinder = null
+                        start(settings!!)
 
                     }
 
@@ -108,19 +102,18 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
                     }
 
                 }
-            ).start()
+            )
+            rawCalibrationFinder!!.start()
         } else {
-            start(settings)
+            frameAnalyzer = OldFrameAnalyzer
+            start(settings!!)
         }
-
-
-
-
 
         return v
     }
 
     fun start(settings: Camera2ApiSettings) {
+        startTimer()
         cameraInterface = Camera2PostConfigurationInterface(
             settings,
             this
@@ -132,30 +125,37 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
         GlobalScope.async {
             val ts = TrueTimeRx.now().time
 
+            val frameResult = when (settings!!.processingMethod) {
+                ProcessingMethod.OFFICIAL -> {
+                    JniWrapper.calculateFrame(
+                        frame.byteArray,
+                        frame.width,
+                        frame.height,
+                        (calibrationResult as OldCalibrationResult?)?.blackThreshold
+                            ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD
+                    )
+                }
+                ProcessingMethod.EXPERIMENTAL -> {
+                    JniWrapper.calculateFrame(
+                        frame.byteArray,
+                        frame.width,
+                        frame.height,
+                        (calibrationResult as RawFormatCalibrationResult).clusterFactorWidth,
+                        (calibrationResult as RawFormatCalibrationResult).clusterFactorHeight,
+                        if (settings!!.imageFormat == ImageFormat.RAW_SENSOR) 2 else 1
+                    )
+                }
+            }
 
-//            val frameResult = frameAnalyzer.baseCalculation(calibrationResult)
-            val stringDataResult = JniWrapper.calculateFrame(
-                frame.byteArray,
-                frame.width,
-                frame.height,
-                calibrationResult?.blackThreshold ?: 40
-            )
-            val frameResult = FrameResult.fromJniStringData(stringDataResult)
-            println("===$this====t1 = ${TrueTimeRx.now().time - ts}  ${frameResult.avg}  ${frameResult.blacksPercentage}")
 
-            if (frameResult.avg < calibrationResult?.avg ?: 40
-                && frameResult.blacksPercentage >= 99.9
-            ) {
+            if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
-                    calibrationResult = calibrationFinder.nextFrame(frameResult)
+                    calibrationResult = oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
-                    if (calibrationResult != null) {
-                        Prefs.put(context!!, calibrationResult!!)
-                    }
+                    calibrationResult?.save(context!!)
                     updateState(State.CALIBRATION, frame)
                 } else {
-
-                    val hit = OldFrameAnalyzer.checkHit(
+                    val hit = frameAnalyzer.checkHit(
                         frame,
                         frameResult,
                         calibrationResult!!
@@ -167,67 +167,21 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
             } else {
                 updateState(State.NOT_COVERED, frame)
             }
-//
-
         }
-
     }
 
 
-    fun updateState(state: State, frame: Frame?) {
-        updateState(state, frame, null)
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun updateState(state: State, frame: Frame?, hit: Hit?) {
+    fun updateState(state: State, additionalMsg: String) {
+        super.updateState(state, null)
         GlobalScope.launch(Dispatchers.Main) {
-
-            try {
-                if (frame != null) {
-                    tvFormat.text =
-                        String.format(
-                            "Format: %s",
-                            ConstantsNamesHelper.getFormatName(frame.imageFormat)
-                        )
-                    tvFrameSize.text =
-                        String.format("Frame size: %d x %d", frame.width, frame.height)
-//                    tvExposure.text = String.format("Exposure time %d ms", frame.exposureTime)
-                }
-
-                when (state) {
-                    State.DISABLED -> {
-                        tvState.text = getString(R.string.detector_state_disabled)
-
-                    }
-                    State.NOT_COVERED -> {
-                        tvState.text = getString(R.string.detector_state_not_covered)
-                        progressAnimation?.stop()
-
-                    }
-                    State.CALIBRATION -> {
-                        tvState.text = getString(R.string.detector_state_calibration)
-                        progressAnimation?.start()
-
-
-                    }
-                    State.RUNNING -> {
-                        tvState.text = getString(R.string.detector_state_running)
-                        tvDetectionCount.visibility = View.VISIBLE
-                        if (hit != null) {
-                            tvDetectionCount.text =
-                                "Detections in this run : ${tvDetectionCount.tag}\nLast detection ${(TrueTimeRx.now().time - hit.timestamp!!) / 1000f / 60f} minutes ago"
-                        }
-                        progressAnimation?.start()
-
-                    }
-                }
-            } catch (e: IllegalStateException) {
-                e.printStackTrace()
-            }
-
+            tvState?.text = "${tvState?.text.toString()}\n$additionalMsg"
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        rawCalibrationFinder?.stop()
 
+    }
 
 }

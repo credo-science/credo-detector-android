@@ -26,7 +26,7 @@
  *   app/src/main/java/com/example/kotlin/KotlinJni.kt
  */
 JNIEXPORT jstring JNICALL
-Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateFrame(JNIEnv *env,
+Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIEnv *env,
                                                                          jobject thiz,
                                                                          jbyteArray bytes,
                                                                          jint width,
@@ -105,11 +105,10 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIE
             max = virtualPixelValue;
             maxIndex = i;
         }
-
     }
 
     char buffer[20];
-    sprintf(buffer, "%d;%d;%d;%d", sum / scaledFrameSize,0, max, maxIndex);
+    sprintf(buffer, "%d;%d;%d", sum / scaledFrameSize, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
     free(scaledFrame);
     return result;

@@ -3,27 +3,39 @@ package science.credo.mobiledetector.detector.old
 import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import science.credo.mobiledetector.detector.FrameResult
+import science.credo.mobiledetector.detector.BaseFrameResult
+import science.credo.mobiledetector.detector.OldFrameResult
+import science.credo.mobiledetector.detector.camera2.RawFormatFrameResult
 
 object JniWrapper {
 
     var isBusy = false
 
-    external fun calculateFrame(
+
+    fun calculateFrame(
         byteArray: ByteArray,
         width: Int,
         height: Int,
         blackThreshold: Int
-    ): String
+    ): OldFrameResult {
+        return OldFrameResult.fromJniStringData(
+            calculateOldFrame(
+                byteArray,
+                width,
+                height,
+                blackThreshold
+            )
+        )
+    }
 
     suspend fun calculateFrame(
         bytes: ByteArray,
         width: Int,
         height: Int,
-        scaledWidth: Int,
-        scaledHeight: Int,
+        scaledWidthFactor: Int,
+        scaledHeightFactor: Int,
         pixelPrecision: Int
-    ): FrameResult {
+    ): RawFormatFrameResult {
         val time = TrueTimeRx.now().time
         isBusy = true
         return GlobalScope.async {
@@ -31,13 +43,13 @@ object JniWrapper {
                 bytes,
                 width,
                 height,
-                scaledWidth,
-                scaledHeight,
+                width / scaledWidthFactor,
+                height / scaledHeightFactor,
                 pixelPrecision
             )
             isBusy = false
             println("===============calc time ${TrueTimeRx.now().time - time}")
-            return@async FrameResult.fromJniStringData(stringDataResult)
+            return@async RawFormatFrameResult.fromJniStringData(stringDataResult)
         }.await()
     }
 
@@ -48,6 +60,13 @@ object JniWrapper {
         scaledWidth: Int,
         scaledHeight: Int,
         pixelPrecision: Int
+    ): String
+
+    private external fun calculateOldFrame(
+        byteArray: ByteArray,
+        width: Int,
+        height: Int,
+        blackThreshold: Int
     ): String
 
     init {
