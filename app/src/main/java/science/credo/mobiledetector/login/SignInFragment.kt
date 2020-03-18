@@ -1,5 +1,7 @@
 package science.credo.mobiledetector.login
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
 import science.credo.mobiledetector.main.MainActivity
 import science.credo.mobiledetector.R
+import science.credo.mobiledetector.network.Config
 import science.credo.mobiledetector.network.RestInterface
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
@@ -31,7 +34,7 @@ class SignInFragment private constructor() : Fragment() {
     lateinit var btSignIn: TextView
     lateinit var btForgotPassword: TextView
     lateinit var etLogin: EditText
-    lateinit var viewProgress : View
+    lateinit var viewProgress: View
 
 
     override fun onCreateView(
@@ -63,7 +66,14 @@ class SignInFragment private constructor() : Fragment() {
         }
 
         btForgotPassword.setOnClickListener {
-            //            addFragment(ForgotPasswordFragment.newInstance(email))
+
+            val browserIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://api.credo.science/web/password_reset")
+            )
+            startActivity(browserIntent)
+
+
         }
 
         return v
@@ -76,17 +86,17 @@ class SignInFragment private constructor() : Fragment() {
 
     fun signIn(login: String, password: String) {
 
-        GlobalScope.launch (Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.Main) {
             viewProgress.visibility = View.VISIBLE
             val result = RestInterface.login(context!!, login, password)
             viewProgress.visibility = View.GONE
-            if(result.isSuccess()){
-                Prefs.put(context!!, login,Prefs.Keys.USER_LOGIN)
-                Prefs.put(context!!, password,Prefs.Keys.USER_PASSWORD)
+            if (result.isSuccess()) {
+                Prefs.put(context!!, login, Prefs.Keys.USER_LOGIN)
+                Prefs.put(context!!, password, Prefs.Keys.USER_PASSWORD)
                 startActivity(MainActivity.intent(context!!))
-            }else{
+            } else {
 //                startActivity(MainActivity.intent(context!!))
-                UiUtils.showAlertDialog(context!!,result.getResponse())
+                UiUtils.showAlertDialog(context!!, result.getResponse())
             }
         }
 

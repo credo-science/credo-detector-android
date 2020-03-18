@@ -4,10 +4,7 @@ import android.graphics.Bitmap
 import android.util.Base64
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import science.credo.mobiledetector.detector.BaseCalibrationResult
-import science.credo.mobiledetector.detector.Frame
-import science.credo.mobiledetector.detector.FrameResult
-import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.detector.*
 import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
@@ -17,28 +14,19 @@ import kotlin.math.max
 import kotlin.math.min
 
 
-object OldFrameAnalyzer {
+object OldFrameAnalyzer : BaseFrameAnalyzer() {
 
-        const val HIT_BITMAP_SIZE = 60
+    const val HIT_BITMAP_SIZE = 60
 
-
-
-    suspend fun checkHit(
-        frame : Frame,
-        frameResult : FrameResult,
+    override suspend fun checkHit(
+        frame: Frame,
+        frameResult: BaseFrameResult,
         calibration: BaseCalibrationResult
     ): Hit? {
-        val max = when (calibration) {
-            is OldCalibrationResult -> {
-                calibration.max
-            }
-            is RawFormatCalibrationResult -> {
-                calibration.detectionThreshold
-            }
-            else -> {
-                throw IllegalStateException()
-            }
-        }
+        frameResult as OldFrameResult
+        calibration as OldCalibrationResult
+        val max = calibration.max
+
         if (frameResult.max > max) {
 
             val margin = HIT_BITMAP_SIZE / 2
@@ -75,7 +63,7 @@ object OldFrameAnalyzer {
             hit.x = centerX
             hit.y = centerY
             hit.maxValue = frameResult.max
-            if(calibration is OldCalibrationResult){
+            if (calibration is OldCalibrationResult) {
                 hit.blackThreshold = calibration.blackThreshold
             }
             hit.average = frameResult.avg.toFloat()
@@ -154,12 +142,6 @@ object OldFrameAnalyzer {
 
     }
 
-    suspend fun bitmap2png(bitmap: Bitmap): ByteArray {
-        return GlobalScope.async {
-            val pngData = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngData)
-            return@async pngData.toByteArray()
-        }.await()
-    }
+
 
 }

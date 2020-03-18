@@ -1,24 +1,16 @@
 package science.credo.mobiledetector.detector.old
 
-import android.annotation.SuppressLint
 import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.instacart.library.truetime.TrueTimeRx
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
-import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.settings.OldCameraSettings
 import science.credo.mobiledetector.utils.Prefs
-import java.lang.IllegalStateException
 import science.credo.mobiledetector.detector.*
 
 
@@ -30,20 +22,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
         fun instance(): OldDetectorFragment {
             return OldDetectorFragment()
         }
-
-
     }
-
-
-    lateinit var ivProgress: ImageView
-    lateinit var tvExposure: TextView
-    lateinit var tvFormat: TextView
-    lateinit var tvFrameSize: TextView
-    lateinit var tvState: TextView
-    lateinit var tvDetectionCount: TextView
-    lateinit var tvInterface: TextView
-
-    var progressAnimation: AnimationDrawable? = null
 
     var calibrationResult: OldCalibrationResult? = null
     val calibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
@@ -62,15 +41,14 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
         tvInterface = v.findViewById(R.id.tvInterface)
         tvState = v.findViewById(R.id.tvState)
         tvDetectionCount = v.findViewById(R.id.tvDetectionCount)
-        ivProgress.setBackgroundResource(R.drawable.anim_progress)
-        ivProgress.post {
-            progressAnimation = ivProgress.background as AnimationDrawable
+        ivProgress?.setBackgroundResource(R.drawable.anim_progress)
+        tvRunningTime = v.findViewById(R.id.tvRunningTime)
+        ivProgress?.post {
+            progressAnimation = ivProgress?.background as AnimationDrawable
         }
 
 
-        tvInterface.text = "Camera interface: Old"
-
-
+        tvInterface?.text = "Camera interface: Old"
 
 
         cameraInterface = OldCameraInterface(
@@ -78,6 +56,7 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
             Prefs.get(context!!, OldCameraSettings::class.java)!!
         )
         cameraInterface?.start(context!!)
+        startTimer()
         return v
     }
 
@@ -88,13 +67,12 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
 
 
 //            val frameResult = frameAnalyzer.baseCalculation(calibrationResult)
-            val stringDataResult = JniWrapper.calculateFrame(
+            val frameResult = JniWrapper.calculateFrame(
                 frame.byteArray,
                 frame.width,
                 frame.height,
                 calibrationResult?.blackThreshold ?: 40
             )
-            val frameResult = FrameResult.fromJniStringData(stringDataResult)
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
@@ -120,61 +98,5 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
         }
 
     }
-
-
-    fun updateState(state: State, frame: Frame?) {
-        updateState(state, frame, null)
-    }
-
-    @SuppressLint("SetTextI18n")
-    fun updateState(state: State, frame: Frame?, hit: Hit?) {
-        GlobalScope.launch(Dispatchers.Main) {
-
-            try {
-                if (frame != null) {
-                    tvFormat.text =
-                        String.format(
-                            "Format: %s",
-                            ConstantsNamesHelper.getFormatName(frame.imageFormat)
-                        )
-                    tvFrameSize.text =
-                        String.format("Frame size: %d x %d", frame.width, frame.height)
-                    tvExposure.text = String.format("Exposure time %d ms", frame.exposureTime)
-                }
-
-                when (state) {
-                    State.DISABLED -> {
-                        tvState.text = getString(R.string.detector_state_disabled)
-
-                    }
-                    State.NOT_COVERED -> {
-                        tvState.text = getString(R.string.detector_state_not_covered)
-                        progressAnimation?.stop()
-
-                    }
-                    State.CALIBRATION -> {
-                        tvState.text = getString(R.string.detector_state_calibration)
-                        progressAnimation?.start()
-
-
-                    }
-                    State.RUNNING -> {
-                        tvState.text = getString(R.string.detector_state_running)
-                        tvDetectionCount.visibility = View.VISIBLE
-                        if (hit != null) {
-                            tvDetectionCount.text =
-                                "Detections in this run : ${tvDetectionCount.tag}\nLast detection ${(TrueTimeRx.now().time - hit.timestamp!!) / 1000f / 60f} minutes ago"
-                        }
-                        progressAnimation?.start()
-
-                    }
-                }
-            } catch (e: IllegalStateException) {
-                e.printStackTrace()
-            }
-
-        }
-    }
-
 
 }

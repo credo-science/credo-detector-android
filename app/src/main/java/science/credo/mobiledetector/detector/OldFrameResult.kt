@@ -5,16 +5,16 @@ import science.credo.mobiledetector.detector.old.OldCalibrationResult
 import java.lang.IllegalStateException
 
 
-class FrameResult(
+class OldFrameResult(
     val avg: Int,
     val blacksPercentage: Float,
     val max: Int,
     val maxIndex: Int
-) {
+) :BaseFrameResult() {
     companion object {
-        fun fromJniStringData(data: String): FrameResult {
+        fun fromJniStringData(data: String): OldFrameResult {
             val parts = data.split(";")
-            return FrameResult(
+            return OldFrameResult(
                 parts[0].toInt(),
                 parts[1].toFloat(),
                 parts[2].toInt(),
@@ -23,13 +23,13 @@ class FrameResult(
         }
     }
 
-    fun isCovered(calibrationResult: BaseCalibrationResult?): Boolean {
+   override fun isCovered(calibrationResult: BaseCalibrationResult?): Boolean {
         if (calibrationResult is OldCalibrationResult?) {
             return avg < calibrationResult?.avg ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD &&
                     blacksPercentage >= 99.9
-        } else if (calibrationResult is RawFormatCalibrationResult) {
-            return avg < RawFormatCalibrationResult.DEFAULT_NOISE_THRESHOLD
+        } else{
+            throw IllegalStateException()
         }
-        throw IllegalStateException()
     }
+
 }

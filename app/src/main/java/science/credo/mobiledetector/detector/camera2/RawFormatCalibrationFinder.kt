@@ -107,7 +107,7 @@ class RawFormatCalibrationFinder(
                 callback.onStatusChanged(
                     State.CALIBRATION,
                     "${clusterFactorWidth}x$clusterFactorHeight",
-                    counter,
+                    ((counter.toFloat()/LENGHT)*100).toInt(),
                     frameResult.avg
                 )
                 if (counter >= LENGHT) {
