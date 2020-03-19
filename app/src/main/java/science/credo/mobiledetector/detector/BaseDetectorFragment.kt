@@ -41,7 +41,7 @@ abstract class BaseDetectorFragment : Fragment() {
                 delay(1000)
                 timeInSeconds++
                 val hours = timeInSeconds / 3600
-                val minutes = timeInSeconds / 60
+                val minutes = (timeInSeconds / 60)%60
                 val seconds = timeInSeconds % 60
 
                 GlobalScope.launch(Dispatchers.Main) {

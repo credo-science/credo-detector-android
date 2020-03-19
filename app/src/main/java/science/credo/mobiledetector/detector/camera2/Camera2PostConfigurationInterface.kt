@@ -91,7 +91,7 @@ class Camera2PostConfigurationInterface(
 
                     captureBuilder.set<Int>(CaptureRequest.CONTROL_MODE, settings.controlMode)
                     captureBuilder.set<Int>(CaptureRequest.SENSOR_SENSITIVITY, settings.lowerIsoValue)
-//                    captureBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, settings.frameDuration)
+                    captureBuilder.set(CaptureRequest.SENSOR_FRAME_DURATION, settings.exposureInMillis.toLong()*1000000)
                     captureBuilder.set<Long>(
                         CaptureRequest.SENSOR_EXPOSURE_TIME,
                         settings.exposureInMillis.toLong()*1000000

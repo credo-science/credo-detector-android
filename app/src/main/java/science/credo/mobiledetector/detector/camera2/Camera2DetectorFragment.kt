@@ -40,7 +40,7 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
     var calibrationResult: BaseCalibrationResult? = null
     val oldCalibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
     var rawCalibrationFinder: RawFormatCalibrationFinder? = null
-    lateinit var frameAnalyzer : BaseFrameAnalyzer
+    lateinit var frameAnalyzer: BaseFrameAnalyzer
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -150,10 +150,13 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
-                    calibrationResult = oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
+                    calibrationResult =
+                        oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
-                    updateState(State.CALIBRATION, frame)
+                    val progress =
+                        (oldCalibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
+                    updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")
                 } else {
                     val hit = frameAnalyzer.checkHit(
                         frame,

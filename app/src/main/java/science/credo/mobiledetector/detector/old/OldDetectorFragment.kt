@@ -6,8 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.instacart.library.truetime.TrueTimeRx
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.settings.OldCameraSettings
 import science.credo.mobiledetector.utils.Prefs
@@ -79,7 +81,10 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
-                    updateState(State.CALIBRATION, frame)
+                    val progress =
+                        (calibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
+                    updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")
+
                 } else {
                     val hit = OldFrameAnalyzer.checkHit(
                         frame,
@@ -97,6 +102,13 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
 
         }
 
+    }
+
+    fun updateState(state: State, additionalMsg: String) {
+        super.updateState(state, null)
+        GlobalScope.launch(Dispatchers.Main) {
+            tvState?.text = "${tvState?.text.toString()}\n$additionalMsg"
+        }
     }
 
 }

@@ -25,6 +25,7 @@ class OldFrameResult(
 
    override fun isCovered(calibrationResult: BaseCalibrationResult?): Boolean {
         if (calibrationResult is OldCalibrationResult?) {
+            println("=======================avg avg   $avg   ${calibrationResult?.avg ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD}   $blacksPercentage")
             return avg < calibrationResult?.avg ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD &&
                     blacksPercentage >= 99.9
         } else{
