@@ -27,7 +27,6 @@ object Prefs {
         editor.apply()
     }
 
-
     fun <T : Any> put(context: Context, obj: T) {
         put(context, obj, "")
     }

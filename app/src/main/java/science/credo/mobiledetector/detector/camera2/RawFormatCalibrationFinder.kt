@@ -53,6 +53,8 @@ class RawFormatCalibrationFinder(
 
     public fun start() {
 
+        println(">>>>>>>> start lenght: $LENGHT")
+
         if (configuration.imageFormat == ImageFormat.RAW_SENSOR) {
             clusterFactorWidth = 2
             clusterFactorHeight = 2
@@ -96,8 +98,8 @@ class RawFormatCalibrationFinder(
                 frame.byteArray,
                 frame.width,
                 frame.height,
-                configuration.scaledWidth,
-                configuration.scaledHeight,
+                clusterFactorWidth,
+                clusterFactorHeight,
                 2
             )
 
@@ -105,7 +107,7 @@ class RawFormatCalibrationFinder(
                 callback.onStatusChanged(
                     State.CALIBRATION,
                     "${clusterFactorWidth}x$clusterFactorHeight",
-                    counter,
+                    ((counter.toFloat()/LENGHT)*100).toInt(),
                     frameResult.avg
                 )
                 if (counter >= LENGHT) {
@@ -115,6 +117,7 @@ class RawFormatCalibrationFinder(
                 avgs[counter] = frameResult.avg
                 counter++
                 if (counter == LENGHT) {
+                    println(">>>>>>>> c progress: $LENGHT")
                     counter = 0
                     cameraUtil.stop()
                     val stat = Statistics(max)

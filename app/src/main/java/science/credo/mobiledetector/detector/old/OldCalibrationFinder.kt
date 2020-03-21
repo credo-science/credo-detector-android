@@ -1,8 +1,6 @@
 package science.credo.mobiledetector.detector.old
 
-import science.credo.mobiledetector.detector.FrameResult
-import java.lang.Math.max
-import java.lang.Math.min
+import science.credo.mobiledetector.detector.OldFrameResult
 
 class OldCalibrationFinder {
 
@@ -15,10 +13,10 @@ class OldCalibrationFinder {
     var maxSum = 0L
     var blacksPercentageSum = 0f
 
-    suspend fun nextFrame(frameResult: FrameResult): OldCalibrationResult? {
-        avgSum += frameResult.avg
-        blacksPercentageSum += frameResult.blacksPercentage
-        maxSum += frameResult.max
+    suspend fun nextFrame(oldFrameResult: OldFrameResult): OldCalibrationResult? {
+        avgSum += oldFrameResult.avg
+        blacksPercentageSum += oldFrameResult.blacksPercentage
+        maxSum += oldFrameResult.max
         counter++
         return if (counter >= CALIBRATION_LENGHT) {
             val avg = avgSum / CALIBRATION_LENGHT

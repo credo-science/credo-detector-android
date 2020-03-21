@@ -4,28 +4,30 @@ import android.graphics.Bitmap
 import android.util.Base64
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
-import science.credo.mobiledetector.detector.Frame
-import science.credo.mobiledetector.detector.FrameResult
-import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.detector.*
+import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
 import java.io.ByteArrayOutputStream
+import java.lang.IllegalStateException
 import kotlin.math.max
 import kotlin.math.min
 
 
-object OldFrameAnalyzer {
+object OldFrameAnalyzer : BaseFrameAnalyzer() {
 
-        const val HIT_BITMAP_SIZE = 60
+    const val HIT_BITMAP_SIZE = 60
 
-
-
-    suspend fun checkHit(
-        frame : Frame,
-        frameResult : FrameResult,
-        calibration: OldCalibrationResult
+    override suspend fun checkHit(
+        frame: Frame,
+        frameResult: BaseFrameResult,
+        calibration: BaseCalibrationResult
     ): Hit? {
-        if (frameResult.max > calibration.max) {
+        frameResult as OldFrameResult
+        calibration as OldCalibrationResult
+        val max = calibration.max
+
+        if (frameResult.max > max) {
 
             val margin = HIT_BITMAP_SIZE / 2
             val centerX = frameResult.maxIndex.rem(frame.width)
@@ -61,7 +63,9 @@ object OldFrameAnalyzer {
             hit.x = centerX
             hit.y = centerY
             hit.maxValue = frameResult.max
-            hit.blackThreshold = calibration.blackThreshold
+            if (calibration is OldCalibrationResult) {
+                hit.blackThreshold = calibration.blackThreshold
+            }
             hit.average = frameResult.avg.toFloat()
             hit.blacksPercentage = frameResult.blacksPercentage
             hit.ax = SensorHelper.accX
@@ -138,12 +142,6 @@ object OldFrameAnalyzer {
 
     }
 
-    suspend fun bitmap2png(bitmap: Bitmap): ByteArray {
-        return GlobalScope.async {
-            val pngData = ByteArrayOutputStream()
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngData)
-            return@async pngData.toByteArray()
-        }.await()
-    }
+
 
 }

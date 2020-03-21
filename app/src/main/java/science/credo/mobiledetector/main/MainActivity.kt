@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
 import androidx.appcompat.view.menu.MenuBuilder
@@ -15,6 +16,10 @@ import science.credo.mobiledetector.detector.DetectorActivity
 import science.credo.mobiledetector.settings.SettingsActivity
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.Prefs
+import science.credo.mobiledetector.utils.SynchronizedTimeUtils
+import com.instacart.library.truetime.TrueTimeRx
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import science.credo.mobiledetector.utils.UpdateTimeBroadcastReceiver
 
 class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
