@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class UpdateTimeBroadcastReceiver : BroadcastReceiver() {
 
     var isSynchronized = false
-    //ToDo kill when detection is off
+    // ToDo Set flag Synchronized for Hits
 
     override fun onReceive(contxt: Context, intent: Intent?) {
         initRxTrueTime(contxt)
@@ -64,7 +64,7 @@ class UpdateTimeBroadcastReceiver : BroadcastReceiver() {
 
             if (!TrueTimeRx.isInitialized()) {
 //                We are not synchronized
-//                ToDo Will crash
+//                ToDo Will crash when app launch without internet. Remedy = Force internet in LaunchActivity -> is forced already due to LoginProcess
             } else {
 //                We are not synchronized, but latest drift is in cache
             }
@@ -77,14 +77,9 @@ class UpdateTimeBroadcastReceiver : BroadcastReceiver() {
         val mIntent = Intent(context, UpdateTimeBroadcastReceiver::class.java)
         val mAlarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val mPendingIntent = PendingIntent.getBroadcast(context, 0, mIntent, 0)
-//        mAlarmManager.set(
-//            AlarmManager.RTC_WAKEUP,
-//            (System.currentTimeMillis() + 120000L),
-//            mPendingIntent
-//        )
         mAlarmManager.set(
             AlarmManager.RTC_WAKEUP,
-            (System.currentTimeMillis() + 10000L),
+            (System.currentTimeMillis() + 120000L),
             mPendingIntent
         )
     }

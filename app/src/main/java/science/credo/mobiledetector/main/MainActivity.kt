@@ -4,29 +4,18 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Looper
-import android.util.Log
 import android.view.Gravity
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.SplashActivity
 import science.credo.mobiledetector.detector.DetectorActivity
 import science.credo.mobiledetector.settings.SettingsActivity
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.Prefs
-import com.instacart.library.truetime.TrueTimeRx
-import io.reactivex.schedulers.Schedulers;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import science.credo.mobiledetector.utils.UpdateTimeBroadcastReceiver
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
@@ -46,7 +35,6 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
         setSupportActionBar(toolbar)
 
-
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
@@ -57,9 +45,7 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
         setupDrawer()
 
         btRunDetector.setOnClickListener {
-
             startActivity(DetectorActivity.intent(this))
-
         }
     }
 
