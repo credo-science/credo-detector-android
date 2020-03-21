@@ -9,11 +9,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.NetworkInfo
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import com.instacart.library.truetime.TrueTime
 import com.instacart.library.truetime.TrueTime.clearCachedInfo
 import com.instacart.library.truetime.TrueTimeRx
 import io.reactivex.android.schedulers.AndroidSchedulers
