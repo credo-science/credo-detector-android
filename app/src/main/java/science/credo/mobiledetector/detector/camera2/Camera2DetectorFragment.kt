@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
