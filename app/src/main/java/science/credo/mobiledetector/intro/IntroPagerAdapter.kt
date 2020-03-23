@@ -1,27 +1,35 @@
 package science.credo.mobiledetector.intro
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentPagerAdapter
 
-class IntroPagerAdapter(manager: FragmentManager) : FragmentPagerAdapter(manager) {
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import science.credo.mobiledetector.R
 
-    private val COUNT_FRAGMENT = 4
+class IntroPagerAdapter :
+    ListAdapter<Int, IntroPagerAdapter.Companion.EmptyViewHolder>(DIFF_CALLBACK) {
 
-    override fun getItem(position: Int): Fragment {
-        var fragment: Fragment = Intro1Fragment()
-        when (position) {
-            0 -> fragment = Intro1Fragment()
-            1 -> fragment = Intro2Fragment()
-            2 -> fragment = Intro3Fragment()
-            3 -> fragment = Intro4Fragment()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
+        EmptyViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.empty_match_parent_layout,
+                parent,
+                false
+            )
+        )
+
+    override fun onBindViewHolder(holder: EmptyViewHolder, position: Int) {}
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Int>() {
+            override fun areItemsTheSame(oldItem: Int, newItem: Int) = oldItem == newItem
+
+            override fun areContentsTheSame(oldItem: Int, newItem: Int) = oldItem == newItem
         }
-        return fragment
+
+        class EmptyViewHolder(view: View) : RecyclerView.ViewHolder(view)
     }
-
-    override fun getCount(): Int {
-        return COUNT_FRAGMENT
-    }
-
-
 }
