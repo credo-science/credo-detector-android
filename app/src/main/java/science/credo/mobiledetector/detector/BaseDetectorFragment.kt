@@ -195,10 +195,10 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
                         tvState?.text = getString(R.string.detector_state_running)
                         tvDetectionCount?.visibility = View.VISIBLE
                         if (hit != null) {
-                            val counter = ((tvDetectionCount?.tag as Int?) ?: 0) + 1
+                            val counter = ((tvDetectionCount?.tag as String?)?.toIntOrNull() ?: 0) + 1
                             tvDetectionCount?.text =
                                 "Detections in this run : $counter\nLast detection at: ${UiUtils.timestampToReadableHour(hit.timestamp!!)}"
-                            tvDetectionCount?.tag = counter
+                            tvDetectionCount?.tag = counter.toString()
 
                         }
                         tvState?.setTextColor(Color.GREEN)

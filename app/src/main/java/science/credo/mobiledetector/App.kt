@@ -6,7 +6,7 @@ import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.SensorHelper
 import kotlin.system.exitProcess
 
-class App : Application(), Thread.UncaughtExceptionHandler {
+class App : Application(){
 
     companion object {
         lateinit var token: String
@@ -22,14 +22,9 @@ class App : Application(), Thread.UncaughtExceptionHandler {
 
         LocationHelper.init(this)
         SensorHelper.init(this)
-        Thread.setDefaultUncaughtExceptionHandler(this)
 
     }
 
-    override fun uncaughtException(t: Thread, e: Throwable) {
 
-        exitProcess(0)
-
-    }
 
 }
