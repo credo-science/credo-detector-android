@@ -1,6 +1,7 @@
 package science.credo.mobiledetector.network
 
 import android.content.Context
+import science.credo.mobiledetector.App
 import science.credo.mobiledetector.detector.Hit
 import science.credo.mobiledetector.login.IdentityInfo
 import science.credo.mobiledetector.login.LoginByEmailRequestBody
@@ -69,8 +70,8 @@ object RestInterface {
         val request = DetectionRequestBody.build(
             deviceInfo, listOf(hit)
         )
-
-        return Http.sendPostRequestRaw(Config.API_URL + "detection", request)
+        println("===========send token ${App.token}")
+        return Http.sendPostRequestRaw(Config.API_URL + "detection", Pair("Authorization","Token ${App.token}"),request)
 
     }
 

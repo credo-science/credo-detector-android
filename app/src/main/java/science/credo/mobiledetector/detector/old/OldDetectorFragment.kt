@@ -1,6 +1,5 @@
 package science.credo.mobiledetector.detector.old
 
-import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +15,7 @@ import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.detector.*
 
 
-class OldDetectorFragment private constructor() : BaseDetectorFragment(),
+class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.fragment_detector),
     CameraInterface.FrameCallback {
 
 
@@ -34,28 +33,15 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_detector, container, false)
-
-        ivProgress = v.findViewById(R.id.ivProgress)
-        tvExposure = v.findViewById(R.id.tvExposure)
-        tvFormat = v.findViewById(R.id.tvFormat)
-        tvFrameSize = v.findViewById(R.id.tvFrameSize)
-        tvInterface = v.findViewById(R.id.tvInterface)
-        tvState = v.findViewById(R.id.tvState)
-        tvDetectionCount = v.findViewById(R.id.tvDetectionCount)
-        ivProgress?.setBackgroundResource(R.drawable.anim_progress)
-        tvRunningTime = v.findViewById(R.id.tvRunningTime)
-        ivProgress?.post {
-            progressAnimation = ivProgress?.background as AnimationDrawable
-        }
-
+        val v = super.onCreateView(inflater, container, savedInstanceState)
 
         tvInterface?.text = "Camera interface: Old"
-
+        val settings = Prefs.get(context!!, OldCameraSettings::class.java)!!
+        displayFrameSettings(settings)
 
         cameraInterface = OldCameraInterface(
             this,
-            Prefs.get(context!!, OldCameraSettings::class.java)!!
+            settings!!
         )
         cameraInterface?.start(context!!)
         startTimer()
@@ -75,12 +61,14 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(),
                 frame.height,
                 calibrationResult?.blackThreshold ?: 40
             )
+            displayFrameResults(frameResult)
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
+                    displayCalibrationResults(calibrationResult)
                     val progress =
                         (calibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
                     updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")

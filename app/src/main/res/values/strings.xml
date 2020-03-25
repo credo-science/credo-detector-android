@@ -41,11 +41,17 @@
     <string name="settings_last_calibration">Last calibration</string>
     <string name="settings_no_calibration_yet">Calibration wasn\'t run yet.</string>
     <string name="detector_state_calibration">Calibration in progress</string>
+    <string name="detector_calibration_result_raw"><b>Calibration result:</b>\nCluster : %dx%d\nDetection threshold : %d\nCalibration noise : %d</string>
+    <string name="detector_calibration_result_old"><b>Calibration result:</b>\nCoverage threshold : %d\nBlackness threshold : %d\nDetection threshold : %d</string>
+    <string name="detector_frame_result_raw"><u>Frame result:</u>\nAverage brightness : %d\nMax : %d</string>
+    <string name="detector_frame_result_old"><u>Frame result:</u>\nAverage brightness : %d\nBlacks percentage : %.2f\nMax : %d</string>
+
+
     <string name="detector_state_running">Running</string>
     <string name="detector_state_not_covered">Please cover your camera</string>
     <string name="detector_state_disabled">Off</string>
     <string name="no_settings_warning">No saved settings found. Do you want to use default settings, or choose the settings by yourself?</string>
-    <string name="detector_no_detections_yet">no detections yet</string>
+    <string name="detector_no_detections_yet">No detections yet</string>
     <string name="detector_cant_calibrate_warning">Cannot calibrate device, please use Old Camera Api</string>
 
     <!-- Intro Fragment -->
@@ -58,5 +64,6 @@
     <string name="fragment_intro_text_bottom_3">And click "Run detection" on the main screen</string>
     <string name="fragment_intro_text_bottom_4">Some text that introduce app</string>
     <string name="fragment_intro_btn_4">Start using the app!</string>
+    <string name="menu_item_classification">Classification App</string>
 
 </resources>

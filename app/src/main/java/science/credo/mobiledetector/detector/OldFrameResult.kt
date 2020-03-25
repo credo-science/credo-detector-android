@@ -16,7 +16,7 @@ class OldFrameResult(
             val parts = data.split(";")
             return OldFrameResult(
                 parts[0].toInt(),
-                parts[1].toFloat(),
+                parts[1].toFloat()/100,
                 parts[2].toInt(),
                 parts[3].toInt()
             )

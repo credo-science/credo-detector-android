@@ -6,11 +6,14 @@ class RawFormatCalibrationResult(
     val clusterFactorWidth: Int,
     val clusterFactorHeight: Int,
     val detectionThreshold: Int,
-    val avgNoise: Int
+    val calibrationNoise : Int
 ) : BaseCalibrationResult() {
+
+     //should be used to define need for recalibration
+
     companion object {
         const val AMPLIFIER = 1.05
-        const val DEFAULT_NOISE_THRESHOLD = 1.05
+        const val DEFAULT_NOISE_THRESHOLD = 10
 
     }
 }

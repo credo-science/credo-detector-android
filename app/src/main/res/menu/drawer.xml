@@ -18,6 +18,11 @@
         android:title="@string/menu_item_statistics"
         app:showAsAction="ifRoom" />
     <item
+        android:id="@+id/menuClassificationApp"
+        android:icon="@drawable/ic_statistics"
+        android:title="@string/menu_item_classification"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/menuLogout"
         android:icon="@drawable/ic_logout"
         android:title="@string/menu_logout"

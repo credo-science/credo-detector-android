@@ -23,8 +23,8 @@ class RawFormatFrameResult (
     }
 
     override fun isCovered(calibrationResult: BaseCalibrationResult?): Boolean {
-        if (calibrationResult is RawFormatCalibrationResult) {
-            return avg < RawFormatCalibrationResult.DEFAULT_NOISE_THRESHOLD
+        if (calibrationResult is RawFormatCalibrationResult?) {
+            return avg <  RawFormatCalibrationResult.DEFAULT_NOISE_THRESHOLD
         } else {
             throw IllegalStateException()
         }

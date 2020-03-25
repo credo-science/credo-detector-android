@@ -1,7 +1,6 @@
 package science.credo.mobiledetector.detector.camera2
 
 import android.graphics.ImageFormat
-import android.graphics.drawable.AnimationDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,23 +8,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import com.instacart.library.truetime.TrueTimeRx
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.detector.*
-import science.credo.mobiledetector.detector.old.*
+import science.credo.mobiledetector.detector.old.JniWrapper
+import science.credo.mobiledetector.detector.old.OldCalibrationFinder
+import science.credo.mobiledetector.detector.old.OldCalibrationResult
+import science.credo.mobiledetector.detector.old.OldFrameAnalyzer
 import science.credo.mobiledetector.settings.Camera2ApiSettings
-import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.settings.ProcessingMethod
+import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
+import java.io.*
+
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
+class Camera2DetectorFragment private constructor() :
+    BaseDetectorFragment(R.layout.fragment_detector),
     CameraInterface.FrameCallback {
-
 
     companion object {
         fun instance(): Camera2DetectorFragment {
@@ -34,9 +35,7 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
 
     }
 
-
     var settings: Camera2ApiSettings? = null
-
     var calibrationResult: BaseCalibrationResult? = null
     val oldCalibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
     var rawCalibrationFinder: RawFormatCalibrationFinder? = null
@@ -47,23 +46,12 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val v = inflater.inflate(R.layout.fragment_detector, container, false)
+        val v = super.onCreateView(inflater, container, savedInstanceState)
 
-        ivProgress = v.findViewById(R.id.ivProgress)
-        tvFormat = v.findViewById(R.id.tvFormat)
-        tvFrameSize = v.findViewById(R.id.tvFrameSize)
-        tvState = v.findViewById(R.id.tvState)
-        tvInterface = v.findViewById(R.id.tvInterface)
-        tvDetectionCount = v.findViewById(R.id.tvDetectionCount)
-        ivProgress?.setBackgroundResource(R.drawable.anim_progress)
-        tvRunningTime = v.findViewById(R.id.tvRunningTime)
-        ivProgress?.post {
-            progressAnimation = ivProgress?.background as AnimationDrawable
-        }
 
         settings = Prefs.get(context!!, Camera2ApiSettings::class.java)
+        displayFrameSettings(settings!!)
         tvInterface?.text = "Camera interface: Camera2\n" +
-                "Image format: ${ConstantsNamesHelper.getFormatName(settings!!.imageFormat)}\n" +
                 "Processing method: ${settings!!.processingMethod}"
 
 
@@ -87,8 +75,9 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
 
                     override fun onCalibrationSuccess(calibrationResult: RawFormatCalibrationResult) {
 
-                        println("==========calibration found !! ${calibrationResult.detectionThreshold}  ${calibrationResult.avgNoise}")
+                        println("==========calibration found !! ${calibrationResult.detectionThreshold}  ${calibrationResult.calibrationNoise}")
                         this@Camera2DetectorFragment.calibrationResult = calibrationResult
+                        displayCalibrationResults(calibrationResult)
                         rawCalibrationFinder = null
                         start(settings!!)
 
@@ -121,6 +110,37 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
         cameraInterface?.start(context!!)
     }
 
+//    fun mockDetection() {
+//        GlobalScope.launch {
+//            //        val dir = activity!!.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+//            delay(5000)
+//            val dir = "/storage/emulated/0/fake_detections/"
+//            val file = File(dir + "2_hit_1576622145491kotlin.Unit")
+//            val size = file.length().toInt()
+//            val bytes = ByteArray(size)
+//            try {
+//                val buf = BufferedInputStream(FileInputStream(file))
+//                buf.read(bytes, 0, bytes.size)
+//                buf.close()
+//            } catch (e: FileNotFoundException) {
+//                e.printStackTrace()
+//            } catch (e: IOException) {
+//                e.printStackTrace()
+//            }
+//            onFrameReceived(
+//                (Frame(
+//                    bytes,
+//                    3968,
+//                    2976,
+//                    ImageFormat.RAW_SENSOR,
+//                    700,
+//                    System.currentTimeMillis() - 3000
+//                ))
+//            )
+//        }
+//
+//    }
+
     override fun onFrameReceived(frame: Frame) {
         GlobalScope.async {
             val ts = TrueTimeRx.now().time
@@ -146,7 +166,7 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
                     )
                 }
             }
-
+            displayFrameResults(frameResult)
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
@@ -154,10 +174,16 @@ class Camera2DetectorFragment private constructor() : BaseDetectorFragment(),
                         oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
+                    displayCalibrationResults(calibrationResult)
                     val progress =
                         (oldCalibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
                     updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")
                 } else {
+                    if (settings?.processingMethod == ProcessingMethod.EXPERIMENTAL) {
+                        if ((frameResult as RawFormatFrameResult).avg > (calibrationResult as RawFormatCalibrationResult).calibrationNoise) {
+                            //TODO recalibration here
+                        }
+                    }
                     val hit = frameAnalyzer.checkHit(
                         frame,
                         frameResult,
