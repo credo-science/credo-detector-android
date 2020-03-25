@@ -145,6 +145,9 @@ class Camera2DetectorFragment private constructor() :
         GlobalScope.async {
             val ts = TrueTimeRx.now().time
 
+            if(JniWrapper.isBusy){
+                return@async
+            }
             val frameResult = when (settings!!.processingMethod) {
                 ProcessingMethod.OFFICIAL -> {
                     JniWrapper.calculateFrame(

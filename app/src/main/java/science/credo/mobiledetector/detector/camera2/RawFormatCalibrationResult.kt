@@ -12,7 +12,7 @@ class RawFormatCalibrationResult(
      //should be used to define need for recalibration
 
     companion object {
-        const val AMPLIFIER = 1.05
+        const val AMPLIFIER = 1.15
         const val DEFAULT_NOISE_THRESHOLD = 10
 
     }

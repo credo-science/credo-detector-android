@@ -53,6 +53,11 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.
         GlobalScope.async {
             val ts = TrueTimeRx.now().time
 
+            if(JniWrapper.isBusy){
+                println("===========status skipped")
+                return@async
+            }
+            println("===========status running")
 
 //            val frameResult = frameAnalyzer.baseCalculation(calibrationResult)
             val frameResult = JniWrapper.calculateFrame(

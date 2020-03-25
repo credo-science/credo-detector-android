@@ -38,7 +38,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIE
     int sum = 0;
     int max = 0;
     int maxIndex = 0;
-    long blacks = 0;
+    int blacks = 0;
     for (int i = 0; i < size; ++i) {
         int bb = (int) *b++;
         bb = bb & 0xff;
@@ -53,9 +53,9 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIE
             ++blacks;
         }
     }
-
-    char buffer[20];
-    sprintf(buffer, "%d;%ld;%d;%d", sum / size, blacks * 10000 / size, max, maxIndex);
+//    (*env)->ReleaseByteArrayElements(env,bytes, b, 0);
+    char buffer[100];
+    sprintf(buffer, "%d;%d;%d;%d;%d", sum / size, blacks,size, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
     return result;
 
@@ -107,7 +107,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIE
         }
     }
 
-    char buffer[20];
+    char buffer[100];
     sprintf(buffer, "%d;%d;%d", sum / scaledFrameSize, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
     free(scaledFrame);
