@@ -19,3 +19,11 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+#-optimizations   code/simplification/arithmetic,!code/simplification/cast,!field/*,! class/merging/*,!method/inlining/*
+#-optimizationpasses 5
+#-allowaccessmodification
+
+#if you want to disable optimization then use these commands against above commands
+ #-dontoptimize
+ #-dontpreverify
