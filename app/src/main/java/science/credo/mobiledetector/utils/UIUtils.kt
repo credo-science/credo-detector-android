@@ -31,7 +31,7 @@ object UiUtils {
     fun timestampToReadableHour(ts : Long) :String{
         val calendar = Calendar.getInstance()
         calendar.timeInMillis = ts
-        return  String.format("%2d:%2d:%2d",calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND))
+        return  String.format("%02d:%02d:%02d",calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND))
     }
 
 
