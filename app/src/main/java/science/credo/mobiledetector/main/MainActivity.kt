@@ -25,16 +25,20 @@ import science.credo.mobiledetector.detector.DetectorActivity
 import science.credo.mobiledetector.settings.SettingsActivity
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.Prefs
+import science.credo.mobiledetector.utils.SynchronizedTimeUtils
+import com.instacart.library.truetime.TrueTimeRx
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import science.credo.mobiledetector.utils.UpdateTimeBroadcastReceiver
 
 
 class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
-    var sntpSynchronizationJob: Job? = null
+    val mUpdateTimeBroadcastReceiver = UpdateTimeBroadcastReceiver()
 
     companion object {
         fun intent(context: Context): Intent {
             return Intent(context, MainActivity::class.java)
-
         }
     }
 
@@ -42,9 +46,9 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        startNtpSynchronization()
 
         setSupportActionBar(toolbar)
-
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
@@ -55,43 +59,13 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
         setupDrawer()
 
         btRunDetector.setOnClickListener {
-
             startActivity(DetectorActivity.intent(this))
-
         }
-
-
-        startNtpSynchronization()
-
     }
 
     fun startNtpSynchronization() {
-        sntpSynchronizationJob = GlobalScope.launch {
-            while (true) {
-                initRxTrueTime()
-                delay(300000)
-            }
-        }
-
-    }
-
-    private fun initRxTrueTime() {
-        val disposable = TrueTimeRx.build()
-            .withConnectionTimeout(31428)
-            .withRetryCount(100)
-            .withSharedPreferencesCache(this)
-            .initializeRx("time.google.com")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ date ->
-                Log.d("initRxTrueTime", "initRxTrueTime - Success initialized TrueTime :$date")
-            }, {
-                Log.e(
-                    "initRxTrueTime",
-                    "something went wrong when trying to initializeRx TrueTime",
-                    it
-                )
-            })
+        mUpdateTimeBroadcastReceiver.initRxTrueTime(this)
+        mUpdateTimeBroadcastReceiver.setAlarm(this)
     }
 
     fun setupDrawer() {
@@ -153,6 +127,5 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
     override fun onDestroy() {
         super.onDestroy()
-        sntpSynchronizationJob?.cancel()
     }
 }

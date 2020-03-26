@@ -55,15 +55,19 @@
     <string name="detector_cant_calibrate_warning">Cannot calibrate device, please use Old Camera Api</string>
 
     <!-- Intro Fragment -->
-    <string name="fragment_intro_text_top_1">Welcome in Credo Mobile Detector!</string>
-    <string name="fragment_intro_text_top_2">First Sign in or Register to our community</string>
-    <string name="fragment_intro_text_top_3">Next you need to cover smartphone camera</string>
-    <string name="fragment_intro_text_top_4">Ready to deep dive into the Astrophysics particle river?</string>
+    <string name="intro_skip">Skip</string>
+    <string name="intro_start">Start</string>
+    <string name="fragment_intro_text_top_1">Welcome in the Credo Mobile Detector tutorial!</string>
     <string name="fragment_intro_text_bottom_1">Swipe right to start your journey</string>
-    <string name="fragment_intro_text_bottom_2"> </string>
-    <string name="fragment_intro_text_bottom_3">And click "Run detection" on the main screen</string>
-    <string name="fragment_intro_text_bottom_4">Some text that introduce app</string>
-    <string name="fragment_intro_btn_4">Start using the app!</string>
+    <string name="fragment_intro_text_top_2">First Sign in or get Registered to our community</string>
+    <string name="fragment_intro_text_bottom_2">Swipe right/left</string>
+    <string name="fragment_intro_text_top_3">Cover the smartphone camera</string>
+    <string name="fragment_intro_text_bottom_3">Only then detection will be possible \nSwipe right/left</string>
+    <string name="fragment_intro_text_top_4">When you do that, click "Run detection"</string>
+    <string name="fragment_intro_text_bottom_4">Swipe right/left</string>
+    <string name="fragment_intro_text_top_5">Ready to deep dive into the Astrophysics particle river?</string>
+    <string name="fragment_intro_btn_5">Start!</string>
+    <string name="fragment_intro_text_bottom_5">Click a button on the bottom of the screen to start!</string>
     <string name="menu_item_classification">Classification App</string>
 
 </resources>

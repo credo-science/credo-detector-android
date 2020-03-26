@@ -50,7 +50,7 @@
 
         <activity
             android:name=".intro.IntroActivity" />
-      
+
         <receiver android:name=".utils.UpdateTimeBroadcastReceiver"/>
 
     </application>
