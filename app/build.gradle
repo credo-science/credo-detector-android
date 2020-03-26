@@ -35,7 +35,7 @@ android {
     packagingOptions {
         exclude 'META-INF/atomicfu.kotlin_module'
     }
-
+    ndkVersion '21.0.6113669'
 }
 
 dependencies {
@@ -67,4 +67,6 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
     implementation 'io.reactivex.rxjava2:rxjava:2.1.14'
 
+//  Slider
+    implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
 }
