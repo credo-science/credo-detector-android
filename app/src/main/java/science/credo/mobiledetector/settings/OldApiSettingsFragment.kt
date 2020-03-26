@@ -9,11 +9,16 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.detector.old.OldCalibrationResult
 import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
+import java.lang.Exception
 
 class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
 
@@ -73,46 +78,59 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
         tvCalibrationAvg = v.findViewById(R.id.tvCalibrationAvg)
         tvCalibrationBlackThreshold = v.findViewById(R.id.tvCalibrationBlackThreshold)
 
-
-        camera = Camera.open()
-        val parameters: Camera.Parameters = camera!!.parameters;
-
-        println("============ ${parameters.pictureFormat}")
-
-        val currentSettings: OldCameraSettings? =
-            Prefs.get(context!!, OldCameraSettings::class.java)
-
-        setupPreviewFormatRG(parameters.supportedPreviewFormats, currentSettings?.imageFormat)
-        setupFpsRG(parameters.supportedPreviewFpsRange, currentSettings?.fpsRange)
-        setupFrameSizeRG(
-            parameters.supportedPreviewSizes,
-            currentSettings?.width,
-            currentSettings?.height
-        )
-
-        val lastCalibration = Prefs.get(context!!, OldCalibrationResult::class.java)
-        if (lastCalibration != null) {
-            tvCalibrationBlackThreshold.visibility = View.VISIBLE
-            tvCalibrationAvg.text =
-                String.format("Coverage (black) threshold: %d", lastCalibration.blackThreshold)
-            tvCalibrationBlackThreshold.text =
-                String.format("Coverage (avg) threshold: %d", lastCalibration.avg)
-            tvCalibrationMax.visibility = View.VISIBLE
-            tvCalibrationMax.text =
-                String.format("Detection (max) threshold: %d", lastCalibration.max)
-            tvNoCalibrationWarning.visibility = View.GONE
-        } else {
-            tvNoCalibrationWarning.visibility = View.VISIBLE
-            tvCalibrationBlackThreshold.visibility = View.GONE
-            tvCalibrationMax.visibility = View.GONE
+        GlobalScope.async {
+            try {
+                camera = Camera.open()
+                afterCameraOpened()
+            }catch (e : Exception){
+                val alertDialog = UiUtils.showAlertDialog(
+                    context!!,
+                    "Cannot connect to the camera, make sure the camera is not being used by another application"
+                )
+                alertDialog.setOnDismissListener {
+                    activity?.finish()
+                }
+            }
         }
-
-
-
-
 
         return v
 
+    }
+
+    private fun afterCameraOpened() {
+        GlobalScope.launch(Dispatchers.Main) {
+            val parameters: Camera.Parameters = camera!!.parameters;
+
+            println("============ ${parameters.pictureFormat}")
+
+            val currentSettings: OldCameraSettings? =
+                Prefs.get(context!!, OldCameraSettings::class.java)
+
+            setupPreviewFormatRG(parameters.supportedPreviewFormats, currentSettings?.imageFormat)
+            setupFpsRG(parameters.supportedPreviewFpsRange, currentSettings?.fpsRange)
+            setupFrameSizeRG(
+                parameters.supportedPreviewSizes,
+                currentSettings?.width,
+                currentSettings?.height
+            )
+
+            val lastCalibration = Prefs.get(context!!, OldCalibrationResult::class.java)
+            if (lastCalibration != null) {
+                tvCalibrationBlackThreshold.visibility = View.VISIBLE
+                tvCalibrationAvg.text =
+                    String.format("Coverage (black) threshold: %d", lastCalibration.blackThreshold)
+                tvCalibrationBlackThreshold.text =
+                    String.format("Coverage (avg) threshold: %d", lastCalibration.avg)
+                tvCalibrationMax.visibility = View.VISIBLE
+                tvCalibrationMax.text =
+                    String.format("Detection (max) threshold: %d", lastCalibration.max)
+                tvNoCalibrationWarning.visibility = View.GONE
+            } else {
+                tvNoCalibrationWarning.visibility = View.VISIBLE
+                tvCalibrationBlackThreshold.visibility = View.GONE
+                tvCalibrationMax.visibility = View.GONE
+            }
+        }
     }
 
     private fun setupFpsRG(supportedPreviewFpsRange: List<IntArray>, currentFpsRange: IntArray?) {
@@ -141,7 +159,7 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
             rb.tag = format
             rb.text = ConstantsNamesHelper.getFormatName(format)
             radioGroupPreviewFormat.addView(rb)
-            if (currentFormat?:ImageFormat.NV21 == format) {
+            if (currentFormat ?: ImageFormat.NV21 == format) {
                 currentChoiceIndex = index
             }
         }
@@ -173,6 +191,7 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
 
     override fun onDestroy() {
         super.onDestroy()
+        camera?.stopPreview()
         camera?.release()
     }
 

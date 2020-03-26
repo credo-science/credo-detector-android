@@ -25,6 +25,7 @@ class RawFormatCalibrationFinder(
 ) : CameraInterface.FrameCallback {
 
     val LENGHT = 60000/configuration.exposureInMillis
+//    val LENGHT = 10
 
     companion object {
         const val STATUS_IN_PROGRESS = 1
@@ -43,7 +44,7 @@ class RawFormatCalibrationFinder(
     }
 
     var clusterFactorWidth = 2
-    var clusterFactorHeight = 1
+    var clusterFactorHeight = 2
     var counter = 0
     var max: IntArray = IntArray(LENGHT)
     var avgs: IntArray = IntArray(LENGHT)
@@ -103,7 +104,7 @@ class RawFormatCalibrationFinder(
                 2
             )
 
-            if (frameResult.avg <= 50) {
+            if (frameResult.avg <= RawFormatCalibrationResult.DEFAULT_NOISE_THRESHOLD) {
                 callback.onStatusChanged(
                     State.CALIBRATION,
                     "${clusterFactorWidth}x$clusterFactorHeight",
@@ -113,6 +114,7 @@ class RawFormatCalibrationFinder(
                 if (counter >= LENGHT) {
                     return@launch
                 }
+                println("======================calibration max = ${frameResult.max}")
                 max[counter] = frameResult.max
                 avgs[counter] = frameResult.avg
                 counter++

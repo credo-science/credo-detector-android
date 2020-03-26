@@ -35,6 +35,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIE
 
     int size = width * height;
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
+    jbyte *address = b;
     int sum = 0;
     int max = 0;
     int maxIndex = 0;
@@ -53,9 +54,9 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIE
             ++blacks;
         }
     }
-
-    char buffer[20];
-    sprintf(buffer, "%d;%d;%d;%d", sum / size, blacks * 100 / size, max, maxIndex);
+    (*env)->ReleaseByteArrayElements(env,bytes, address, 0);
+    char buffer[100];
+    sprintf(buffer, "%d;%d;%d;%d;%d", sum / size, blacks,size, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
     return result;
 
@@ -85,6 +86,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIE
 
     int * scaledFrame= (int *)(malloc((sizeof(int))*scaledFrameSize));
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
+    jbyte *address = b;
     for (int r = 0; r < height; ++r) {
         int indexRow = r * width * pixelPrecision;
         int scaledIndexRow = r / scaleFactorHeight * scaledWidth;
@@ -93,7 +95,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIE
             int index = indexRow + c;
             int resultIndex = scaledIndexRow + c / pixelPrecision / scaleFactorWidth;
             int byteValue = *(b+index) & 0xff;
-            scaledFrame[resultIndex]=byteValue;
+            scaledFrame[resultIndex]= scaledFrame[resultIndex]+byteValue;
             c += pixelPrecision;
         }
     }
@@ -106,8 +108,8 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIE
             maxIndex = i;
         }
     }
-
-    char buffer[20];
+    (*env)->ReleaseByteArrayElements(env,bytes, address, 0);
+    char buffer[100];
     sprintf(buffer, "%d;%d;%d", sum / scaledFrameSize, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
     free(scaledFrame);

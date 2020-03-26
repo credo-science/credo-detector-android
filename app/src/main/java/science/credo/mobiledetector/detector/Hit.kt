@@ -42,7 +42,12 @@ class Hit(
 
     suspend fun send(context: Context){
 
-        RestInterface.sendHit(context,this)
+        println("============send")
+        val response = RestInterface.sendHit(context,this)
+
+        println("=================send response ${response.getCode()}")
+        println("=================send response ${response.isSuccess()}")
+        println("=================send response ${response.getResponse()}")
 
     }
 }

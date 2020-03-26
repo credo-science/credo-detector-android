@@ -15,6 +15,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import java.lang.IllegalStateException
+import java.util.*
 
 
 object UiUtils {
@@ -26,6 +27,13 @@ object UiUtils {
     fun dpToPx(dp: Int): Int {
         return (dp * Resources.getSystem().displayMetrics.density).toInt()
     }
+
+    fun timestampToReadableHour(ts : Long) :String{
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = ts
+        return  String.format("%02d:%02d:%02d",calendar.get(Calendar.HOUR_OF_DAY),calendar.get(Calendar.MINUTE),calendar.get(Calendar.SECOND))
+    }
+
 
     fun hideSoftKeyboard(activity: Activity) {
         val inputMethodManager = activity.getSystemService(

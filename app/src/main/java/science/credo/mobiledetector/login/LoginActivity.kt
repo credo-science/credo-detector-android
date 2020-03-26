@@ -11,6 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import science.credo.mobiledetector.App
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.intro.IntroActivity
 import science.credo.mobiledetector.main.MainActivity
@@ -32,7 +33,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
         viewProgress.visibility = View.VISIBLE
 
-        if (!Prefs.get(this, String::class.java, "showIntro").equals("False")){
+        if (!Prefs.get(this, String::class.java, "showIntro").equals("False")) {
             startActivity(Intent(this, IntroActivity::class.java))
         }
 
@@ -66,11 +67,13 @@ class LoginActivity : AppCompatActivity() {
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000)
             val result = RestInterface.login(this@LoginActivity, login, password)
-            if(result.isSuccess()){
+            if (result.isSuccess()) {
                 viewProgress.visibility = View.GONE
+                App.token = result.getCastedResponse(LoginResponse::class.java)?.token?:""
+                Prefs.put(this@LoginActivity,App.token,Prefs.Keys.USER_TOKEN)
                 startActivity(MainActivity.intent(this@LoginActivity))
                 finish()
-            }else{
+            } else {
                 containerButtons.visibility = View.VISIBLE
                 viewProgress.visibility = View.GONE
             }

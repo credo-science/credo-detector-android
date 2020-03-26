@@ -101,6 +101,7 @@ object RawFormatFrameAnalyzer : BaseFrameAnalyzer() {
 
             return hit
         } else {
+            calibration.adjustThreshold(frameResult.max)
             return null
         }
 

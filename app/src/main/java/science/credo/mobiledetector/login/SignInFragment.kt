@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
+import science.credo.mobiledetector.App
 import science.credo.mobiledetector.main.MainActivity
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.network.Config
@@ -89,6 +90,8 @@ class SignInFragment private constructor() : Fragment() {
         GlobalScope.launch(Dispatchers.Main) {
             viewProgress.visibility = View.VISIBLE
             val result = RestInterface.login(context!!, login, password)
+            App.token = result.getCastedResponse(LoginResponse::class.java)?.token ?: ""
+            Prefs.put(context!!,App.token,Prefs.Keys.USER_TOKEN)
             viewProgress.visibility = View.GONE
             if (result.isSuccess()) {
                 Prefs.put(context!!, login, Prefs.Keys.USER_LOGIN)

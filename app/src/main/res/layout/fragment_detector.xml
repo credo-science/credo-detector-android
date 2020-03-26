@@ -6,10 +6,10 @@
     tools:background="@color/colorPrimaryDark">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="230dp"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
         android:background="@drawable/bg_button"
         android:orientation="vertical"
         android:padding="20dp">
@@ -28,39 +28,51 @@
             android:layout_marginTop="10dp"
             android:textColor="@color/colorTransparentWhite" />
         <TextView
-            android:id="@+id/tvState"
+            android:id="@+id/tvFormat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textColor="@color/colorTransparentWhite" />
-
         <TextView
             android:id="@+id/tvFrameSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:textColor="@color/colorTransparentWhite" />
-
-        <TextView
-            android:id="@+id/tvFormat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorTransparentWhite" />
-
         <TextView
             android:id="@+id/tvExposure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/colorTransparentWhite" />
+
+        <TextView
+            android:id="@+id/tvCalibrationResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/colorTransparentWhite" />
 
+        <TextView
+            android:id="@+id/tvFrameResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorTransparentWhite" />
+
+        <TextView
+            android:id="@+id/tvState"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorTransparentWhite" />
+
+
+
+
         <ImageView
             android:id="@+id/ivProgress"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp" />
+            android:layout_marginTop="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
