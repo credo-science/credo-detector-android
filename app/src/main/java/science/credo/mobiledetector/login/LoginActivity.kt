@@ -23,7 +23,6 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         fun intent(context: Context): Intent {
             return Intent(context, LoginActivity::class.java)
-
         }
     }
 
@@ -43,11 +42,6 @@ class LoginActivity : AppCompatActivity() {
 
         btSignIn.setOnClickListener {
             addFragment(SignInFragment.newInstance())
-//            if (Prefs.get(this, OldCameraSettings::class.java) == null) {
-//                startActivity(SettingsActivity.intent(this, true))
-//            } else {
-//                startActivity(SettingsActivity.intent(this))
-//            }
         }
 
         val savedLogin = Prefs.get(this, String::class.java, Prefs.Keys.USER_LOGIN)
@@ -58,12 +52,9 @@ class LoginActivity : AppCompatActivity() {
             containerButtons.visibility = View.VISIBLE
             viewProgress.visibility = View.GONE
         }
-
-
     }
 
     fun silentLogin(login: String, password: String) {
-
         GlobalScope.launch(Dispatchers.Main) {
             delay(1000)
             val result = RestInterface.login(this@LoginActivity, login, password)
@@ -78,7 +69,6 @@ class LoginActivity : AppCompatActivity() {
                 viewProgress.visibility = View.GONE
             }
         }
-
     }
 
     fun addFragment(fragment: Fragment) {

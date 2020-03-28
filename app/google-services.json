@@ -1,34 +1,34 @@
 {
   "project_info": {
-    "project_number": "408989139692",
-    "firebase_url": "https://credo-detector-eaeed.firebaseio.com",
-    "project_id": "credo-detector-eaeed",
-    "storage_bucket": "credo-detector-eaeed.appspot.com"
+    "project_number": "100293988729",
+    "firebase_url": "https://credo-science.firebaseio.com",
+    "project_id": "credo-science",
+    "storage_bucket": "credo-science.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:408989139692:android:dcc014d691a18745789bc9",
+        "mobilesdk_app_id": "1:100293988729:android:5e941b79bac356bbef5fa8",
         "android_client_info": {
           "package_name": "science.credo.mobiledetector"
         }
       },
       "oauth_client": [
         {
-          "client_id": "408989139692-074cfba9l6ji05iiioa5kjl3crrbtev6.apps.googleusercontent.com",
+          "client_id": "100293988729-vmgcug0i1iov2loisca012ie5rlalrgd.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBvphjEQyCYXO7Y1E50_TrXQ4bSxeygO8A"
+          "current_key": "AIzaSyDmfJJwN93ns2yZFLBagHu1lI7m0MCnY4M"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "408989139692-074cfba9l6ji05iiioa5kjl3crrbtev6.apps.googleusercontent.com",
+              "client_id": "100293988729-vmgcug0i1iov2loisca012ie5rlalrgd.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
