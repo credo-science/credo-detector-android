@@ -257,8 +257,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         }
 
         //Loops iterates from upper-left point sideLength times
-        for (i in y..y + sideLength) {
-            for (j in x..x + sideLength) {
+        for (i in y..y + sideLength - 1) {
+            for (j in x..x + sideLength - 1) {
                 data[i * width + j] = 0
             }
         }
