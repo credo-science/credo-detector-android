@@ -29,17 +29,15 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
 
     var cameraInterface: CameraInterface? = null
     var ivProgress: ImageView? = null
-    var tvExposure: TextView? = null
-    var tvFormat: TextView? = null
-    var tvFrameSize: TextView? = null
     var tvState: TextView? = null
-    var tvInterface: TextView? = null
     var tvDetectionCount: TextView? = null
     var progressAnimation: AnimationDrawable? = null
     var tvRunningTime: TextView? = null
-    var tvCalibrationResult: TextView? = null
-    var tvFrameResult: TextView? = null
+    var tvShowMoreInfo: TextView? = null
+
+
     var timerJob: Job? = null
+    var infoDialogFragment: InfoDialogFragment? = null
 
 
     override fun onCreateView(
@@ -49,19 +47,21 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
     ): View? {
         val v = inflater.inflate(layoutResource, container, false)
         ivProgress = v.findViewById(R.id.ivProgress)
-        tvFormat = v.findViewById(R.id.tvFormat)
-        tvFrameSize = v.findViewById(R.id.tvFrameSize)
         tvState = v.findViewById(R.id.tvState)
-        tvInterface = v.findViewById(R.id.tvInterface)
         tvDetectionCount = v.findViewById(R.id.tvDetectionCount)
         ivProgress?.setBackgroundResource(R.drawable.anim_progress)
         tvRunningTime = v.findViewById(R.id.tvRunningTime)
-        tvCalibrationResult = v.findViewById(R.id.tvCalibrationResult)
-        tvFrameResult = v.findViewById(R.id.tvFrameResult)
-        tvExposure = v.findViewById(R.id.tvExposure)
+        tvShowMoreInfo = v.findViewById(R.id.tvShowMoreInfo)
 
         ivProgress?.post {
             progressAnimation = ivProgress?.background as AnimationDrawable
+        }
+
+        tvShowMoreInfo?.setOnClickListener {
+            infoDialogFragment?.show(
+                childFragmentManager,
+                infoDialogFragment!!::class.java.simpleName
+            )
         }
 
 
@@ -72,6 +72,9 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
 
     fun startTimer() {
         var timeInSeconds = 0
+        GlobalScope.launch (Dispatchers.Main){
+            tvRunningTime?.visibility = View.VISIBLE
+        }
         timerJob = GlobalScope.launch {
             while (true) {
                 delay(1000)
@@ -89,76 +92,6 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
         }
     }
 
-    fun displayFrameSettings(settings: BaseSettings) {
-        GlobalScope.launch(Dispatchers.Main) {
-            tvFormat?.text =
-                String.format(
-                    "Format: %s",
-                    ConstantsNamesHelper.getFormatName(settings.imageFormat)
-                )
-            tvFrameSize?.text =
-                String.format("Frame size: %d x %d", settings.width, settings.height)
-            if (settings is OldCameraSettings) {
-                tvExposure?.text =
-                    String.format("Fps range: %d-%d", settings.fpsRange[0], settings.fpsRange[1])
-            } else if (settings is Camera2ApiSettings) {
-                tvExposure?.text = String.format("Exposure time %d ms", settings.exposureInMillis)
-            }
-        }
-    }
-
-    fun displayCalibrationResults(calibrationResult: BaseCalibrationResult?) {
-        if (calibrationResult == null) {
-            return
-        }
-        GlobalScope.launch(Dispatchers.Main) {
-            when (calibrationResult) {
-                is RawFormatCalibrationResult -> {
-                    tvCalibrationResult?.text =
-                        String.format(
-                            getString(R.string.detector_calibration_result_raw),
-                            calibrationResult.clusterFactorWidth,
-                            calibrationResult.clusterFactorHeight,
-                            calibrationResult.detectionThreshold,
-                            calibrationResult.calibrationNoise
-                        )
-                }
-                is OldCalibrationResult -> {
-                    tvCalibrationResult?.text =
-                        String.format(
-                            getString(R.string.detector_calibration_result_old),
-                            calibrationResult.avg,
-                            calibrationResult.blackThreshold,
-                            calibrationResult.max
-                        )
-                }
-                else -> {
-                }
-            }
-        }
-    }
-
-    fun displayFrameResults(frameResult: BaseFrameResult) {
-        GlobalScope.launch(Dispatchers.Main) {
-            if (frameResult is RawFormatFrameResult) {
-                tvFrameResult?.text =
-                    String.format(
-                        getString(R.string.detector_frame_result_raw),
-                        frameResult.avg,
-                        frameResult.max
-                    )
-            } else if (frameResult is OldFrameResult) {
-                tvFrameResult?.text =
-                    String.format(
-                        getString(R.string.detector_frame_result_old),
-                        frameResult.avg,
-                        frameResult.blacksPercentage,
-                        frameResult.max
-                    )
-            }
-        }
-
-    }
 
     fun stopCamera() {
         cameraInterface?.stop()
@@ -195,9 +128,12 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
                         tvState?.text = getString(R.string.detector_state_running)
                         tvDetectionCount?.visibility = View.VISIBLE
                         if (hit != null) {
-                            val counter = ((tvDetectionCount?.tag as String?)?.toIntOrNull() ?: 0) + 1
+                            val counter =
+                                ((tvDetectionCount?.tag as String?)?.toIntOrNull() ?: 0) + 1
                             tvDetectionCount?.text =
-                                "Detections in this run : $counter\nLast detection at: ${UiUtils.timestampToReadableHour(hit.timestamp!!)}"
+                                "Detections in this run : $counter\nLast detection at: ${UiUtils.timestampToReadableHour(
+                                    hit.timestamp!!
+                                )}"
                             tvDetectionCount?.tag = counter.toString()
 
                         }

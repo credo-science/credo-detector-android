@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.*
 import science.credo.mobiledetector.R
@@ -18,10 +17,8 @@ import science.credo.mobiledetector.detector.old.OldCalibrationResult
 import science.credo.mobiledetector.detector.old.OldFrameAnalyzer
 import science.credo.mobiledetector.settings.Camera2ApiSettings
 import science.credo.mobiledetector.settings.ProcessingMethod
-import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
-import java.io.*
 
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
@@ -51,10 +48,8 @@ class Camera2DetectorFragment private constructor() :
 
 
         settings = Prefs.get(context!!, Camera2ApiSettings::class.java)
-        displayFrameSettings(settings!!)
-        tvInterface?.text = "Camera interface: Camera2\n" +
-                "Processing method: ${settings!!.processingMethod}"
 
+        infoDialogFragment = InfoDialogFragment.newInstance(settings!!)
 
         if (settings!!.imageFormat == ImageFormat.RAW_SENSOR &&
             settings!!.processingMethod == ProcessingMethod.EXPERIMENTAL
@@ -78,7 +73,7 @@ class Camera2DetectorFragment private constructor() :
 
                         println("==========calibration found !! ${calibrationResult.detectionThreshold}  ${calibrationResult.calibrationNoise}")
                         this@Camera2DetectorFragment.calibrationResult = calibrationResult
-                        displayCalibrationResults(calibrationResult)
+                        infoDialogFragment?.setCalibrationResults(calibrationResult)
                         rawCalibrationFinder = null
                         start(settings!!)
 
@@ -142,9 +137,11 @@ class Camera2DetectorFragment private constructor() :
 //
 //    }
 
-    override fun onFrameReceived(frame: Frame) {
+    override fun onFrameReceived(frame: Frame, sameFrameTimestamp: Long?) {
         GlobalScope.async {
-            val ts = TrueTimeRx.now().time
+
+            val ts = sameFrameTimestamp ?: TrueTimeRx.now().time
+
 
             if(JniWrapper.isBusy){
                 return@async
@@ -170,7 +167,7 @@ class Camera2DetectorFragment private constructor() :
                     )
                 }
             }
-            displayFrameResults(frameResult)
+            infoDialogFragment?.setFrameResults(frameResult)
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
@@ -178,7 +175,7 @@ class Camera2DetectorFragment private constructor() :
                         oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
-                    displayCalibrationResults(calibrationResult)
+                    infoDialogFragment?.setCalibrationResults(calibrationResult)
                     val progress =
                         (oldCalibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
                     updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")
@@ -195,6 +192,12 @@ class Camera2DetectorFragment private constructor() :
                     )
                     println("===$this====t3 = ${TrueTimeRx.now().time - ts} $hit")
                     hit?.send(context!!)
+                    hit?.saveToStorage(context!!)
+                    if (hit != null) {
+                        if(settings!!.processingMethod == ProcessingMethod.OFFICIAL){
+                            onFrameReceived(frame,ts)
+                        }
+                    }
                     updateState(State.RUNNING, frame, hit)
                 }
             } else {

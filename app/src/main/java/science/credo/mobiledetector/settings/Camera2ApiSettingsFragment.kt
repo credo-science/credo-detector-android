@@ -66,7 +66,7 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
         settings.sendToServer = cbSendToServer.isChecked
         settings.saveToMemory = cbSaveToMemory.isChecked
         settings.saveFrameByteArraySource = cbSaveFullFrameArray.isChecked
-
+        settings.thresholdMultiplier = tvSelectedThresholdMultiplier.text.toString().replace(",",".").toFloat()
 
 
         return settings
@@ -95,6 +95,12 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
     lateinit var cbSaveToMemory: CheckBox
     lateinit var cbSendToServer: CheckBox
 
+    lateinit var seekBarThresholdMultiplier: SeekBar
+    lateinit var tvMaxThresholdMultiplier: TextView
+    lateinit var tvMinThresholdMultiplier: TextView
+    lateinit var tvSelectedThresholdMultiplier: TextView
+    lateinit var containerThresholdMultiplier: LinearLayout
+
     var lowerIsoValue: Int = 0
 
     override fun onAttach(context: Context) {
@@ -121,10 +127,42 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
         radioGroupFrameSize = v.findViewById(R.id.radioGroupFrameSize)
         radioGroupProcessingMethod = v.findViewById(R.id.radioGroupProcessingMethod)
         tvStallTime = v.findViewById(R.id.tvStallTime)
+
+        containerThresholdMultiplier = v.findViewById(R.id.containerThresholdMultiplier)
+        tvSelectedThresholdMultiplier = v.findViewById(R.id.tvSelectedThresholdMultiplier)
+        tvMinThresholdMultiplier = v.findViewById(R.id.tvMinThresholdMultiplier)
+        tvMaxThresholdMultiplier = v.findViewById(R.id.tvMaxThresholdMultiplier)
+        seekBarThresholdMultiplier = v.findViewById(R.id.seekBarThresholdMultiplier)
+
         val currentSettings: Camera2ApiSettings? =
             Prefs.get(context!!, Camera2ApiSettings::class.java)
 
         setupProcessingMethod(currentSettings?.processingMethod)
+
+        tvMinThresholdMultiplier.text = "1.05"
+        tvMaxThresholdMultiplier.text = "2.50"
+        tvSelectedThresholdMultiplier.text =
+            (currentSettings?.thresholdMultiplier ?: 1.05).toString()
+        seekBarThresholdMultiplier.max = 19
+        seekBarThresholdMultiplier.setOnSeekBarChangeListener(object :
+            SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val value = if (progress < 10) {
+                    (progress+1) * 0.05f
+                } else {
+                    10 * 0.05f + (progress-9) * 0.10f
+                } + 1
+                tvSelectedThresholdMultiplier.text = String.format("%.2f",value)
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+            }
+
+        })
+
 
         cbSaveFullFrameArray.isChecked = currentSettings?.saveFrameByteArraySource ?: false
         cbSaveToMemory.isChecked = currentSettings?.saveToMemory ?: false
@@ -149,10 +187,17 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
             }
             radioGroupProcessingMethod.addView(rb)
         }
+        radioGroupProcessingMethod.setOnCheckedChangeListener { group, checkedId ->
+            if (group.findViewById<RadioButton>(checkedId).tag == ProcessingMethod.EXPERIMENTAL) {
+                containerThresholdMultiplier.visibility = View.VISIBLE
+            } else {
+                containerThresholdMultiplier.visibility = View.GONE
+            }
+        }
+
         (radioGroupProcessingMethod.getChildAt(selection) as RadioButton).isChecked = true
-
-
         (radioGroupProcessingMethod.getChildAt(1) as RadioButton).isEnabled = false
+
 
     }
 
@@ -220,7 +265,8 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
         radioGroupImageFormat.setOnCheckedChangeListener { group, checkedId ->
             val imageFormat = group.findViewById<RadioButton>(checkedId).tag as Int
             setupFrameSizeRG(imageFormat, scalerMap, currentSettings)
-            (radioGroupProcessingMethod.getChildAt(1) as RadioButton).isEnabled = imageFormat==ImageFormat.RAW_SENSOR
+            (radioGroupProcessingMethod.getChildAt(1) as RadioButton).isEnabled =
+                imageFormat == ImageFormat.RAW_SENSOR
         }
         (radioGroupImageFormat.getChildAt(currentSelection) as RadioButton).isChecked = true
     }

@@ -133,7 +133,7 @@ class SettingsActivity : AppCompatActivity() {
                     }
                 }
                 CameraApi.NDK -> {
-                    fragments.add(OldApiSettingsFragment.instance())
+//                    fragments.add(OldApiSettingsFragment.instance())
                     radioButton.isEnabled = false
                 }
             }

@@ -26,6 +26,8 @@ import science.credo.mobiledetector.utils.SynchronizedTimeUtils
 import com.instacart.library.truetime.TrueTimeRx
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.statistics.StatisticsActivity
 import science.credo.mobiledetector.utils.UpdateTimeBroadcastReceiver
 
 
@@ -41,6 +43,8 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
         setContentView(R.layout.activity_main)
 
         startNtpSynchronization()
@@ -57,6 +61,7 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
 
         btRunDetector.setOnClickListener {
             startActivity(DetectorActivity.intent(this))
+
         }
     }
 
@@ -94,6 +99,14 @@ class MainActivity : AppCompatActivity(), DrawerAdapter.OnItemClick {
                 println("============location ${LocationHelper.location}")
                 startActivity(SettingsActivity.intent(this))
                 drawerLayout.closeDrawer(Gravity.LEFT)
+            }
+            R.id.menuStatistics -> {
+                startActivity(
+                    Intent(
+                        this,
+                        StatisticsActivity::class.java
+                    )
+                )
             }
             R.id.menuLogout -> {
                 Prefs.put(this, null, String::class.java, Prefs.Keys.USER_LOGIN)

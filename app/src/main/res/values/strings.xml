@@ -42,7 +42,7 @@
     <string name="settings_no_calibration_yet">Calibration wasn\'t run yet.</string>
     <string name="detector_state_calibration">Calibration in progress</string>
     <string name="detector_calibration_result_raw"><b>Calibration result:</b>\nCluster : %dx%d\nDetection threshold : %d\nCalibration noise : %d</string>
-    <string name="detector_calibration_result_old"><b>Calibration result:</b>\nCoverage threshold : %d\nBlackness threshold : %d\nDetection threshold : %d</string>
+    <string name="detector_calibration_result_old"><b>Calibration result:</b>\nCoverage threshold : %d\nBlackness threshold : %d\nDetection threshold : %d\n\nCalibration calculation data:\navgAvg = %d\navgMax = %d\navgBlacksPercentage = %f</string>
     <string name="detector_frame_result_raw"><u>Frame result:</u>\nAverage brightness : %d\nMax : %d</string>
     <string name="detector_frame_result_old"><u>Frame result:</u>\nAverage brightness : %d\nBlacks percentage : %.2f\nMax : %d</string>
 
@@ -69,5 +69,8 @@
     <string name="fragment_intro_btn_5">Start!</string>
     <string name="fragment_intro_text_bottom_5">Click a button on the bottom of the screen to start!</string>
     <string name="menu_item_classification">Classification App</string>
+    <string name="settings_threshold_multiplier">Threshold Multiplier</string>
+    <string name="show_advanced_info"><u><b>Show advanced info</b></u></string>
+    <string name="statistics_title">Statistics</string>
 
 </resources>

@@ -72,7 +72,6 @@ object RestInterface {
         )
         println("===========send token ${App.token}")
         return Http.sendPostRequestRaw(Config.API_URL + "detection", Pair("Authorization","Token ${App.token}"),request)
-
     }
 
 

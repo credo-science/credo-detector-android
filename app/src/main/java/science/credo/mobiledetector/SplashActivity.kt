@@ -17,6 +17,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import science.credo.mobiledetector.login.LoginActivity
+import science.credo.mobiledetector.utils.UiUtils
 
 class SplashActivity : AppCompatActivity() {
 
@@ -35,6 +36,8 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        UiUtils.initScreenDimensions(this)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             ivLogo.animate()

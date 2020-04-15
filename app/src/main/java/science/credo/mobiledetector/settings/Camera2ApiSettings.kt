@@ -26,12 +26,12 @@ class Camera2ApiSettings(
     var scaledHeight: Int = 0
     var template = CameraDevice.TEMPLATE_PREVIEW
     var lowerIsoValue: Int = -1
-//    var sensorExposureTime: Long = -1L
+    //    var sensorExposureTime: Long = -1L
 //    var sensorMaxExposureTime: Long = -1L
 //    var frameDuration: Long =-1L
     var controlMode: Int = CameraMetadata.CONTROL_MODE_OFF
     val controlAEMode: Int = CameraMetadata.CONTROL_AE_MODE_OFF
-
-    val maxImages : Int = 2
+    var thresholdMultiplier :Float? = 1.10f
+    val maxImages: Int = 2
 }
 

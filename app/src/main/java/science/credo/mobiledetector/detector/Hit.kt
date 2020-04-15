@@ -2,8 +2,12 @@ package science.credo.mobiledetector.detector
 
 //import androidx.room.Entity
 import android.content.Context
+import android.os.Environment
+import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import science.credo.mobiledetector.network.RestInterface
+import java.io.File
+import java.io.PrintWriter
 
 //import androidx.room.PrimaryKey
 
@@ -12,7 +16,7 @@ import science.credo.mobiledetector.network.RestInterface
 class Hit(
 ) {
 
-//    @PrimaryKey(autoGenerate = true)
+    //    @PrimaryKey(autoGenerate = true)
     var id: Int = 0
     @SerializedName("frame_content")
     var frameContent: String? = null
@@ -40,14 +44,38 @@ class Hit(
     var temperature: Int? = null
 
 
-    suspend fun send(context: Context){
+    suspend fun send(context: Context) {
 
         println("============send")
-        val response = RestInterface.sendHit(context,this)
-
+        val response = RestInterface.sendHit(context, this)
         println("=================send response ${response.getCode()}")
         println("=================send response ${response.isSuccess()}")
         println("=================send response ${response.getResponse()}")
+
+    }
+
+    suspend fun saveToStorage(context: Context) {
+
+        val storage = context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS)
+        val folder = storage!!.path + "/detections"
+        val timestampFolder = File("$folder/$timestamp/")
+        println("=========$timestampFolder   ${timestampFolder.exists()}")
+        if (!timestampFolder.exists()) {
+            timestampFolder.mkdirs()
+        }
+        var counter = 0
+        var detectionFile: File? = null
+        do {
+            counter++
+            detectionFile = File("$folder/$timestamp/${timestamp}_$counter.txt")
+        } while (detectionFile!!.exists())
+
+        detectionFile.createNewFile()
+        val writer = PrintWriter(detectionFile.path, "UTF-8")
+        writer.println(Gson().toJson(this))
+        writer.close()
+
+        println("============send")
 
     }
 }
