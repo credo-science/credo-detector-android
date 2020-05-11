@@ -2,6 +2,7 @@
     <string name="app_name">Credo Detector 2</string>
     <string name="sign_in">Sign in</string>
     <string name="register">Register</string>
+    <string name="sign_in_via_sci_starter">Sign in via SciStarter</string>
     <string name="login_hint">login/email</string>
     <string name="password_hint">password</string>
     <string name="forgot_password"><u>forgot password?</u></string>

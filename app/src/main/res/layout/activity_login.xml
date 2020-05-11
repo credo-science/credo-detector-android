@@ -55,6 +55,21 @@
             android:text="@string/register"
             android:textColor="@color/colorTransparentWhite" />
 
+        <TextView
+            android:id="@+id/btSignInViaSciStarter"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_button"
+            android:layout_marginTop="20dp"
+            android:elevation="3dp"
+            android:paddingTop="15dp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="15dp"
+            android:text="@string/sign_in_via_sci_starter"
+            android:textColor="@color/colorTransparentWhite" />
+
     </LinearLayout>
 
     <FrameLayout

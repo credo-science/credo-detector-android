@@ -17,6 +17,7 @@ android {
         versionName "2.0.7"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders = ['appAuthRedirectScheme': 'science.credo.mobiledetector.scheme']
 
     }
     buildTypes {
@@ -73,4 +74,8 @@ dependencies {
 
 //  Slider
     implementation 'com.tbuonomo.andrui:viewpagerdotsindicator:4.1.2'
+
+//  OAUTH2
+    implementation 'net.openid:appauth:0.7.1'
+
 }

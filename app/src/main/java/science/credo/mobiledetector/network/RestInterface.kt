@@ -3,10 +3,7 @@ package science.credo.mobiledetector.network
 import android.content.Context
 import science.credo.mobiledetector.App
 import science.credo.mobiledetector.detector.Hit
-import science.credo.mobiledetector.login.IdentityInfo
-import science.credo.mobiledetector.login.LoginByEmailRequestBody
-import science.credo.mobiledetector.login.LoginByUsernameRequestBody
-import science.credo.mobiledetector.login.RegisterDeviceInfoRequestBody
+import science.credo.mobiledetector.login.*
 import java.util.*
 
 
@@ -33,6 +30,21 @@ object RestInterface {
 
         return Http.sendPostRequestRaw(Config.API_URL + "user/login", loginRequestBody)
 
+    }
+
+    suspend fun loginViaCode(context: Context, provider: String, authorization_code: String): Response {
+
+        val info = IdentityInfo.getDefault(context).getIdentityData()
+
+        val loginRequestBody = {
+            LoginByCodeRequestBody.build(
+                provider,
+                authorization_code,
+                info
+            )
+        }
+
+        return Http.sendPostRequestRaw(Config.API_URL + "user/oauth_login", loginRequestBody)
     }
 
     suspend fun register(
