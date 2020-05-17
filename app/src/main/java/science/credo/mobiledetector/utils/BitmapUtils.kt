@@ -1,6 +1,8 @@
 package science.credo.mobiledetector.utils
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.util.Base64
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -51,5 +53,16 @@ object BitmapUtils {
         return GlobalScope.async {
             return@async Bitmap.createBitmap(bitmap, startColumn, startRow, size, size)
         }
+    }
+
+    suspend fun loadBitmap(base64: String?): Bitmap? {
+        return GlobalScope.async {
+            if (base64 == null) {
+                return@async null
+            } else {
+                val decodedString: ByteArray = Base64.decode(base64, Base64.DEFAULT)
+                return@async BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
+            }
+        }.await()
     }
 }

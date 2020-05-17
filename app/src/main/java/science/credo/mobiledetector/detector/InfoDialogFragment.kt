@@ -42,6 +42,7 @@ class InfoDialogFragment private constructor() : DialogFragment() {
     var tvInterface: TextView? = null
     var tvFrameSize: TextView? = null
     var tvFormat: TextView? = null
+    var btClose: TextView? = null
 
     var isDisplayed = false
 
@@ -52,12 +53,15 @@ class InfoDialogFragment private constructor() : DialogFragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_dialog_detector_info, container, false)
 
+        isCancelable = false
+
         tvExposure = v.findViewById(R.id.tvExposure)
         tvFrameResult = v.findViewById(R.id.tvFrameResult)
         tvCalibrationResult = v.findViewById(R.id.tvCalibrationResult)
         tvInterface = v.findViewById(R.id.tvInterface)
         tvFrameSize = v.findViewById(R.id.tvFrameSize)
         tvFormat = v.findViewById(R.id.tvFormat)
+        btClose = v.findViewById(R.id.btClose)
 
         displayFrameSettings(settings)
 
@@ -66,6 +70,10 @@ class InfoDialogFragment private constructor() : DialogFragment() {
         } else if (settings is Camera2ApiSettings) {
             tvInterface?.text = "Camera interface: Camera2\n" +
                     "Processing method: ${(settings as Camera2ApiSettings).processingMethod}"
+        }
+
+        btClose?.setOnClickListener {
+            dismissAllowingStateLoss()
         }
         return v
     }

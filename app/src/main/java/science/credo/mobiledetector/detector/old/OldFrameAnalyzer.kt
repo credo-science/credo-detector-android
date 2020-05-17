@@ -6,6 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import science.credo.mobiledetector.detector.*
 import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult
+import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
 import java.io.ByteArrayOutputStream
@@ -72,7 +73,13 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
             hit.ay = SensorHelper.accY
             hit.az = SensorHelper.accZ
             hit.temperature = SensorHelper.temperature
-            fillHited(frame,frameResult.maxIndex, HIT_BITMAP_SIZE)
+            fillHited(frame, frameResult.maxIndex, HIT_BITMAP_SIZE)
+
+            hit.threshold = calibration.max
+            hit.format = ConstantsNamesHelper.getFormatName(frame.imageFormat)
+            hit.processingMethod = "OFFICIAL"
+            hit.exposure = frame.exposureTime
+
 
 
             return hit

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:id="@+id/containerContent"
         android:background="@drawable/bg_button"
         android:orientation="vertical">
 
@@ -46,6 +47,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/colorTransparentWhite" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/btClose"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:text="X"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_alignEnd="@id/containerContent"
+        android:layout_alignRight="@id/containerContent"
+        android:background="@drawable/bg_button"
+        />
+
 </RelativeLayout>

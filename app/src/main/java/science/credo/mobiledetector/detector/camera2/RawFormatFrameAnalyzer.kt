@@ -6,6 +6,7 @@ import science.credo.mobiledetector.detector.*
 import science.credo.mobiledetector.detector.old.OldCalibrationResult
 import science.credo.mobiledetector.detector.old.OldFrameAnalyzer
 import science.credo.mobiledetector.utils.BitmapUtils
+import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
 import java.lang.IllegalStateException
@@ -89,9 +90,23 @@ object RawFormatFrameAnalyzer : BaseFrameAnalyzer() {
             hit.x = centerX
             hit.y = centerY
             hit.maxValue = frameResult.max
+            hit.format = ConstantsNamesHelper.getFormatName(frame.imageFormat)
+
+            hit.clusteringFactor =
+                "${calibration.clusterFactorWidth}x${calibration.clusterFactorHeight}"
+            hit.calibrationNoise = calibration.calibrationNoise
+            hit.thresholdAmplifier = calibration.thresholdAmplifier
+            hit.threshold = calibration.detectionThreshold
+
             if (calibration is OldCalibrationResult) {
                 hit.blackThreshold = calibration.blackThreshold
+                hit.processingMethod = "OFFICIAL"
+            }else{
+                hit.processingMethod = "EXPERIMENTAL"
             }
+            hit.exposure = frame.exposureTime
+
+
             hit.average = frameResult.avg.toFloat()
 //            hit.blacksPercentage = frameResult.blacksPercentage
             hit.ax = SensorHelper.accX

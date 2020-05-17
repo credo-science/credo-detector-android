@@ -43,6 +43,14 @@ class Hit(
     var orientation: Float? = null
     var temperature: Int? = null
 
+    var format: String? = null
+    var processingMethod: String? = null
+    var clusteringFactor: String? = null
+    var calibrationNoise: Int? = null
+    var threshold: Int? = null
+    var thresholdAmplifier: Float? = null
+    var exposure :Long? =null
+
 
     suspend fun send(context: Context) {
 

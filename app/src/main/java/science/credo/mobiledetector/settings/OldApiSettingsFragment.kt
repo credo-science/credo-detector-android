@@ -195,6 +195,7 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
     override fun onDestroy() {
         super.onDestroy()
         camera?.stopPreview()
+        camera?.setPreviewCallback(null)
         camera?.release()
     }
 

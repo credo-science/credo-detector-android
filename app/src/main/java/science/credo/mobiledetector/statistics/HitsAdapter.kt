@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,7 +18,10 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.utils.BitmapUtils
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class HitsAdapter(
@@ -28,6 +32,7 @@ class HitsAdapter(
 ) : RecyclerView.Adapter<HitsAdapter.VH>() {
     val inflater = LayoutInflater.from(context)
 
+    val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
 
     interface OnClickListener {
         fun onClick(hit: Hit)
@@ -36,6 +41,7 @@ class HitsAdapter(
     class VH(v: View, itemHeight: Int) : RecyclerView.ViewHolder(v) {
         val ivHit = v.findViewById<ImageView>(R.id.ivHit)
         val progressBar = v.findViewById<ProgressBar>(R.id.progressBar)
+        val tvTime = v.findViewById<TextView>(R.id.tvTime)
 
         init {
             v.layoutParams.height = itemHeight
@@ -58,10 +64,14 @@ class HitsAdapter(
     override fun onBindViewHolder(holder: VH, position: Int) {
         GlobalScope.launch(Dispatchers.Main) {
             holder.progressBar.visibility = View.VISIBLE
-            val b = loadBitmap(items[position].frameContent)
+            val b = BitmapUtils.loadBitmap(items[position].frameContent)
             holder.ivHit.setImageBitmap(b)
             holder.ivHit.tag = b
             holder.progressBar.visibility = View.GONE
+            val cal = Calendar.getInstance()
+            cal.timeInMillis = items[position].timestamp ?: 0L
+            val timeParts = sdf.format(cal.time).split(" ")
+            holder.tvTime.text = "${timeParts[0]}\n${timeParts[1]}"
         }
         holder.itemView.setOnClickListener {
             onClickListener.onClick(items[position])
@@ -76,14 +86,5 @@ class HitsAdapter(
         }
     }
 
-    suspend fun loadBitmap(base64: String?): Bitmap? {
-        return GlobalScope.async {
-            if (base64 == null) {
-                return@async null
-            } else {
-                val decodedString: ByteArray = Base64.decode(base64, Base64.DEFAULT)
-                return@async BitmapFactory.decodeByteArray(decodedString, 0, decodedString.size)
-            }
-        }.await()
-    }
+
 }

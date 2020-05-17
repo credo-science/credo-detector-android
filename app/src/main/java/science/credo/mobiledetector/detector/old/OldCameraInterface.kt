@@ -146,6 +146,7 @@ class OldCameraInterface(
         mSurfaceView?.holder?.removeCallback(surfaceHolderCallback)
         mWindowManager?.removeView(mSurfaceView)
         mCamera?.stopPreview()
+        mCamera?.setPreviewCallback(null)
         mCamera?.release()
     }
 

@@ -28,6 +28,10 @@ class StatisticsActivity : AppCompatActivity(), HitsAdapter.OnClickListener {
 
     lateinit var detections: Array<Hit>
 
+    companion object {
+        const val SPAN_COUNT = 2
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_statistics)
@@ -35,18 +39,18 @@ class StatisticsActivity : AppCompatActivity(), HitsAdapter.OnClickListener {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_toolbar_back)
-
+        UiUtils.initScreenDimensions(this)
 
         GlobalScope.launch(Dispatchers.Main) {
             viewProgress.visibility = View.VISIBLE
             detections = load()
             println("====== ${detections.size}")
-            rvDetections.layoutManager = GridLayoutManager(this@StatisticsActivity, 3)
+            rvDetections.layoutManager = GridLayoutManager(this@StatisticsActivity, SPAN_COUNT)
             rvDetections.adapter = HitsAdapter(
                 this@StatisticsActivity,
                 detections,
                 this@StatisticsActivity,
-                (UiUtils.getScreenWidth() - UiUtils.dpToPx(20)) / 3
+                (UiUtils.getScreenWidth() - UiUtils.dpToPx(20)) / SPAN_COUNT
             )
             viewProgress.visibility = View.GONE
         }
@@ -89,7 +93,7 @@ class StatisticsActivity : AppCompatActivity(), HitsAdapter.OnClickListener {
     }
 
     override fun onClick(hit: Hit) {
-        HitInfoDialog.newInstance(hit).show(supportFragmentManager,"${hit.timestamp}")
+        HitInfoDialog.newInstance(hit).show(supportFragmentManager, "${hit.timestamp}")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
