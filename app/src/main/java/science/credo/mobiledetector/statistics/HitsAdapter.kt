@@ -66,7 +66,7 @@ class HitsAdapter(
             holder.progressBar.visibility = View.VISIBLE
             val b = BitmapUtils.loadBitmap(items[position].frameContent)
             holder.ivHit.setImageBitmap(b)
-            holder.ivHit.tag = b
+//            holder.ivHit.tag = b
             holder.progressBar.visibility = View.GONE
             val cal = Calendar.getInstance()
             cal.timeInMillis = items[position].timestamp ?: 0L
@@ -78,13 +78,13 @@ class HitsAdapter(
         }
     }
 
-    override fun onViewRecycled(holder: VH) {
-        super.onViewRecycled(holder)
-        try {
-            (holder.ivHit.tag as Bitmap).recycle()
-        } catch (e: Exception) {
-        }
-    }
+//    override fun onViewRecycled(holder: VH) {
+//        super.onViewRecycled(holder)
+//        try {
+//            (holder.ivHit.tag as Bitmap).recycle()
+//        } catch (e: Exception) {
+//        }
+//    }
 
 
 }

@@ -68,7 +68,6 @@ class HitInfoDialog private constructor() : DialogFragment() {
         tvDate = v.findViewById(R.id.tvDate)
         btClose = v.findViewById(R.id.btClose)
 
-        isCancelable = false
         v.post {
             GlobalScope.launch {
                 val bitmap = BitmapUtils.loadBitmap(hit.frameContent)
@@ -107,7 +106,7 @@ class HitInfoDialog private constructor() : DialogFragment() {
                 sb.append("\nSize: ${hit.width}x${hit.height}")
             }
             if (hit.exposure != null) {
-                sb.append("Exposure: ${hit.exposure}")
+                sb.append("\nExposure: ${hit.exposure}")
             }
             if (hit.maxValue != null) {
                 sb.append("\nMax brightness : ${hit.maxValue}")
@@ -123,9 +122,6 @@ class HitInfoDialog private constructor() : DialogFragment() {
             }
             if (hit.clusteringFactor != null) {
                 sb.append("\nClustering factor: ${hit.clusteringFactor}")
-            }
-            if (hit.calibrationNoise != null) {
-                sb.append("\nCalibration noise: ${hit.calibrationNoise}")
             }
             if (hit.calibrationNoise != null) {
                 sb.append("\nCalibration noise: ${hit.calibrationNoise}")

@@ -53,7 +53,6 @@ class InfoDialogFragment private constructor() : DialogFragment() {
     ): View? {
         val v = inflater.inflate(R.layout.fragment_dialog_detector_info, container, false)
 
-        isCancelable = false
 
         tvExposure = v.findViewById(R.id.tvExposure)
         tvFrameResult = v.findViewById(R.id.tvFrameResult)
