@@ -13,11 +13,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Ahoj prázdny fragment</string>
-    <string name="title_status">Status</string>
+    <string name="title_status">Detektor</string>
     <string name="title_statistics">Detekcie</string>
     <string name="title_login">Prihlásenie</string>
     <string name="title_settings">Nastavenia</string>
-    <string name="title_information">api.credo.science</string>
+    <string name="title_information">Informácie</string>
     <string name="title_activity_settings">Nastavenia</string>
     <string name="login_title_activity">Registrácia</string>
 
