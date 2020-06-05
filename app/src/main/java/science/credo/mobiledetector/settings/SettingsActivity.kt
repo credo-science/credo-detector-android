@@ -4,14 +4,17 @@ import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Camera
 import android.os.Build
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout
+import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
@@ -24,6 +27,7 @@ import kotlinx.coroutines.launch
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.utils.Prefs
 import science.credo.mobiledetector.utils.UiUtils
+
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -90,7 +94,17 @@ class SettingsActivity : AppCompatActivity() {
 
         radioGroupApis.setOnCheckedChangeListener { group, checkedId ->
             val index = radioGroupApis.indexOfChild(group?.findViewById<RadioButton>(checkedId))
-            viewPager.setCurrentItem(index, true)
+            if (index == 1 && Prefs.get(
+                    this,
+                    Boolean::class.java,
+                    Prefs.Keys.CAMERA2_ENABLED
+                ) != true
+            ) {
+                (radioGroupApis.getChildAt(0) as RadioButton).isChecked = true
+                showInputDialog()
+            } else {
+                viewPager.setCurrentItem(index, true)
+            }
         }
 
         btSave.setOnClickListener {
@@ -174,4 +188,37 @@ class SettingsActivity : AppCompatActivity() {
         return true
     }
 
+
+    fun showInputDialog() {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+        builder.setTitle(getString(R.string.app_name))
+        builder.setMessage(getString(R.string.trusted_mode_info))
+
+        var password = "";
+        val input = EditText(this)
+        input.imeOptions = EditorInfo.IME_ACTION_DONE;
+        input.isSingleLine = true
+        input.gravity = Gravity.CENTER
+        builder.setView(input)
+
+        builder.setPositiveButton(
+            "OK"
+        ) { dialog, _ ->
+            password = input.text.toString()
+            if(password == "credo2020"){
+                Prefs.put(this,true,Prefs.Keys.CAMERA2_ENABLED)
+                (radioGroupApis.getChildAt(1) as RadioButton).isChecked = true
+            }else{
+                UiUtils.showAlertDialog(this,getString(R.string.incorrect))
+            }
+            dialog.dismiss()
+        }
+        builder.setNegativeButton(
+            "Cancel"
+        ) { dialog, which -> dialog.cancel() }
+
+        val dialog = builder.create()
+        dialog.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        dialog.show()
+    }
 }

@@ -13,8 +13,8 @@ android {
         applicationId "science.credo.mobiledetector"
         minSdkVersion 16
         targetSdkVersion 29
-        versionCode 221
-        versionName "2.1.1"
+        versionCode 2102
+        versionName "2.1.2"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

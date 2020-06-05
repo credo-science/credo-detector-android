@@ -156,9 +156,11 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
             }
 
             override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
+
             }
 
         })

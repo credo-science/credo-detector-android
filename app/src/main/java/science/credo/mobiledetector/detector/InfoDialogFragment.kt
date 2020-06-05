@@ -1,10 +1,9 @@
 package science.credo.mobiledetector.detector
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -46,11 +45,24 @@ class InfoDialogFragment private constructor() : DialogFragment() {
 
     var isDisplayed = false
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE);
+//        dialog?.window?.setBackgroundDrawable(ColorDrawable(activity!!.resources.getColor(R.color.colorPrimary)));
+//        dialog?.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+//
+//        dialog?.window?.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.TOP);
+//        val p = dialog?.window?.attributes;
+//        p?.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//        p?.softInputMode = WindowManager.LayoutParams.FIRST_SYSTEM_WINDOW;
+//        p?.x = 200;
+//        dialog?.window?.attributes = p;
+
         val v = inflater.inflate(R.layout.fragment_dialog_detector_info, container, false)
 
 
@@ -71,27 +83,37 @@ class InfoDialogFragment private constructor() : DialogFragment() {
                     "Processing method: ${(settings as Camera2ApiSettings).processingMethod}"
         }
 
+
         btClose?.setOnClickListener {
             dismissAllowingStateLoss()
         }
         return v
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+    }
+
+
 
     override fun onStart() {
         super.onStart()
         isDisplayed = true
+
         displayCalibrationResults(calibrationResult)
         displayFrameResults(frameResult)
     }
 
     override fun onStop() {
         super.onStop()
+
         isDisplayed = false
     }
 
     fun displayFrameSettings(settings: BaseSettings) {
         GlobalScope.launch(Dispatchers.Main) {
+
             tvFormat?.text =
                 String.format(
                     "Format: %s",

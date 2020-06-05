@@ -72,5 +72,7 @@
     <string name="settings_threshold_multiplier">Threshold Multiplier</string>
     <string name="show_advanced_info"><u><b>Show advanced info</b></u></string>
     <string name="statistics_title">Statistics</string>
+    <string name="incorrect">Incorrect!</string>
+    <string name="trusted_mode_info">Alternative api is being tested and is only available to trusted users. To unlock, enter the password</string>
 
 </resources>

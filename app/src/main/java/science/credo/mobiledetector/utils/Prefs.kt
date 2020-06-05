@@ -11,6 +11,8 @@ object Prefs {
             const val USER_LOGIN = "USER_LOGIN"
             const val USER_TOKEN = "USER_TOKEN"
             const val USER_PASSWORD = "USER_PASSWORD"
+            const val CAMERA2_ENABLED = "CAMERA2_ENABLED"
+
         }
     }
 

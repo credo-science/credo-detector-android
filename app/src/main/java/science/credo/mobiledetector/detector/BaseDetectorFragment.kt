@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
@@ -58,10 +59,13 @@ abstract class BaseDetectorFragment(private val layoutResource: Int) : Fragment(
         }
 
         tvShowMoreInfo?.setOnClickListener {
-            infoDialogFragment?.show(
-                childFragmentManager,
-                infoDialogFragment!!::class.java.simpleName
-            )
+            GlobalScope.launch {
+                infoDialogFragment?.show(
+                    childFragmentManager,
+                    infoDialogFragment!!::class.java.simpleName
+                )
+            }
+
         }
 
 

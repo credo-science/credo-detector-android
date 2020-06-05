@@ -143,7 +143,7 @@ class Camera2DetectorFragment private constructor() :
             val ts = sameFrameTimestamp ?: TrueTimeRx.now().time
 
 
-            if(JniWrapper.isBusy){
+            if (JniWrapper.isBusy) {
                 return@async
             }
             val frameResult = when (settings!!.processingMethod) {
@@ -194,8 +194,11 @@ class Camera2DetectorFragment private constructor() :
                     hit?.send(context!!)
                     hit?.saveToStorage(context!!)
                     if (hit != null) {
-                        if(settings!!.processingMethod == ProcessingMethod.OFFICIAL){
-                            onFrameReceived(frame,ts)
+                        if (settings!!.processingMethod == ProcessingMethod.OFFICIAL) {
+                            onFrameReceived(frame, ts)
+                        }
+                        if (settings?.saveFrameByteArraySource == true) {
+                            frame.saveToStorage(context!!)
                         }
                     }
                     updateState(State.RUNNING, frame, hit)

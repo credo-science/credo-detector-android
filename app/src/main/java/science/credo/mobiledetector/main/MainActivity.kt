@@ -27,6 +27,8 @@ import com.instacart.library.truetime.TrueTimeRx
 import io.reactivex.schedulers.Schedulers;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import science.credo.mobiledetector.detector.Hit
+import science.credo.mobiledetector.detector.InfoDialogFragment
+import science.credo.mobiledetector.settings.OldCameraSettings
 import science.credo.mobiledetector.statistics.StatisticsActivity
 import science.credo.mobiledetector.utils.UpdateTimeBroadcastReceiver
 
