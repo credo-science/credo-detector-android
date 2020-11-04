@@ -67,23 +67,26 @@ class StatisticsActivity : AppCompatActivity(), HitsAdapter.OnClickListener {
             val detections = ArrayList<Hit>()
             for (detectionFolder in (root.listFiles() ?: emptyArray()).sortedDescending()) {
                 for (detectionFile in detectionFolder.listFiles() ?: emptyArray()) {
-                    val br = BufferedReader(FileReader(detectionFile))
-                    try {
-                        val sb = StringBuilder()
-                        do {
-                            val line = br.readLine();
-                            sb.append(line ?: "")
-                        } while (line != null)
-                        detections.add(
-                            gson.fromJson<Hit>(
-                                sb.toString().replace("\n", ""),
-                                Hit::class.java
+                    if(detectionFile.name.contains(".txt")){
+                        val br = BufferedReader(FileReader(detectionFile))
+                        try {
+                            val sb = StringBuilder()
+                            do {
+                                val line = br.readLine();
+                                sb.append(line ?: "")
+                            } while (line != null)
+                            println("=========hit?$detectionFile ${sb.toString()}")
+                            detections.add(
+                                gson.fromJson<Hit>(
+                                    sb.toString().replace("\n", ""),
+                                    Hit::class.java
+                                )
                             )
-                        )
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } finally {
-                        br.close()
+                        } catch (e: IOException) {
+                            e.printStackTrace()
+                        } finally {
+                            br.close()
+                        }
                     }
                 }
             }

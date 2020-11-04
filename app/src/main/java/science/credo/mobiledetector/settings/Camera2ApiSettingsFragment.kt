@@ -304,7 +304,7 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
         currentSettings: Camera2ApiSettings?
     ) {
 
-        val currentProgress = (currentSettings?.exposureInMillis ?: 0) / 100
+        val currentProgress = (currentSettings?.exposureInMillis ?: 0) / 50
 
         println("======current progress $currentProgress")
 
@@ -312,13 +312,13 @@ class Camera2ApiSettingsFragment : BaseSettingsFragment() {
         val minInMillis = (minFrameDuration / 1000000)
         tvMinExposure.text = "${minInMillis}ms"
         tvMaxExposure.text = "2000ms"
-        seekBarExposure.max = 20
+        seekBarExposure.max = 40
         seekBarExposure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (progress == 0) {
                     tvSelectedExposure.text = "${minInMillis}ms"
                 } else {
-                    tvSelectedExposure.text = "${(100 * progress)}ms"
+                    tvSelectedExposure.text = "${(50 * progress)}ms"
                 }
             }
 

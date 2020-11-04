@@ -18,6 +18,7 @@ import science.credo.mobiledetector.detector.old.OldFrameAnalyzer
 import science.credo.mobiledetector.settings.Camera2ApiSettings
 import science.credo.mobiledetector.settings.ProcessingMethod
 import science.credo.mobiledetector.utils.Prefs
+import science.credo.mobiledetector.utils.SynchronizedTimeUtils
 import science.credo.mobiledetector.utils.UiUtils
 
 
@@ -38,6 +39,21 @@ class Camera2DetectorFragment private constructor() :
     val oldCalibrationFinder: OldCalibrationFinder = OldCalibrationFinder()
     var rawCalibrationFinder: RawFormatCalibrationFinder? = null
     lateinit var frameAnalyzer: BaseFrameAnalyzer
+
+
+    var ntpSyncJob : Job? = null
+
+    fun startNtpLoop(): Job {
+        return GlobalScope.launch {
+            while (true) {
+                val result = SynchronizedTimeUtils.SntpClient.requestTime("2.pl.pool.ntp.org", 5000)
+                println("==============ntp $result")
+                println("==============ntp ${SynchronizedTimeUtils.SntpClient.ntpTime}")
+                delay(15000)
+            }
+        }
+    }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -173,7 +189,6 @@ class Camera2DetectorFragment private constructor() :
                 if (calibrationResult == null) {
                     calibrationResult =
                         oldCalibrationFinder.nextFrame(frameResult as OldFrameResult)
-                    println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
                     infoDialogFragment?.setCalibrationResults(calibrationResult)
                     val progress =
@@ -190,7 +205,6 @@ class Camera2DetectorFragment private constructor() :
                         frameResult,
                         calibrationResult!!
                     )
-                    println("===$this====t3 = ${TrueTimeRx.now().time - ts} $hit")
                     hit?.send(context!!)
                     hit?.saveToStorage(context!!)
                     if (hit != null) {
@@ -217,9 +231,15 @@ class Camera2DetectorFragment private constructor() :
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        ntpSyncJob = startNtpLoop()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         rawCalibrationFinder?.stop()
+        ntpSyncJob?.cancel()
 
     }
 
