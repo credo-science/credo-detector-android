@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="science.credo.mobiledetector">
+    package="science.credo.mobiledetector2">
 
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,7 +16,7 @@
 
 
     <application
-        android:name=".App"
+        android:name="science.credo.mobiledetector2.App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:hardwareAccelerated="true"
@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".SplashActivity"
+            android:name="science.credo.mobiledetector2.SplashActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,27 +36,38 @@
         </activity>
 
         <activity
-            android:name=".login.LoginActivity"
+            android:name="science.credo.mobiledetector2.login.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".main.MainActivity"
+            android:name="science.credo.mobiledetector2.main.MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".settings.SettingsActivity"
+            android:name="science.credo.mobiledetector2.settings.SettingsActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".detector.DetectorActivity"
-            android:screenOrientation="portrait" />
-
-        <activity
-            android:name=".statistics.StatisticsActivity"
+            android:name="science.credo.mobiledetector2.detector.DetectorActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name="science.credo.mobiledetector2.statistics.StatisticsActivity"
+            android:screenOrientation="portrait" />
+
 
         <activity
-            android:name=".intro.IntroActivity" />
+            android:name="science.credo.mobiledetector2.intro.IntroActivity" />
 
-        <receiver android:name=".utils.UpdateTimeBroadcastReceiver"/>
+        <receiver android:name="science.credo.mobiledetector2.utils.UpdateTimeBroadcastReceiver"/>
+
+        <receiver
+            android:name="science.credo.mobiledetector2.utils.BatteryStateReceiver"
+            android:enabled="true"
+            android:exported="true">
+
+            <intent-filter>
+                <action android:name="android.intent.action.ACTION_BATTERY_CHANGED" />
+            </intent-filter>
+
+        </receiver>
 
     </application>
 
