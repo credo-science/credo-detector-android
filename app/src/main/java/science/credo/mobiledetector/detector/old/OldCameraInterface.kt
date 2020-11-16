@@ -78,7 +78,7 @@ class OldCameraInterface(
                 -5000,
                 5000,
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-                    WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY
+                    WindowManager.LayoutParams.TYPE_BASE_APPLICATION
                 else
                     WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE + WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
@@ -146,6 +146,7 @@ class OldCameraInterface(
         mSurfaceView?.holder?.removeCallback(surfaceHolderCallback)
         mWindowManager?.removeView(mSurfaceView)
         mCamera?.stopPreview()
+        mCamera?.setPreviewCallback(null)
         mCamera?.release()
     }
 

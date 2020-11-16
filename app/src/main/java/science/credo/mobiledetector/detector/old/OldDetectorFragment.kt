@@ -35,25 +35,25 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.
     ): View? {
         val v = super.onCreateView(inflater, container, savedInstanceState)
 
-        tvInterface?.text = "Camera interface: Old"
+
         val settings = Prefs.get(context!!, OldCameraSettings::class.java)!!
-        displayFrameSettings(settings)
+        infoDialogFragment = InfoDialogFragment.newInstance(settings)
 
         cameraInterface = OldCameraInterface(
             this,
-            settings!!
+            settings
         )
+
         cameraInterface?.start(context!!)
         startTimer()
         return v
     }
 
-
-    override fun onFrameReceived(frame: Frame) {
+    override fun onFrameReceived(frame: Frame, sameFrameTimestamp: Long?) {
         GlobalScope.async {
-            val ts = TrueTimeRx.now().time
+            val ts = sameFrameTimestamp ?: TrueTimeRx.now().time
 
-            if(JniWrapper.isBusy){
+            if (JniWrapper.isBusy) {
                 println("===========status skipped")
                 return@async
             }
@@ -66,14 +66,14 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.
                 frame.height,
                 calibrationResult?.blackThreshold ?: 40
             )
-            displayFrameResults(frameResult)
+            infoDialogFragment?.setFrameResults(frameResult)
 
             if (frameResult.isCovered(calibrationResult)) {
                 if (calibrationResult == null) {
                     calibrationResult = calibrationFinder.nextFrame(frameResult)
                     println("===$this====t2 = ${TrueTimeRx.now().time - ts}")
                     calibrationResult?.save(context!!)
-                    displayCalibrationResults(calibrationResult)
+                    infoDialogFragment?.setCalibrationResults(calibrationResult)
                     val progress =
                         (calibrationFinder.counter.toFloat() / OldCalibrationFinder.CALIBRATION_LENGHT) * 100
                     updateState(State.CALIBRATION, "${String.format("%.2f", progress)}%")
@@ -86,6 +86,10 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.
                     )
                     println("===$this====t3 = ${TrueTimeRx.now().time - ts} $hit")
                     hit?.send(context!!)
+                    hit?.saveToStorage(context!!)
+                    if (hit != null) {
+                        onFrameReceived(frame, sameFrameTimestamp)
+                    }
                     updateState(State.RUNNING, frame, hit)
                 }
             } else {

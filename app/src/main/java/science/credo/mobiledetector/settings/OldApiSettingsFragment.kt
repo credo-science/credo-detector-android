@@ -77,10 +77,12 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
         tvCalibrationMax = v.findViewById(R.id.tvCalibrationMax)
         tvCalibrationAvg = v.findViewById(R.id.tvCalibrationAvg)
         tvCalibrationBlackThreshold = v.findViewById(R.id.tvCalibrationBlackThreshold)
+        println("=======old ")
 
         GlobalScope.async {
             try {
                 camera = Camera.open()
+                camera!!.lock()
                 afterCameraOpened()
             }catch (e : Exception){
                 val alertDialog = UiUtils.showAlertDialog(
@@ -99,6 +101,7 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
 
     private fun afterCameraOpened() {
         GlobalScope.launch(Dispatchers.Main) {
+
             val parameters: Camera.Parameters = camera!!.parameters;
 
             println("============ ${parameters.pictureFormat}")
@@ -192,6 +195,7 @@ class OldApiSettingsFragment private constructor() : BaseSettingsFragment() {
     override fun onDestroy() {
         super.onDestroy()
         camera?.stopPreview()
+        camera?.setPreviewCallback(null)
         camera?.release()
     }
 

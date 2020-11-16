@@ -28,11 +28,17 @@ class OldCalibrationFinder {
 
             val finalMax =
                 (max_ * 3).coerceAtLeast(80).coerceAtMost(160).coerceAtLeast(finalAvg)
-            OldCalibrationResult(
+
+            val result = OldCalibrationResult(
                 finalBlack.toInt(),
                 finalAvg.toInt(),
                 finalMax.toInt()
             )
+            result.avgAvg = avg
+            result.avgMax = max_
+            result.avgBlacksPercentage = blacksPercentage
+
+            return result
 
         } else {
             null

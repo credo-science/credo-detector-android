@@ -23,8 +23,7 @@ class Camera2PostConfigurationInterface(
     var lastFrameTimestamp: Long = 0
 
     override fun onImageAvailable(p0: ImageReader?) {
-        val timestamp = TrueTimeRx.now().time
-
+        val timestamp = SynchronizedTimeUtils.getTimestamp()
         val exposure = timestamp - lastFrameTimestamp
         lastFrameTimestamp = timestamp
 

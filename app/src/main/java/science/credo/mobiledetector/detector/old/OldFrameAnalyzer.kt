@@ -6,6 +6,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import science.credo.mobiledetector.detector.*
 import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult
+import science.credo.mobiledetector.utils.ConstantsNamesHelper
 import science.credo.mobiledetector.utils.LocationHelper
 import science.credo.mobiledetector.utils.SensorHelper
 import java.io.ByteArrayOutputStream
@@ -72,11 +73,50 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
             hit.ay = SensorHelper.accY
             hit.az = SensorHelper.accZ
             hit.temperature = SensorHelper.temperature
+            fillHited(frame, frameResult.maxIndex, HIT_BITMAP_SIZE)
+
+            hit.threshold = calibration.max
+            hit.format = ConstantsNamesHelper.getFormatName(frame.imageFormat)
+            hit.processingMethod = "OFFICIAL"
+            hit.exposure = frame.exposureTime
+
+
 
             return hit
         } else {
             return null
         }
+    }
+
+    suspend fun fillHited(frame: Frame, maxPosition: Int, sideLength: Int) {
+
+        //Point (maxX,maxY) is center(brightest pixel) of hit
+        val maxX = maxPosition.rem(frame.width)
+        val maxY = maxPosition / frame.width
+
+        //Point (x,y) is upper-left corner of square with we want to fill
+        var x = maxX - sideLength / 2
+        var y = maxY - sideLength / 2
+
+
+        when {
+            x < 0 -> x = 0
+            x >= frame.width - sideLength -> x = frame.width - sideLength
+        }
+
+        when {
+            //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
+            y < 0 -> y = 0
+            y >= frame.height - sideLength -> y = frame.height - sideLength
+        }
+
+        //Loops iterates from upper-left point sideLength times
+        for (i in y..y + sideLength) {
+            for (j in x..x + sideLength) {
+                frame.byteArray[i * frame.width + j] = 0
+            }
+        }
+
     }
 
 
@@ -141,7 +181,6 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
         }.await()
 
     }
-
 
 
 }

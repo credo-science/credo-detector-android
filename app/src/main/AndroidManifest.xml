@@ -49,6 +49,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".statistics.StatisticsActivity"
+            android:screenOrientation="portrait" />
+
+
+        <activity
             android:name=".intro.IntroActivity" />
 
         <receiver android:name=".utils.UpdateTimeBroadcastReceiver"/>

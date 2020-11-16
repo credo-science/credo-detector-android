@@ -9,7 +9,11 @@ class OldCalibrationResult(
     val max: Int
 ) : BaseCalibrationResult() {
 
-    companion object{
+    var avgMax = -1L
+    var avgBlacksPercentage = -1f
+    var avgAvg = -1L
+
+    companion object {
         const val DEFAULT_BLACK_THRESHOLD = 40
     }
 }

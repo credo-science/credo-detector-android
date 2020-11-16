@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 import science.credo.mobiledetector.detector.CameraInterface
 import science.credo.mobiledetector.detector.Frame
 import science.credo.mobiledetector.detector.State
-import science.credo.mobiledetector.detector.camera2.RawFormatCalibrationResult.Companion.AMPLIFIER
 import science.credo.mobiledetector.detector.old.JniWrapper
 import science.credo.mobiledetector.settings.Camera2ApiSettings
 import science.credo.mobiledetector.utils.Statistics
@@ -24,7 +23,7 @@ class RawFormatCalibrationFinder(
     val callback: CalibrationCallback
 ) : CameraInterface.FrameCallback {
 
-    val LENGHT = 60000/configuration.exposureInMillis
+    val LENGHT = 60000 / configuration.exposureInMillis
 //    val LENGHT = 10
 
     companion object {
@@ -84,7 +83,7 @@ class RawFormatCalibrationFinder(
 
     var ignoreFirstsFrame = 0
 
-    override fun onFrameReceived(frame: Frame) {
+    override fun onFrameReceived(frame: Frame, sameFrameTimestamp: Long?) {
 
         GlobalScope.launch {
             if (ignoreFirstsFrame < 3) {
@@ -108,7 +107,7 @@ class RawFormatCalibrationFinder(
                 callback.onStatusChanged(
                     State.CALIBRATION,
                     "${clusterFactorWidth}x$clusterFactorHeight",
-                    ((counter.toFloat()/LENGHT)*100).toInt(),
+                    ((counter.toFloat() / LENGHT) * 100).toInt(),
                     frameResult.avg
                 )
                 if (counter >= LENGHT) {
@@ -124,45 +123,24 @@ class RawFormatCalibrationFinder(
                     cameraUtil.stop()
                     val stat = Statistics(max)
                     println("======${clusterFactorWidth}x$clusterFactorHeight stdDev : " + stat.stdDev)
-                    if (configuration.imageFormat == ImageFormat.RAW_SENSOR) {
-                        if (stat.stdDev < 2) {
-                            callback.onCalibrationSuccess(
-                                RawFormatCalibrationResult(
-                                    clusterFactorWidth,
-                                    clusterFactorHeight,
-                                    (stat.mean * AMPLIFIER).toInt(),
-                                    getMax(avgs)
-                                )
-
-
+                    if (stat.stdDev < 2) {
+                        callback.onCalibrationSuccess(
+                            RawFormatCalibrationResult(
+                                clusterFactorWidth,
+                                clusterFactorHeight,
+                                (stat.mean * (configuration.thresholdMultiplier
+                                    ?: 1.10f)).toInt(),
+                                getMax(avgs),
+                                configuration.thresholdMultiplier ?: 1.10f
                             )
-                        } else {
-                            changeClusterFactors()
-                            if (clusterFactorWidth * clusterFactorHeight > 64) {
-                                callback.onCalibrationFailed()
-                            } else {
-                                tryNext()
-                            }
-                        }
+                        )
                     } else {
-                        if (stat.stdDev < 2) {
-                            callback.onCalibrationSuccess(
-                                RawFormatCalibrationResult(
-                                    clusterFactorWidth,
-                                    clusterFactorHeight,
-                                    (stat.mean + 15).toInt(),
-                                    getMax(avgs)
-                                )
-                            )
+                        changeClusterFactors()
+                        if (clusterFactorWidth * clusterFactorHeight > 64) {
+                            callback.onCalibrationFailed()
                         } else {
-                            changeClusterFactors()
-                            if (clusterFactorWidth * clusterFactorHeight > 64) {
-                                println("====== stop ")
-                            } else {
-                                tryNext()
-                            }
+                            tryNext()
                         }
-
                     }
 
                 }
