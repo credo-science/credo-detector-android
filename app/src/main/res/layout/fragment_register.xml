@@ -88,23 +88,33 @@
             android:id="@+id/etDisplayName"
             android:padding="10dp"
             android:inputType="text"
-            android:imeOptions="actionNext"
-            android:textColorHint="@color/colorTransparentWhite"
-            android:textColor="@color/colorTransparentWhite"
-            android:background="@drawable/bg_button"/>
-        <EditText
-            android:layout_marginTop="5dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/team_hint"
-            android:elevation="3dp"
-            android:id="@+id/etTeam"
-            android:padding="10dp"
-            android:inputType="text"
             android:imeOptions="actionDone"
             android:textColorHint="@color/colorTransparentWhite"
             android:textColor="@color/colorTransparentWhite"
             android:background="@drawable/bg_button"/>
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/team_hint"
+                android:elevation="3dp"
+                android:id="@+id/etTeam"
+                android:padding="10dp"
+                android:inputType="text"
+                android:imeOptions="actionDone"
+                android:textColorHint="@color/colorTransparentWhite"
+                android:textColor="@color/colorTransparentWhite"
+                android:background="@drawable/bg_button"/>
+            <View
+                android:layout_marginTop="5dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@color/colorTransparentWhite"/>
+        </FrameLayout>
+
 
         <CheckBox
             android:layout_width="wrap_content"

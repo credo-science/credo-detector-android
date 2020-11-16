@@ -82,7 +82,7 @@
             </LinearLayout>
 
 
-            <science.credo.mobiledetector.settings.NonSwipeableViewPager
+            <science.credo.mobiledetector2.settings.NonSwipeableViewPager
                 android:id="@+id/viewPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
