@@ -11,7 +11,7 @@
     <string name="login_register_hint">login</string>
     <string name="display_name_hint">display name</string>
     <string name="team_hint">team</string>
-    <string name="checkbox_accept_terms"><u>Akceptuję regulamin</u></string>
+    <string name="checkbox_accept_terms">I accept terms and conditions</string>
     <string name="button_register">register</string>
     <string name="settings_choose_camera_api">Choose camera API:</string>
     <string name="settings_old_api">Camera</string>
