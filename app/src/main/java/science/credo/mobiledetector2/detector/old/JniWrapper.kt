@@ -75,12 +75,33 @@ object JniWrapper {
         pixelPrecision: Int
     ): String
 
-    private external fun calculateOldFrame(
-        byteArray: ByteArray,
+    // This function may or may not follow the wrong algorithm
+    private fun calculateOldFrame(
+        byteArray: ByteArray, // A list of greyscale image bytes from 0 (black) to 127 (white)
         width: Int,
         height: Int,
         blackThreshold: Int
-    ): String
+    ): String {
+        var sum: Int = 0
+        var blackPixels: Int = 0
+        var max: Int = 0
+        var maxIndex: Int = 0
+
+        byteArray.forEachIndexed { index, byte ->
+            sum += byte
+
+            if (byte > max) {
+                max = byte.toInt()
+                maxIndex = index
+            }
+
+            if (byte < blackThreshold) {
+                ++blackPixels
+            }
+        }
+
+        return "${sum / byteArray.size};$blackPixels;${byteArray.size};$max;$maxIndex"
+    }
 
     init {
         System.loadLibrary("kotlin-jni")
