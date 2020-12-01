@@ -26,7 +26,7 @@
  *   app/src/main/java/com/example/kotlin/KotlinJni.kt
  */
 JNIEXPORT jstring JNICALL
-Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIEnv *env,
+Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateOldFrame(JNIEnv *env,
                                                                          jobject thiz,
                                                                          jbyteArray bytes,
                                                                          jint width,
@@ -64,7 +64,7 @@ Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateOldFrame(JNIE
 
 
 JNIEXPORT jstring JNICALL
-Java_science_credo_mobiledetector_detector_old_JniWrapper_calculateRawFrame(JNIEnv *env,
+Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawFrame(JNIEnv *env,
                                                                             jobject thiz,
                                                                             jbyteArray bytes,
                                                                             jint width,
