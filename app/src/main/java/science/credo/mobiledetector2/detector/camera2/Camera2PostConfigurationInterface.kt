@@ -43,20 +43,26 @@ class Camera2PostConfigurationInterface(
 //        println("==============on Image Available ${c.get(Calendar.HOUR_OF_DAY)}:${c.get(Calendar.MINUTE)}:${c.get(Calendar.SECOND)}.${c.get(Calendar.MILLISECOND)}     ||| $timestamp")
 
         val imageFormat = p0.imageFormat
-        val buffer1 = image.planes[0].buffer
-        var data: ByteArray? = null
-        data = ByteArray(buffer1.remaining())
-        buffer1.get(data)
-        val frame = Frame(
-            data,
-            image.width,
-            image.height,
-            imageFormat,
-            exposure,
-            timestamp
-        )
 
-        callback.onFrameReceived(frame)
+        if (image.planes.isEmpty()) {
+            println("Image can't be processed, number of planes is zero")
+        } else {
+            val buffer1 = image.planes[0].buffer
+            var data: ByteArray? = null
+            data = ByteArray(buffer1.remaining())
+            buffer1.get(data)
+            val frame = Frame(
+                    data,
+                    image.width,
+                    image.height,
+                    imageFormat,
+                    exposure,
+                    timestamp
+            )
+
+            callback.onFrameReceived(frame)
+        }
+
         image.close()
     }
 
