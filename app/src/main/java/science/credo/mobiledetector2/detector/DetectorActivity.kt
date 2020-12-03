@@ -108,38 +108,33 @@ class DetectorActivity : AppCompatActivity() {
     }
 
     suspend fun sendDetectorFinishEvent(baseFragment: BaseDetectorFragment) {
-        if (baseFragment.calibrationResult != null) {
-            val timeInSeconds = baseFragment.timeInSeconds
-            val detectionCount = (baseFragment.tvDetectionCount?.tag as String?)?.toIntOrNull()
-            val settings: BaseSettings? = when (baseFragment) {
-                is OldDetectorFragment -> {
-                    baseFragment.settings
-                }
-                is Camera2DetectorFragment -> {
-                    baseFragment.settings
-                }
-                else -> null
+        val timeInSeconds = baseFragment.timeInSeconds
+        val detectionCount = (baseFragment.tvDetectionCount?.tag as String?)?.toIntOrNull()
+        val settings: BaseSettings? = when (baseFragment) {
+            is OldDetectorFragment -> {
+                baseFragment.settings
             }
-            val calibrationResult: BaseCalibrationResult? = when (baseFragment) {
-                is OldDetectorFragment -> {
-                    baseFragment.calibrationResult
-                }
-                is Camera2DetectorFragment -> {
-                    baseFragment.calibrationResult
-                }
-                else -> null
+            is Camera2DetectorFragment -> {
+                baseFragment.settings
             }
-            DetectorStopEvent(
-                    this,
-                    timeInSeconds,
-                    detectionCount ?: 0,
-                    settings!!,
-                    calibrationResult!!
-            ).send()
-        } else {
-            println("Calibration didn't finish, stopping.")
+            else -> null
         }
-
+        val calibrationResult: BaseCalibrationResult? = when (baseFragment) {
+            is OldDetectorFragment -> {
+                baseFragment.calibrationResult
+            }
+            is Camera2DetectorFragment -> {
+                baseFragment.calibrationResult
+            }
+            else -> null
+        }
+        DetectorStopEvent(
+            this,
+            timeInSeconds,
+            detectionCount ?: 0,
+            settings!!,
+            calibrationResult
+        ).send()
     }
 
 }
