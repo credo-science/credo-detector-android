@@ -1,5 +1,7 @@
 package science.credo.mobiledetector2.detector.old
 
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
 import com.instacart.library.truetime.TrueTimeRx
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -15,26 +17,44 @@ object JniWrapper {
         byteArray: ByteArray,
         width: Int,
         height: Int,
-        blackThreshold: Int
+        blackThreshold: Int,
+        imageFormat: Int
     ): OldFrameResult {
         return GlobalScope.async {
             val time = TrueTimeRx.now().time
             isBusy = true
-            val stringData = GlobalScope.async {
-                return@async calculateOldFrame(
-                    byteArray,
-                    width,
-                    height,
-                    blackThreshold
-                )
-            }.await()
+
+            val stringData: String
+            if (imageFormat == ImageFormat.JPEG) {
+                val bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+                val pixels = IntArray(width * height)
+                bitmap.getPixels(pixels, 0, width, 0, 0, width, height)
+
+                stringData = GlobalScope.async {
+                    return@async calculateRGBFrame(
+                        pixels,
+                        width,
+                        height,
+                        blackThreshold
+                    )
+                }.await()
+            } else {
+                stringData = GlobalScope.async {
+                    return@async calculateOldFrame(
+                        byteArray,
+                        width,
+                        height,
+                        blackThreshold
+                    )
+                }.await()
+            }
+
             val result = OldFrameResult.fromJniStringData(stringData)
             isBusy = false
             println("===============calc time ${TrueTimeRx.now().time - time}")
             return@async result
         }.await()
     }
-
 
     suspend fun calculateFrame(
         bytes: ByteArray,
@@ -77,6 +97,13 @@ object JniWrapper {
 
     private external fun calculateOldFrame(
         byteArray: ByteArray,
+        width: Int,
+        height: Int,
+        blackThreshold: Int
+    ): String
+
+    private external fun calculateRGBFrame(
+        intArray: IntArray,
         width: Int,
         height: Int,
         blackThreshold: Int

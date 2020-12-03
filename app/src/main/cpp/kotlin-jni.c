@@ -62,6 +62,50 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateOldFrame(JNI
 
 }
 
+JNIEXPORT jstring JNICALL
+Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRGBFrame(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jintArray pixels,
+                                                                             jint width,
+                                                                             jint height,
+                                                                             jint blackThreshold) {
+
+    int size = width * height;
+    jint *b = (*env)->GetIntArrayElements(env, pixels, JNI_FALSE);
+    jint *address = b;
+    int sum = 0;
+    int max = 0;
+    int maxIndex = 0;
+    int blacks = 0;
+    for (int i = 0; i < size; ++i) {
+        int bb = *b++;
+
+        // Alpha is ignored, it should always be 0xff
+        int red = (bb >> 16) & 0xff;
+        int green = (bb >> 8) & 0xff;
+        int blue = bb & 0xff;
+
+        // Calculate luma
+        bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+
+        if (bb > 0) {
+            sum += bb;
+            if (bb > max) {
+                max = bb;
+                maxIndex = i;
+            }
+        }
+        if (bb < blackThreshold) {
+            ++blacks;
+        }
+    }
+    (*env)->ReleaseIntArrayElements(env, pixels, address, 0);
+    char buffer[100];
+    sprintf(buffer, "%d;%d;%d;%d;%d", sum / size, blacks, size, max, maxIndex);
+    jstring result = (*env)->NewStringUTF(env, buffer);
+    return result;
+
+}
 
 JNIEXPORT jstring JNICALL
 Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawFrame(JNIEnv *env,

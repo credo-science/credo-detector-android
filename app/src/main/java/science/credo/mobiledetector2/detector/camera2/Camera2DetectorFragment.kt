@@ -178,7 +178,8 @@ class Camera2DetectorFragment private constructor() :
                         frame.width,
                         frame.height,
                         (calibrationResult as OldCalibrationResult?)?.blackThreshold
-                            ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD
+                            ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD,
+                        settings.imageFormat
                     )
                 }
                 ProcessingMethod.EXPERIMENTAL -> {
