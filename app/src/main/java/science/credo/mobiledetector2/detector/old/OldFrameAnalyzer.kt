@@ -1,6 +1,8 @@
 package science.credo.mobiledetector2.detector.old
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
 import android.util.Base64
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -37,15 +39,28 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
             val endX = min(frame.width, centerX + margin)
             val endY = min(frame.height, centerY + margin)
 
-            val cropBitmap = yuv2rgb(
-                frame.byteArray,
-                frame.width,
-                frame.height,
-                offsetX,
-                offsetY,
-                endX,
-                endY
-            )
+            val cropBitmap = when(frame.imageFormat) {
+                ImageFormat.JPEG -> {
+                    cropJPEG(
+                            frame.byteArray,
+                            offsetX,
+                            offsetY,
+                            endX,
+                            endY
+                    )
+                }
+                else -> {
+                    yuv2rgb(
+                            frame.byteArray,
+                            frame.width,
+                            frame.height,
+                            offsetX,
+                            offsetY,
+                            endX,
+                            endY
+                    )
+                }
+            }
             val cropDataPNG = bitmap2png(cropBitmap)
             val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
@@ -180,5 +195,19 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
 
     }
 
+    private suspend fun cropJPEG(
+            byteArray: ByteArray,
+            offsetX: Int,
+            offsetY: Int,
+            endX: Int,
+            endY: Int
+    ): Bitmap {
+        return GlobalScope.async {
+            val og = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            val outWidth = endX - offsetX
+            val outHeight = endY - offsetY
 
+            return@async Bitmap.createBitmap(og, offsetX, offsetY, outWidth, outHeight)
+        }.await()
+    }
 }
