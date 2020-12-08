@@ -108,6 +108,19 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRGBFrame(JNI
 }
 
 JNIEXPORT jstring JNICALL
+Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFrame(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jbyteArray bytes,
+                                                                             jint width,
+                                                                             jint height,
+                                                                             jint blackThreshold,
+                                                                             jint colorFilterArrangement,
+                                                                             jint whiteLevel,
+                                                                             jintArray blackLevelArray) {
+    return "0;0;0;0;0";
+}
+
+JNIEXPORT jstring JNICALL
 Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawFrame(JNIEnv *env,
                                                                             jobject thiz,
                                                                             jbyteArray bytes,

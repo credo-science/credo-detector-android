@@ -66,7 +66,10 @@ class OldDetectorFragment private constructor() : BaseDetectorFragment(R.layout.
                 frame.height,
                 (calibrationResult as OldCalibrationResult?)?.blackThreshold
                     ?: OldCalibrationResult.DEFAULT_BLACK_THRESHOLD,
-                settings.imageFormat
+                settings.imageFormat,
+                null,
+                null,
+                null
             )
             infoDialogFragment?.setFrameResults(frameResult)
 
