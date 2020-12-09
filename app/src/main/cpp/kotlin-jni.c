@@ -117,7 +117,49 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                                                                              jint colorFilterArrangement,
                                                                              jint whiteLevel,
                                                                              jintArray blackLevelArray) {
-    return "0;0;0;0;0";
+    long int size = width * height;
+    jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
+    jbyte *address = b;
+    jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
+    jbyte *bAAddress = bA;
+    long int sum = 0;
+    long int max = 0;
+    long int maxIndex = 0;
+    long int blacks = 0;
+    char sensorColour;
+
+    for (int i = 0; i < size; ++i) {
+        if ((i / width) % 2) {
+            sensorColour = (i % width) % 2 + 2;
+        } else {
+            sensorColour = (i % width) % 2;
+        }
+
+        long int bb = *b;
+        bb = (bb & 0xffff);
+        bb = bb > bA[sensorColour] ? bb - bA[sensorColour] : 0;
+
+        if (bb > 0) {
+            long int ceiledBb = (bb < whiteLevel ? bb : whiteLevel);
+            sum += ceiledBb;
+            if (ceiledBb > max) {
+                max = ceiledBb;
+                maxIndex = i;
+            }
+        }
+
+        if (bb < blackThreshold) {
+            ++blacks;
+        }
+
+        b += 2;
+    }
+    (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
+    (*env)->ReleaseIntArrayElements(env, blackLevelArray, bAAddress, 0);
+    char buffer[100];
+    sprintf(buffer, "%ld;%ld;%ld;%ld;%ld", sum / size, blacks, size, max, maxIndex);
+    jstring result = (*env)->NewStringUTF(env, buffer);
+    return result;
 }
 
 JNIEXPORT jstring JNICALL
