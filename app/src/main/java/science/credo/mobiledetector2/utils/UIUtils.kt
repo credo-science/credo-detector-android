@@ -3,6 +3,7 @@ package science.credo.mobiledetector2.utils
 import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.view.inputmethod.InputMethodManager
 import android.widget.RadioButton
@@ -47,6 +48,7 @@ object UiUtils {
     }
 
     fun showAlertDialog(context: Context, msg: String): AlertDialog {
+        Looper.prepare()
 
         val alertDialog = AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.app_name))
