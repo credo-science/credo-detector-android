@@ -11,7 +11,7 @@ import science.credo.mobiledetector2.detector.camera2.RawFormatFrameResult
 object JniWrapper {
 
     var isBusy = false
-
+    var hotPixels: BooleanArray? = null
 
     suspend fun calculateFrame(
         byteArray: ByteArray,
@@ -45,6 +45,10 @@ object JniWrapper {
                 }
 
                 ImageFormat.RAW_SENSOR -> {
+                    if (hotPixels == null) {
+                        hotPixels = BooleanArray(width * height)
+                    }
+
                     stringData = GlobalScope.async {
                         return@async calculateRawSensorFrame(
                             byteArray,
@@ -53,7 +57,8 @@ object JniWrapper {
                             blackThreshold,
                             colorFilterArrangement!!,
                             whiteLevel!!,
-                            blackLevelArray!!
+                            blackLevelArray!!,
+                            hotPixels!!
                         )
                     }.await()
                 }
@@ -140,7 +145,8 @@ object JniWrapper {
         blackThreshold: Int,
         colorFilterArrangement: Int,
         whiteLevel: Int,
-        blackLevelArray: IntArray
+        blackLevelArray: IntArray,
+        hotPixels: BooleanArray
     ): String
 
     init {

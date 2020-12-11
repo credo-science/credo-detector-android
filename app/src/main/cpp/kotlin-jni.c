@@ -116,12 +116,15 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                                                                              jint blackThreshold,
                                                                              jint colorFilterArrangement,
                                                                              jint whiteLevel,
-                                                                             jintArray blackLevelArray) {
+                                                                             jintArray blackLevelArray,
+                                                                             jbooleanArray hotPixels) {
     long int size = width * height;
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
     jbyte *address = b;
     jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
     jbyte *bAAddress = bA;
+    jbyte *hP = (*env)->GetBooleanArrayElements(env, hotPixels, JNI_FALSE);
+    jbyte *hPAddress = hP;
     long int sum = 0;
     long int max = 0;
     long int maxIndex = 0;
@@ -129,10 +132,13 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
     char sensorColour;
 
     for (int i = 0; i < size; ++i) {
-        if ((i / width) % 2) {
-            sensorColour = (i % width) % 2 + 2;
+        int x = i % width;
+        int y = i / width;
+
+        if (y % 2) {
+            sensorColour = x % 2 + 2;
         } else {
-            sensorColour = (i % width) % 2;
+            sensorColour = x % 2;
         }
 
         long int bb = *b;
@@ -140,8 +146,18 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
         bb = bb > bA[sensorColour] ? bb - bA[sensorColour] : 0;
 
         if (bb > 0) {
-            long int ceiledBb = (bb < whiteLevel ? bb : whiteLevel);
+            long int ceiledBb = bb < whiteLevel ? bb : whiteLevel;
+
+            if (ceiledBb < whiteLevel) {
+                hP[i] = 0;
+            } else if (hP[i]) {
+                continue;
+            } else {
+                hP[i] = 1;
+            }
+
             sum += ceiledBb;
+
             if (ceiledBb > max) {
                 max = ceiledBb;
                 maxIndex = i;
@@ -154,8 +170,10 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
 
         b += 2;
     }
+
     (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
     (*env)->ReleaseIntArrayElements(env, blackLevelArray, bAAddress, 0);
+    (*env)->ReleaseBooleanArrayElements(env, hotPixels, hPAddress, 0);
     char buffer[100];
     sprintf(buffer, "%ld;%ld;%ld;%ld;%ld", sum / size, blacks, size, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
