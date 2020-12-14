@@ -116,64 +116,79 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                                                                              jint blackThreshold,
                                                                              jint colorFilterArrangement,
                                                                              jint whiteLevel,
-                                                                             jintArray blackLevelArray,
-                                                                             jbooleanArray hotPixels) {
-    long int size = width * height;
+                                                                             jintArray blackLevelArray) {
+    long int size = (width * height) >> 2;
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
     jbyte *address = b;
     jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
     jbyte *bAAddress = bA;
-    jbyte *hP = (*env)->GetBooleanArrayElements(env, hotPixels, JNI_FALSE);
-    jbyte *hPAddress = hP;
     long int sum = 0;
     long int max = 0;
     long int maxIndex = 0;
     long int blacks = 0;
-    char sensorColour;
 
-    for (int i = 0; i < size; ++i) {
-        int x = i % width;
-        int y = i / width;
+    if (colorFilterArrangement < 4) {
+        for (int i = 0; i < height; i += 2) {
+            for (int j = 0; j < width; j += 2) {
+                long red, green, blue;
+                long pixel[] = {
+                        (b[i * width + j] & 0xffff) - bA[0],
+                        (b[i * width + (j + 1)] & 0xffff) - bA[1],
+                        (b[(i + 1) * width + j] & 0xffff) - bA[2],
+                        (b[(i + 1) * width + (j + 1)] & 0xffff) - bA[3]
+                };
 
-        if (y % 2) {
-            sensorColour = x % 2 + 2;
-        } else {
-            sensorColour = x % 2;
-        }
+                switch (colorFilterArrangement) {
+                    case 0: // RGGB
+                        red = pixel[0];
+                        green = (pixel[1] + pixel[2]) >> 1;
+                        blue = pixel[3];
+                        break;
 
-        long int bb = *b;
-        bb = (bb & 0xffff);
-        bb = bb > bA[sensorColour] ? bb - bA[sensorColour] : 0;
+                    case 1: // GRBG
+                        red = pixel[1];
+                        green = (pixel[0] + pixel[3]) >> 1;
+                        blue = pixel[2];
+                        break;
 
-        if (bb > 0) {
-            long int ceiledBb = bb < whiteLevel ? bb : whiteLevel;
+                    case 2: // GBRG
+                        red = pixel[2];
+                        green = (pixel[0] + pixel[3]) >> 1;
+                        blue = pixel[1];
+                        break;
 
-            if (ceiledBb < whiteLevel) {
-                hP[i] = 0;
-            } else if (hP[i]) {
-                continue;
-            } else {
-                hP[i] = 1;
+                    case 3: // BGGR
+                        red = pixel[3];
+                        green = (pixel[1] + pixel[2]) >> 1;
+                        blue = pixel[0];
+                        break;
+                }
+
+                red = red < whiteLevel ? red : whiteLevel;
+                green = green < whiteLevel ? green : whiteLevel;
+                blue = blue < whiteLevel ? blue : whiteLevel;
+
+                // Calculate luma
+                long bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+
+                if (bb > 0) {
+                    sum += bb;
+                    if (bb > max) {
+                        max = bb;
+                        maxIndex = i;
+                    }
+                }
+                if (bb < blackThreshold) {
+                    ++blacks;
+                }
             }
-
-            sum += ceiledBb;
-
-            if (ceiledBb > max) {
-                max = ceiledBb;
-                maxIndex = i;
-            }
         }
-
-        if (bb < blackThreshold) {
-            ++blacks;
-        }
-
-        b += 2;
+    } else {
+        // RGB, monochrome and infrared cameras need to be treated differently
     }
 
     (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
     (*env)->ReleaseIntArrayElements(env, blackLevelArray, bAAddress, 0);
-    (*env)->ReleaseBooleanArrayElements(env, hotPixels, hPAddress, 0);
     char buffer[100];
     sprintf(buffer, "%ld;%ld;%ld;%ld;%ld", sum / size, blacks, size, max, maxIndex);
     jstring result = (*env)->NewStringUTF(env, buffer);
