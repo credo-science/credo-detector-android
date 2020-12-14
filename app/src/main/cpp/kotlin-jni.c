@@ -175,7 +175,7 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                     sum += bb;
                     if (bb > max) {
                         max = bb;
-                        maxIndex = i;
+                        maxIndex = i * width + j;
                     }
                 }
                 if (bb < blackThreshold) {
