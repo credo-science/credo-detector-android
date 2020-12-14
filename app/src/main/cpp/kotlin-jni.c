@@ -117,7 +117,7 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                                                                              jint colorFilterArrangement,
                                                                              jint whiteLevel,
                                                                              jintArray blackLevelArray) {
-    long int size = (width * height) >> 2;
+    long int size;
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
     jbyte *address = b;
     jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
@@ -128,6 +128,8 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
     long int blacks = 0;
 
     if (colorFilterArrangement < 4) {
+        size = (width * height) >> 2;
+
         for (int i = 0; i < height; i += 2) {
             for (int j = 0; j < width; j += 2) {
                 long red, green, blue;
@@ -183,8 +185,35 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                 }
             }
         }
+    } else if (colorFilterArrangement == 4) { // RGB (untested)
+        size = width * height;
+
+        for (int i = 0; i < size; ++i) {
+            long bb = *b;
+            int red = (bb >> 16) & 0xffff;
+            bb += 2;
+            int green = (bb >> 16) & 0xffff;
+            bb += 2;
+            int blue = (bb >> 16) & 0xffff;
+            bb += 2;
+
+            // Calculate luma
+            bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+
+            if (bb > 0) {
+                sum += bb;
+                if (bb > max) {
+                    max = bb;
+                    maxIndex = i;
+                }
+            }
+            if (bb < blackThreshold) {
+                ++blacks;
+            }
+        }
     } else {
-        // RGB, monochrome and infrared cameras need to be treated differently
+        size = width * height;
+        // Monochrome and infrared cameras need to be treated differently
     }
 
     (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
