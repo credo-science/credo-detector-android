@@ -211,9 +211,24 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                 ++blacks;
             }
         }
-    } else {
+    } else { // MONO or NIR (untested)
         size = width * height;
-        // Monochrome and infrared cameras need to be treated differently
+
+        for (int i = 0; i < size; ++i) {
+            long int bb = *(b + i * 2);
+            bb = ((bb >> 16) & 0xffff) - bA[0];
+
+            if (bb > 0) {
+                sum += bb;
+                if (bb > max) {
+                    max = bb;
+                    maxIndex = i;
+                }
+            }
+            if (bb < blackThreshold) {
+                ++blacks;
+            }
+        }
     }
 
     (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
