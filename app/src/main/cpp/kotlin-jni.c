@@ -189,13 +189,12 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
         size = width * height;
 
         for (int i = 0; i < size; ++i) {
-            long bb = *b;
+            long bb = *(b + (i >> 1));
             int red = (bb >> 16) & 0xffff;
-            bb += 2;
+            bb = *(b + (i >> 1) + 2);
             int green = (bb >> 16) & 0xffff;
-            bb += 2;
+            bb = *(b + (i >> 1) + 4);
             int blue = (bb >> 16) & 0xffff;
-            bb += 2;
 
             // Calculate luma
             bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
