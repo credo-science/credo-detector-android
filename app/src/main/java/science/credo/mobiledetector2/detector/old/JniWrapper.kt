@@ -71,7 +71,7 @@ object JniWrapper {
 
             println("debug $stringData")
 
-            val result = OldFrameResult.fromJniStringData(stringData)
+            val result = OldFrameResult.fromJniStringData(stringData, whiteLevel, blackLevelArray)
             isBusy = false
             println("===============calc time ${TrueTimeRx.now().time - time}")
             return@async result

@@ -127,6 +127,9 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
     long int maxIndex = 0;
     long int blacks = 0;
 
+    double maxValue = whiteLevel - (bA[0] + bA[1] + bA[2] + bA[3]) / 4.;
+    blackThreshold = blackThreshold * maxValue / 255;
+
     if (colorFilterArrangement < 4) {
         size = (width * height) >> 2;
 

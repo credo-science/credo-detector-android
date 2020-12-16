@@ -11,15 +11,25 @@ class OldFrameResult(
     val maxIndex: Int
 ) :BaseFrameResult() {
     companion object {
-        fun fromJniStringData(data: String): OldFrameResult {
+        fun fromJniStringData(data: String, whiteLevel: Int?, blackLevelArray: IntArray?): OldFrameResult {
             val parts = data.split(";")
             println("====================== ${parts[1]}")
-            return OldFrameResult(
-                parts[0].toInt(),
-                ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
-                parts[3].toInt(),
-                parts[4].toInt()
-            )
+            if (whiteLevel == null || blackLevelArray == null) {
+                return OldFrameResult(
+                    parts[0].toInt(),
+                    ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
+                    parts[3].toInt(),
+                    parts[4].toInt()
+                )
+            } else {
+                val maxPossible = whiteLevel - blackLevelArray.average()
+                return OldFrameResult(
+                    (parts[0].toInt() / maxPossible * 255.0).toInt(),
+                    ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
+                    parts[3].toInt(),
+                    parts[4].toInt()
+                )
+            }
         }
     }
 
