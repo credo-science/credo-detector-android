@@ -77,13 +77,16 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRGBFrame(JNI
     int max = 0;
     int maxIndex = 0;
     int blacks = 0;
-    for (int i = 0; i < size; ++i) {
-        int bb = *b++;
+    int bb;
 
+    for (int i = 0; i < size; ++i) {
         // Alpha is ignored, it should always be 0xff
-        int red = (bb >> 16) & 0xff;
+        bb = (int) *(b + (i << 2) + 1);
+        int red = (bb >> 8) & 0xff;
+        bb = (int) *(b + (i << 2) + 2);
         int green = (bb >> 8) & 0xff;
-        int blue = bb & 0xff;
+        bb = (int) *(b + (i << 2) + 3);
+        int blue = (bb >> 8) & 0xff;
 
         // Calculate luma
         bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
