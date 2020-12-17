@@ -117,7 +117,7 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                                                                              jint colorFilterArrangement,
                                                                              jint whiteLevel,
                                                                              jintArray blackLevelArray) {
-    long int size;
+    long int size = width * height;
     jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
     jbyte *address = b;
     jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
@@ -126,13 +126,12 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
     long int max = 0;
     long int maxIndex = 0;
     long int blacks = 0;
+    long int bb;
 
     double maxValue = whiteLevel - (bA[0] + bA[1] + bA[2] + bA[3]) / 4.;
     blackThreshold = blackThreshold * maxValue / 255;
 
     if (colorFilterArrangement < 4) {
-        size = (width * height) >> 2;
-
         for (int i = 0; i < height; i += 2) {
             for (int j = 0; j < width; j += 2) {
                 long red, green, blue;
@@ -179,10 +178,10 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                 blue = blue < whiteLevel ? blue : whiteLevel;
 
                 // Calculate luma
-                long bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+                bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
 
                 if (bb > 0) {
-                    sum += bb;
+                    sum += bb << 2;
                     if (bb > max) {
                         max = bb;
                         maxIndex = i * width + j;
@@ -190,14 +189,11 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                 }
 
                 if (bb < blackThreshold) {
-                    ++blacks;
+                    blacks += 4;
                 }
             }
         }
     } else if (colorFilterArrangement == 4) { // RGB (untested)
-        size = width * height;
-        long int bb;
-
         for (int i = 0; i < size; ++i) {
             bb = *((long *)(b + (i * 6)));
             long red = (bb >> 16) & 0xffff;
@@ -221,9 +217,6 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
             }
         }
     } else { // MONO or NIR (untested)
-        size = width * height;
-        long int bb;
-
         for (int i = 0; i < size; ++i) {
             bb = *((long *)(b + (i << 1)));
             bb = ((bb >> 16) & 0xffff) - bA[0];

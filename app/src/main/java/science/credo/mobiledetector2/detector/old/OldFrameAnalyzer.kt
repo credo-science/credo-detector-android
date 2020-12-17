@@ -49,6 +49,18 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
                             endY
                     )
                 }
+                ImageFormat.RAW_SENSOR -> {
+                    raw2rgb(
+                        frame.byteArray,
+                        frame.width,
+                        offsetX,
+                        offsetY,
+                        endX,
+                        endY,
+                        frameResult.black,
+                        frameResult.white
+                    )
+                }
                 else -> {
                     yuv2rgb(
                             frame.byteArray,
@@ -208,6 +220,36 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
             val outHeight = endY - offsetY
 
             return@async Bitmap.createBitmap(og, offsetX, offsetY, outWidth, outHeight)
+        }.await()
+    }
+
+    private suspend fun raw2rgb(
+        raw: ByteArray,
+        width: Int,
+        offsetX: Int,
+        offsetY: Int,
+        endX: Int,
+        endY: Int,
+        black: Int,
+        white: Int
+    ): Bitmap {
+        return GlobalScope.async {
+            val outWidth = endX - offsetX
+            val outHeight = endY - offsetY
+
+            val rgb = IntArray(outWidth * outHeight)
+            var index = 0
+
+            for (y in offsetY until endY) {
+                for (x in offsetX until endX) {
+                    var luma: Int = (raw[(y * width + x) shl 1].toInt() shl 8) + (raw[(y * width + x + 1) shl 1].toInt())
+                    luma = (luma - black) / white * 255
+
+                    rgb[index++] = -0x1000000 + (luma shl 16) + (luma shl 8) + luma
+                }
+            }
+
+            return@async Bitmap.createBitmap(rgb, outWidth, outHeight, Bitmap.Config.ARGB_8888)
         }.await()
     }
 }
