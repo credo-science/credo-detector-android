@@ -111,6 +111,141 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRGBFrame(JNI
 }
 
 JNIEXPORT jstring JNICALL
+Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFrame(JNIEnv *env,
+                                                                             jobject thiz,
+                                                                             jbyteArray bytes,
+                                                                             jint width,
+                                                                             jint height,
+                                                                             jint blackThreshold,
+                                                                             jint colorFilterArrangement,
+                                                                             jint whiteLevel,
+                                                                             jintArray blackLevelArray) {
+    long int size = width * height;
+    jbyte *b = (*env)->GetByteArrayElements(env, bytes, JNI_FALSE);
+    jbyte *address = b;
+    jbyte *bA = (*env)->GetIntArrayElements(env, blackLevelArray, JNI_FALSE);
+    jbyte *bAAddress = bA;
+    long int sum = 0;
+    long int max = 0;
+    long int maxIndex = 0;
+    long int blacks = 0;
+    long int bb;
+
+    double maxValue = whiteLevel - (bA[0] + bA[1] + bA[2] + bA[3]) / 4.;
+    blackThreshold = blackThreshold * maxValue / 255;
+
+    if (colorFilterArrangement < 4) {
+        for (int i = 0; i < height; i += 2) {
+            for (int j = 0; j < width; j += 2) {
+                long red, green, blue;
+                long pixel[] = {
+                        *((long *)(b + ((i * width + j) << 1))),
+                        *((long *)(b + ((i * width + (j + 1)) << 1))),
+                        *((long *)(b + (((i + 1) * width + j) << 1))),
+                        *((long *)(b + (((i + 1) * width + (j + 1)) << 1)))
+                };
+
+                for (int k = 0; k < 4; ++k) {
+                    pixel[k] = ((pixel[k] >> 16) & 0xffff);
+                    pixel[k] = pixel[k] - bA[k];
+                }
+
+                switch (colorFilterArrangement) {
+                    case 0: // RGGB
+                        red = pixel[0];
+                        green = (pixel[1] + pixel[2]) >> 1;
+                        blue = pixel[3];
+                        break;
+
+                    case 1: // GRBG
+                        red = pixel[1];
+                        green = (pixel[0] + pixel[3]) >> 1;
+                        blue = pixel[2];
+                        break;
+
+                    case 2: // GBRG
+                        red = pixel[2];
+                        green = (pixel[0] + pixel[3]) >> 1;
+                        blue = pixel[1];
+                        break;
+
+                    case 3: // BGGR
+                        red = pixel[3];
+                        green = (pixel[1] + pixel[2]) >> 1;
+                        blue = pixel[0];
+                        break;
+                }
+
+                red = red < whiteLevel ? red : whiteLevel;
+                green = green < whiteLevel ? green : whiteLevel;
+                blue = blue < whiteLevel ? blue : whiteLevel;
+
+                // Calculate luma
+                bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+
+                if (bb > 0) {
+                    sum += bb << 2;
+                    if (bb > max) {
+                        max = bb;
+                        maxIndex = i * width + j;
+                    }
+                }
+
+                if (bb < blackThreshold) {
+                    blacks += 4;
+                }
+            }
+        }
+    } else if (colorFilterArrangement == 4) { // RGB (untested)
+        for (int i = 0; i < size; ++i) {
+            bb = *((long *)(b + (i * 6)));
+            long red = (bb >> 16) & 0xffff;
+            bb = *((long *)(b + (i * 6) + 2));
+            long green = (bb >> 16) & 0xffff;
+            bb = *((long *)(b + (i * 6) + 4));
+            long blue = (bb >> 16) & 0xffff;
+
+            // Calculate luma
+            bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+
+            if (bb > 0) {
+                sum += bb;
+                if (bb > max) {
+                    max = bb;
+                    maxIndex = i;
+                }
+            }
+            if (bb < blackThreshold) {
+                ++blacks;
+            }
+        }
+    } else { // MONO or NIR (untested)
+        for (int i = 0; i < size; ++i) {
+            bb = *((long *)(b + (i << 1)));
+            bb = ((bb >> 16) & 0xffff) - bA[0];
+
+            if (bb > 0) {
+                sum += bb;
+                if (bb > max) {
+                    max = bb;
+                    maxIndex = i;
+                }
+            }
+            if (bb < blackThreshold) {
+                ++blacks;
+            }
+        }
+    }
+
+    (*env)->ReleaseByteArrayElements(env, bytes, address, 0);
+    (*env)->ReleaseIntArrayElements(env, blackLevelArray, bAAddress, 0);
+    char buffer[100];
+    sprintf(buffer, "%ld;%ld;%ld;%ld;%ld", sum / size, blacks, size, max, maxIndex);
+    jstring result = (*env)->NewStringUTF(env, buffer);
+    return result;
+}
+
+JNIEXPORT jstring JNICALL
 Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawFrame(JNIEnv *env,
                                                                             jobject thiz,
                                                                             jbyteArray bytes,
