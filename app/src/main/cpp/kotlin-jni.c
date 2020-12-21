@@ -25,6 +25,10 @@
  *
  *   app/src/main/java/com/example/kotlin/KotlinJni.kt
  */
+
+#define RGBToLuma(red, green, blue)  (0.2126f * (red) + 0.7152f * (green) + 0.0722f * (blue))
+#define coordsToIndex(width, i, j)  ((i) * (width) + (j))
+
 JNIEXPORT jstring JNICALL
 Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateOldFrame(JNIEnv *env,
                                                                          jobject thiz,
@@ -88,8 +92,7 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRGBFrame(JNI
         bb = (int) *(b + (i << 2) + 3);
         int blue = (bb >> 8) & 0xff;
 
-        // Calculate luma
-        bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+        bb = RGBToLuma(red, green, blue);
 
         if (bb > 0) {
             sum += bb;
@@ -131,18 +134,17 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
     long int blacks = 0;
     long int bb;
 
-    double maxValue = whiteLevel - (bA[0] + bA[1] + bA[2] + bA[3]) / 4.;
-    blackThreshold = blackThreshold * maxValue / 255;
+    blackThreshold = blackThreshold * (whiteLevel - (bA[0] + bA[1] + bA[2] + bA[3]) / 4.) / 255;
 
     if (colorFilterArrangement < 4) {
         for (int i = 0; i < height; i += 2) {
             for (int j = 0; j < width; j += 2) {
                 long red, green, blue;
                 long pixel[] = {
-                        *((long *)(b + ((i * width + j) << 1))),
-                        *((long *)(b + ((i * width + (j + 1)) << 1))),
-                        *((long *)(b + (((i + 1) * width + j) << 1))),
-                        *((long *)(b + (((i + 1) * width + (j + 1)) << 1)))
+                        *((long *)(b + (coordsToIndex(width, i, j) << 1))),
+                        *((long *)(b + (coordsToIndex(width, i, j + 1) << 1))),
+                        *((long *)(b + (coordsToIndex(width, i + 1, j) << 1))),
+                        *((long *)(b + (coordsToIndex(width, i + 1, j + 1) << 1)))
                 };
 
                 for (int k = 0; k < 4; ++k) {
@@ -180,14 +182,13 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                 green = green < whiteLevel ? green : whiteLevel;
                 blue = blue < whiteLevel ? blue : whiteLevel;
 
-                // Calculate luma
-                bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+                bb = RGBToLuma(red, green, blue);
 
                 if (bb > 0) {
                     sum += bb << 2;
                     if (bb > max) {
                         max = bb;
-                        maxIndex = i * width + j;
+                        maxIndex = coordsToIndex(width, i, j);
                     }
                 }
 
@@ -205,8 +206,7 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
             bb = *((long *)(b + (i * 6) + 4));
             long blue = (bb >> 16) & 0xffff;
 
-            // Calculate luma
-            bb = (0.2126f * red + 0.7152f * green + 0.0722f * blue);
+            bb = RGBToLuma(red, green, blue);
 
             if (bb > 0) {
                 sum += bb;
