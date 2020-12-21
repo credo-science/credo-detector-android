@@ -28,6 +28,7 @@
 
 #define RGBToLuma(red, green, blue)  (0.2126f * (red) + 0.7152f * (green) + 0.0722f * (blue))
 #define coordsToIndex(width, i, j)  ((i) * (width) + (j))
+#define min(a, b)  ((a) < (b) ? (a) : (b))
 
 JNIEXPORT jstring JNICALL
 Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateOldFrame(JNIEnv *env,
@@ -178,9 +179,9 @@ Java_science_credo_mobiledetector2_detector_old_JniWrapper_calculateRawSensorFra
                         break;
                 }
 
-                red = red < whiteLevel ? red : whiteLevel;
-                green = green < whiteLevel ? green : whiteLevel;
-                blue = blue < whiteLevel ? blue : whiteLevel;
+                red = min(red, whiteLevel);
+                green = min(green, whiteLevel);
+                blue = min(blue, whiteLevel);
 
                 bb = RGBToLuma(red, green, blue);
 
