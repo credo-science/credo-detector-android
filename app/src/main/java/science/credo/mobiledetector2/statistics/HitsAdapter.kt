@@ -20,10 +20,10 @@ import java.util.*
 
 class HitsAdapter(
     val context: Context,
-    val items: Array<Hit>,
     val onClickListener: OnClickListener,
     val itemHeight: Int
 ) : RecyclerView.Adapter<HitsAdapter.VH>() {
+    private var items: Array<Hit> = emptyArray<Hit>()
     val inflater = LayoutInflater.from(context)
 
     val sdf = SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS")
@@ -45,6 +45,10 @@ class HitsAdapter(
         }
 
 
+    }
+
+    fun updateItems(itemArray: Array<Hit>) {
+        this.items = itemArray
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
