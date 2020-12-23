@@ -11,7 +11,7 @@ class DetectorStopEvent(
     val timeInSeconds: Int,
     val detectionCount: Int,
     settings: BaseSettings,
-    calibrationResult: BaseCalibrationResult
+    calibrationResult: BaseCalibrationResult?
 ) : DetectorStateEvent(context, settings, calibrationResult) {
 
     override val eventName: EventName

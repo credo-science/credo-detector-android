@@ -13,7 +13,11 @@ data class Frame(
     val height: Int,
     val imageFormat: Int,
     val exposureTime: Long,
-    val timestamp: Long)
+    val timestamp: Long,
+    val colorFilterArrangement: Int?,
+    val whiteLevel: Int?,
+    val blackLevelArray: IntArray?
+)
 
 {
     suspend fun saveToStorage(context: Context) {

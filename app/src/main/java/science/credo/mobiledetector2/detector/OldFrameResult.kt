@@ -8,18 +8,33 @@ class OldFrameResult(
     val avg: Int,
     val blacksPercentage: Float,
     val max: Int,
-    val maxIndex: Int
+    val maxIndex: Int,
+    val black: Int = 0,
+    val white: Int = 255
 ) :BaseFrameResult() {
     companion object {
-        fun fromJniStringData(data: String): OldFrameResult {
+        fun fromJniStringData(data: String, whiteLevel: Int?, blackLevelArray: IntArray?): OldFrameResult {
             val parts = data.split(";")
             println("====================== ${parts[1]}")
-            return OldFrameResult(
-                parts[0].toInt(),
-                ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
-                parts[3].toInt(),
-                parts[4].toInt()
-            )
+            if (whiteLevel == null || blackLevelArray == null) {
+                return OldFrameResult(
+                    parts[0].toInt(),
+                    ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
+                    parts[3].toInt(),
+                    parts[4].toInt()
+                )
+            } else {
+                val black = blackLevelArray.average()
+                val white = whiteLevel - black
+                return OldFrameResult(
+                    (parts[0].toInt() / white * 255.0).toInt(),
+                    ((parts[1].toLong() * 10000L)/parts[2].toInt())/100f,
+                    parts[3].toInt(),
+                    parts[4].toInt(),
+                    black.toInt(),
+                    white.toInt()
+                )
+            }
         }
     }
 

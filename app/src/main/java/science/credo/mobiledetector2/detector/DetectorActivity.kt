@@ -133,9 +133,8 @@ class DetectorActivity : AppCompatActivity() {
             timeInSeconds,
             detectionCount ?: 0,
             settings!!,
-            calibrationResult!!
+            calibrationResult
         ).send()
-
     }
 
 }

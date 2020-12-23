@@ -1,6 +1,8 @@
 package science.credo.mobiledetector2.detector.old
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ImageFormat
 import android.util.Base64
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -37,15 +39,40 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
             val endX = min(frame.width, centerX + margin)
             val endY = min(frame.height, centerY + margin)
 
-            val cropBitmap = yuv2rgb(
-                frame.byteArray,
-                frame.width,
-                frame.height,
-                offsetX,
-                offsetY,
-                endX,
-                endY
-            )
+            val cropBitmap = when(frame.imageFormat) {
+                ImageFormat.JPEG -> {
+                    cropJPEG(
+                            frame.byteArray,
+                            offsetX,
+                            offsetY,
+                            endX,
+                            endY
+                    )
+                }
+                ImageFormat.RAW_SENSOR -> {
+                    raw2rgb(
+                        frame.byteArray,
+                        frame.width,
+                        offsetX,
+                        offsetY,
+                        endX,
+                        endY,
+                        frameResult.black,
+                        frameResult.white
+                    )
+                }
+                else -> {
+                    yuv2rgb(
+                            frame.byteArray,
+                            frame.width,
+                            frame.height,
+                            offsetX,
+                            offsetY,
+                            endX,
+                            endY
+                    )
+                }
+            }
             val cropDataPNG = bitmap2png(cropBitmap)
             val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
 
@@ -180,5 +207,49 @@ object OldFrameAnalyzer : BaseFrameAnalyzer() {
 
     }
 
+    private suspend fun cropJPEG(
+            byteArray: ByteArray,
+            offsetX: Int,
+            offsetY: Int,
+            endX: Int,
+            endY: Int
+    ): Bitmap {
+        return GlobalScope.async {
+            val og = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+            val outWidth = endX - offsetX
+            val outHeight = endY - offsetY
 
+            return@async Bitmap.createBitmap(og, offsetX, offsetY, outWidth, outHeight)
+        }.await()
+    }
+
+    private suspend fun raw2rgb(
+        raw: ByteArray,
+        width: Int,
+        offsetX: Int,
+        offsetY: Int,
+        endX: Int,
+        endY: Int,
+        black: Int,
+        white: Int
+    ): Bitmap {
+        return GlobalScope.async {
+            val outWidth = endX - offsetX
+            val outHeight = endY - offsetY
+
+            val rgb = IntArray(outWidth * outHeight)
+            var index = 0
+
+            for (y in offsetY until endY) {
+                for (x in offsetX until endX) {
+                    var luma: Int = (raw[(y * width + x) shl 1].toInt() shl 8) + (raw[(y * width + x + 1) shl 1].toInt())
+                    luma = (luma - black) / white * 255
+
+                    rgb[index++] = -0x1000000 + (luma shl 16) + (luma shl 8) + luma
+                }
+            }
+
+            return@async Bitmap.createBitmap(rgb, outWidth, outHeight, Bitmap.Config.ARGB_8888)
+        }.await()
+    }
 }

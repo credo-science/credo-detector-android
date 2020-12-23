@@ -21,6 +21,10 @@ class Camera2PostConfigurationInterface(
     private val TAG = Camera2PostConfigurationInterface::class.java.simpleName
     var lastFrameTimestamp: Long = 0
 
+    private var colorFilterArrangement: Int? = null
+    private var whiteLevel: Int? = null
+    private var blackLevelArray: IntArray? = IntArray(4)
+
     override fun onImageAvailable(p0: ImageReader?) {
         val timestamp = SynchronizedTimeUtils.getTimestamp()
         val exposure = timestamp - lastFrameTimestamp
@@ -43,20 +47,29 @@ class Camera2PostConfigurationInterface(
 //        println("==============on Image Available ${c.get(Calendar.HOUR_OF_DAY)}:${c.get(Calendar.MINUTE)}:${c.get(Calendar.SECOND)}.${c.get(Calendar.MILLISECOND)}     ||| $timestamp")
 
         val imageFormat = p0.imageFormat
-        val buffer1 = image.planes[0].buffer
-        var data: ByteArray? = null
-        data = ByteArray(buffer1.remaining())
-        buffer1.get(data)
-        val frame = Frame(
-            data,
-            image.width,
-            image.height,
-            imageFormat,
-            exposure,
-            timestamp
-        )
 
-        callback.onFrameReceived(frame)
+        if (image.planes.isEmpty()) {
+            println("Image can't be processed, number of planes is zero")
+        } else {
+            val buffer1 = image.planes[0].buffer
+            var data: ByteArray? = null
+            data = ByteArray(buffer1.remaining())
+            buffer1.get(data)
+            val frame = Frame(
+                    data,
+                    image.width,
+                    image.height,
+                    imageFormat,
+                    exposure,
+                    timestamp,
+                    this.colorFilterArrangement,
+                    this.whiteLevel,
+                    this.blackLevelArray
+            )
+
+            callback.onFrameReceived(frame)
+        }
+
         image.close()
     }
 
@@ -72,6 +85,11 @@ class Camera2PostConfigurationInterface(
         val cameraManager: CameraManager =
             context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
         val cameraId = settings.cameraId
+
+        val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+        characteristics.get(CameraCharacteristics.SENSOR_BLACK_LEVEL_PATTERN)!!.copyTo(this.blackLevelArray, 0)
+        this.whiteLevel = characteristics.get(CameraCharacteristics.SENSOR_INFO_WHITE_LEVEL)
+        this.colorFilterArrangement = characteristics.get(CameraCharacteristics.SENSOR_INFO_COLOR_FILTER_ARRANGEMENT)
 
         try {
             cameraManager.openCamera(cameraId, object : CameraDevice.StateCallback() {

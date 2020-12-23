@@ -40,20 +40,22 @@ class StatisticsActivity : AppCompatActivity(), HitsAdapter.OnClickListener {
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_toolbar_back)
         UiUtils.initScreenDimensions(this)
 
+        viewProgress.visibility = View.VISIBLE
+
+        rvDetections.layoutManager = GridLayoutManager(this@StatisticsActivity, SPAN_COUNT)
+        val adapter = HitsAdapter(
+            this@StatisticsActivity,
+            this@StatisticsActivity,
+            (UiUtils.getScreenWidth() - UiUtils.dpToPx(20)) / SPAN_COUNT
+        )
+        rvDetections.adapter = adapter
+        viewProgress.visibility = View.GONE
+
         GlobalScope.launch(Dispatchers.Main) {
-            viewProgress.visibility = View.VISIBLE
             detections = load()
             println("====== ${detections.size}")
-            rvDetections.layoutManager = GridLayoutManager(this@StatisticsActivity, SPAN_COUNT)
-            rvDetections.adapter = HitsAdapter(
-                this@StatisticsActivity,
-                detections,
-                this@StatisticsActivity,
-                (UiUtils.getScreenWidth() - UiUtils.dpToPx(20)) / SPAN_COUNT
-            )
-            viewProgress.visibility = View.GONE
+            adapter.updateItems(detections)
         }
-
     }
 
 

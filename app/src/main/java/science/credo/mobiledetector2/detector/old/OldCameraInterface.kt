@@ -133,7 +133,10 @@ class OldCameraInterface(
                     settings.height,
                     settings.imageFormat,
                     exposure.toLong(),
-                    ts
+                    ts,
+                    null,
+                    null,
+                    null
                 )
             )
 
