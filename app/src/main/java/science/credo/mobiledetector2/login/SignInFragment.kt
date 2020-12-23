@@ -7,9 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.mobsandgeeks.saripaar.ValidationError
+import com.mobsandgeeks.saripaar.Validator
+import com.mobsandgeeks.saripaar.annotation.NotEmpty
+import com.mobsandgeeks.saripaar.annotation.Password
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import science.credo.mobiledetector2.App
@@ -19,7 +24,7 @@ import science.credo.mobiledetector2.network.RestInterface
 import science.credo.mobiledetector2.utils.Prefs
 import science.credo.mobiledetector2.utils.UiUtils
 
-class SignInFragment private constructor() : Fragment() {
+class SignInFragment private constructor() : Fragment(), Validator.ValidationListener {
 
     companion object {
 
@@ -30,13 +35,15 @@ class SignInFragment private constructor() : Fragment() {
 
     }
 
-
+    @Password
     lateinit var etPassword: EditText
     lateinit var btSignIn: TextView
     lateinit var btForgotPassword: TextView
+    @NotEmpty
     lateinit var etLogin: EditText
     lateinit var viewProgress: View
 
+    private lateinit var validatior: Validator
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,10 +67,7 @@ class SignInFragment private constructor() : Fragment() {
 
         btSignIn.setOnClickListener {
             UiUtils.hideSoftKeyboard(activity!!)
-            signIn(
-                etLogin.text.toString(),
-                etPassword.text.toString()
-            )
+            validatior.validate()
         }
 
         btForgotPassword.setOnClickListener {
@@ -77,7 +81,26 @@ class SignInFragment private constructor() : Fragment() {
 
         }
 
+        validatior = Validator(this)
+        validatior.setValidationListener(this)
+
         return v
+    }
+
+    override fun onValidationFailed(errors: MutableList<ValidationError>?) {
+        GlobalScope.launch(Dispatchers.Main) {
+            for (error in errors ?: emptyList<ValidationError>()) {
+                if (error.view is EditText) {
+                    (error.view as EditText).error = error.getCollatedErrorMessage(context!!)
+                } else if (error.view is CheckBox) {
+                    UiUtils.showAlertDialog(context!!, error.getCollatedErrorMessage(context!!))
+                }
+            }
+        }
+    }
+
+    override fun onValidationSucceeded() {
+        signIn()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -85,7 +108,9 @@ class SignInFragment private constructor() : Fragment() {
     }
 
 
-    fun signIn(login: String, password: String) {
+    private fun signIn() {
+        val login = etLogin.text.toString()
+        val password = etPassword.text.toString()
 
         GlobalScope.launch(Dispatchers.Main) {
             viewProgress.visibility = View.VISIBLE
