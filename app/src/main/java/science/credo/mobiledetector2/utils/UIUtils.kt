@@ -48,7 +48,9 @@ object UiUtils {
     }
 
     fun showAlertDialog(context: Context, msg: String): AlertDialog {
-        Looper.prepare()
+        if (Looper.myLooper() == null) {
+            Looper.prepare()
+        }
 
         val alertDialog = AlertDialog.Builder(context)
             .setTitle(context.getString(R.string.app_name))
