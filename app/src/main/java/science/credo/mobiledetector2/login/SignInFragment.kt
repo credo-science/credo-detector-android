@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import kotlinx.coroutines.*
+import org.json.JSONObject
 import science.credo.mobiledetector2.App
 import science.credo.mobiledetector2.main.MainActivity
 import science.credo.mobiledetector2.R
@@ -98,7 +99,13 @@ class SignInFragment private constructor() : Fragment() {
                 startActivity(MainActivity.intent(context!!))
             } else {
 //                startActivity(MainActivity.intent(context!!))
-                UiUtils.showAlertDialog(context!!, result.getResponse())
+                val code = result.getCode()
+                if (code == 400) {
+                    val response = JSONObject(result.getResponse())
+                    UiUtils.showAlertDialog(context!!, response.get("message").toString())
+                } else {
+                    UiUtils.showAlertDialog(context!!, result.getResponse())
+                }
             }
         }
 
