@@ -157,6 +157,7 @@ class RegisterActivity : AppCompatActivity() {
         Toast.makeText(baseContext, message ?: getText(R.string.register_toast_register_failed), Toast.LENGTH_LONG).show()
         val btn_signup = findViewById<Button>(R.id.signup_button)
         btn_signup.setEnabled(true)
+        name_input.setError(message)
         email_input.setError(message)
     }
 
