@@ -38,7 +38,7 @@ class ConfigurationInfo (context: Context) {
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val cropSize: Int
-        get() = parseIntPref(mContext, "crop", 60)
+        get() = parseIntPref(mContext, "crop", 128)
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     var maxFactor: Int
