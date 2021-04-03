@@ -143,6 +143,8 @@
     <string name="login_input_password_validation">at least 4 alphanumeric characters</string>
     <string name="login_toast_login_failed">Login failed</string>
     <string name="login_message_login_pending">Authenticating&#8230;</string>
+    <string name="login_message_login_failed">Invalid login/e-mail or password. Do you enter login? Not display name? Please enter e-mail.</string>
+    <string name="login_message_connection_failed">No connection. WiFi or mobile data works?</string>
     <string name="login_message_validation_failed">Validation failed</string>
 
     <!-- Register Activity -->

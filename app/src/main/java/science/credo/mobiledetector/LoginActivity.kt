@@ -1,6 +1,7 @@
 package science.credo.mobiledetector
 
 import android.app.Activity
+import android.app.Application
 import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
@@ -65,7 +66,7 @@ class LoginActivity : AppCompatActivity() {
         Log.d(TAG, "Login")
 
         if (!validate()) {
-            onLoginFailed(getString(R.string.login_message_validation_failed))
+            onLoginFailed(0, getString(R.string.login_message_validation_failed))
             return
         }
 
@@ -120,7 +121,7 @@ class LoginActivity : AppCompatActivity() {
                 uiThread {
                     if (!isClosed) {
                         progressDialog.dismiss()
-                        onLoginFailed(e.error)
+                        onLoginFailed(e.code, e.error)
                     }
                 }
             } catch (e: Exception) {
@@ -128,7 +129,7 @@ class LoginActivity : AppCompatActivity() {
                 uiThread {
                     if (!isClosed) {
                         progressDialog.dismiss()
-                        onLoginFailed(e.message)
+                        onLoginFailed(-1, e.message)
                     }
                 }
             }
@@ -149,10 +150,12 @@ class LoginActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun onLoginFailed(message: String?) {
-        Toast.makeText(baseContext, message ?: getText(R.string.login_toast_login_failed), Toast.LENGTH_LONG).show()
+    private fun onLoginFailed(code: Int, message: String?) {
+        val msg = translateMessage(baseContext, message, getText(R.string.login_toast_login_failed));
+
+        Toast.makeText(baseContext, msg ?: getText(R.string.login_toast_login_failed), Toast.LENGTH_LONG).show()
         login_button.isEnabled = true
-        email_input.error = message
+        error_text.text = msg
     }
 
     private fun validate(): Boolean {
@@ -167,9 +170,11 @@ class LoginActivity : AppCompatActivity() {
                 valid = false
             } else {
                 email_input.setError(null)
+                error_text.text = ""
             }
         } else {
             email_input.error = null
+            error_text.text = ""
         }
 
         if (passwordStr.isEmpty() || password_input.length() < 4) {

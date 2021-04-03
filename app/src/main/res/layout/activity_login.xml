@@ -45,6 +45,15 @@
                 android:hint="@string/login_input_password"/>
         </android.support.design.widget.TextInputLayout>
 
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ff0000"
+            android:textAlignment="center"
+            android:layout_gravity="center_horizontal"
+            android:text="" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/login_button"
             android:layout_width="fill_parent"

@@ -152,6 +152,8 @@
     <string name="login_input_password_validation">hasło musi mieć co najmniej 4 znaki</string>
     <string name="login_toast_login_failed">Logowanie nieudane</string>
     <string name="login_message_login_pending">Logowanie&#8230;</string>
+    <string name="login_message_login_failed">Zły login/e-mail lub hasło. Na pewno wpisujesz login? Nie nazwę wyświetlaną? Najlepiej wpisać e-mail.</string>
+    <string name="login_message_connection_failed">Brak połączenia. Czy masz włączone WiFi lub dane komórkowe?</string>
     <string name="login_message_validation_failed">Wprowadzono niepoprawne dane</string>
 
     <!-- Register Activity -->
