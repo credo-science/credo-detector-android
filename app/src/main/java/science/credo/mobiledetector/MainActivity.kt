@@ -29,9 +29,6 @@ import android.provider.Settings
 import kotlinx.android.synthetic.main.nav_header_status.*
 import kotlinx.android.synthetic.main.nav_header_status.view.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.imageView
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.view
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
 

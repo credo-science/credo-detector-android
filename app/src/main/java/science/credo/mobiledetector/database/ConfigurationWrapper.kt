@@ -19,7 +19,7 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
 
     var dbSchema : String
         get() {
-            return preferences.getString("db_schema", "")
+            return preferences.getString("db_schema", "")!!
         }
         set(v) {
             setString("db_schema", v)

@@ -95,7 +95,7 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
             p.setSummary(listPref.getEntry())
         }
         if (p is EditTextPreference) {
-            val v = sharedPreferences.getString(key,"")
+            val v = sharedPreferences.getString(key,"")!!
             Log.d(TAG, "updatePrefSummary ${p.key} " + p.title.toString() + " : " + (p as EditTextPreference).text )
             val editTextPref = p as EditTextPreference
             if (initPass) summary[p] = p.summary.toString()

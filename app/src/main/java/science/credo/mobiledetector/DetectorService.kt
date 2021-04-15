@@ -71,7 +71,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         filter.addAction(Intent.ACTION_BATTERY_CHANGED)
         filter.addAction(Intent.ACTION_POWER_CONNECTED)
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        batteryState = PowerConnectionReceiver.parseIntent(registerReceiver(mReceiver, filter))
+        val intent: Intent = registerReceiver(mReceiver, filter)!!
+        batteryState = PowerConnectionReceiver.parseIntent(intent)
 
         mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
         val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)

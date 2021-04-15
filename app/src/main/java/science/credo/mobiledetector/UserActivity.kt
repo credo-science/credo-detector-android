@@ -7,7 +7,6 @@ import android.widget.Toast
 
 import kotlinx.android.synthetic.main.activity_user.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.info.IdentityInfo
@@ -36,7 +35,7 @@ class UserActivity : Activity() {
         team_input.setText(uiw.team)
         //email_input.setText(uiw.email)
 
-        save_button.onClick {
+        save_button.setOnClickListener {
             save()
         }
     }

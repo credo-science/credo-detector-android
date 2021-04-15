@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_launcher.*
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
 import android.content.DialogInterface
@@ -52,30 +51,30 @@ class LauncherActivity : AppCompatActivity() {
         setContentView(R.layout.activity_launcher)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
 
-        login_button.onClick {
+        login_button.setOnClickListener {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
             activate_email_message.visibility = View.GONE
         }
 
-        register_button.onClick {
+        register_button.setOnClickListener {
             startActivityForResult(Intent(this@LauncherActivity, RegisterActivity::class.java), REQUEST_SIGN)
         }
 
-        remember_password_button.onClick {
+        remember_password_button.setOnClickListener {
             val endpoint = ConfigurationWrapper(this@LauncherActivity).endpoint.replace("/api/v2", "")
             val href = "$endpoint/web/password_reset/"
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
             startActivity(browserIntent)
         }
 
-        debug_mode_off_button.onClick {
+        debug_mode_off_button.setOnClickListener {
             ConfigurationWrapper(this@LauncherActivity).endpoint = ConfigurationWrapper.defaultEndpoint
             debugClicksCount = 0
             endpoint_layout.visibility = View.GONE
             debug_mode_off_button.visibility = View.GONE
         }
 
-        logo_image.onClick {
+        logo_image.setOnClickListener {
             debugClicksCount++
             if (debugClicksCount >= debugClicksToActivate) {
                 endpoint_layout.visibility = View.VISIBLE

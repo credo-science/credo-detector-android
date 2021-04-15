@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_register.*
 import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.info.IdentityInfo
@@ -33,11 +32,11 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(R.layout.activity_register)
         info = IdentityInfo.getDefault(this@RegisterActivity).getIdentityData()
 
-        signup_button.onClick{
+        signup_button.setOnClickListener {
             signup()
         }
 
-        view_rules_button.onClick {
+        view_rules_button.setOnClickListener {
             startActivity(Intent(this@RegisterActivity, RulesActivity::class.java))
         }
 

@@ -84,7 +84,7 @@ class ConfigurationInfo (context: Context) {
     val isCharging: Boolean
         get() {
             val ifilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            val batteryStatus = mContext.registerReceiver(null, ifilter)
+            val batteryStatus = mContext.registerReceiver(null, ifilter)!!
             val status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
             Log.d(TAG, "BATTERY_STATUS_CHARGING: ${status == BatteryManager.BATTERY_STATUS_CHARGING}")
             Log.d(TAG, "BATTERY_STATUS_FULL: ${status == BatteryManager.BATTERY_STATUS_FULL}")
@@ -95,7 +95,7 @@ class ConfigurationInfo (context: Context) {
     val isPlugged: Boolean
         get() {
             val ifilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-            val batteryStatus = mContext.registerReceiver(null, ifilter)
+            val batteryStatus = mContext.registerReceiver(null, ifilter)!!
             val status = batteryStatus.getIntExtra(BatteryManager.EXTRA_PLUGGED, -1)
             return status > 0
         }
@@ -127,7 +127,7 @@ class ConfigurationInfo (context: Context) {
     val isWifiConnected: Boolean
         get() {
             return try {
-                val activeNetwork: NetworkInfo = mConnectManager.activeNetworkInfo
+                val activeNetwork: NetworkInfo = mConnectManager.activeNetworkInfo!!
                 activeNetwork.type == ConnectivityManager.TYPE_WIFI
             } catch (e: IllegalStateException) {
                 false
@@ -164,7 +164,7 @@ class ConfigurationInfo (context: Context) {
     companion object {
         fun parseIntPref(context: Context, name: String, defVal: Int) : Int {
             return PreferenceManager.getDefaultSharedPreferences(context)
-                    .getString(name, "").toIntOrNull() ?: return defVal
+                    .getString(name, "")!!.toIntOrNull() ?: return defVal
         }
     }
 }

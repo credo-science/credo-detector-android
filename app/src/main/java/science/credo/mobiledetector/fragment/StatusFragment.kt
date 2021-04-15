@@ -17,8 +17,6 @@ import kotlinx.android.synthetic.main.fragment_status.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.support.v4.startActivity
 import science.credo.mobiledetector.BlankActivity
 import science.credo.mobiledetector.CredoApplication
 

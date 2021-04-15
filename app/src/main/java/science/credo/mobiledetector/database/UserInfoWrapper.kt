@@ -6,7 +6,7 @@ import android.preference.PreferenceManager
 class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
     var login : String
         get() {
-            return preferences.getString("user_login", "")
+            return preferences.getString("user_login", "")!!
         }
         set(v) {
             setString("user_login", v)
@@ -14,7 +14,7 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
 
     var email : String
         get() {
-            return preferences.getString("user_email", "")
+            return preferences.getString("user_email", "")!!
         }
         set(v) {
             setString("user_email", v)
@@ -22,7 +22,7 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
 
     var displayName : String
         get() {
-            return preferences.getString("display_name", login)
+            return preferences.getString("display_name", login)!!
         }
         set(v) {
             setString("display_name", v)
@@ -30,7 +30,7 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
 
     var password : String
         get() {
-            return preferences.getString("password", "")
+            return preferences.getString("password", "")!!
         }
         set(v) {
             setString("password", v)
@@ -38,7 +38,7 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
 
     var team : String
         get() {
-            return preferences.getString("user_team", "")
+            return preferences.getString("user_team", "")!!
         }
         set(v) {
             setString("user_team", v)
@@ -46,7 +46,7 @@ class UserInfoWrapper(context: Context) : SharedPreferencesWrapper(context) {
 
     var token : String
         get() {
-            return preferences.getString("user_token", "")
+            return preferences.getString("user_token", "")!!
         }
         set(v) {
             setString("user_token", v)
