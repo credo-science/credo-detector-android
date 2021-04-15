@@ -3,11 +3,10 @@ package science.credo.mobiledetector
 
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.preference.ListPreference
+import android.preference.PreferenceActivity
+import android.preference.PreferenceManager
 import android.util.Log
-import android.view.MenuItem
-import java.util.prefs.Preferences
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener
-import android.preference.*
 
 
 /**
@@ -41,6 +40,68 @@ class SettingsActivity : EnchPreferenceActivity() {
         val prefHash = pref.all
         for (key in pref.all) {
             Log.d(TAG, "${key.toString()}")
+        }
+
+        val ca = application as CredoApplication
+        val cs = ca.cameraSettings
+        if (cs != null) {
+            val listCameraNumber = findPreference("camera_number") as ListPreference
+            val cameraEntries = arrayOfNulls<CharSequence>(cs.numberOfCameras)
+            val cameraEntryValues = arrayOfNulls<CharSequence>(cs.numberOfCameras)
+            for (i in 0 until cs.numberOfCameras){
+                cameraEntryValues[i] = "$i"
+                when (i) {
+                    0 -> {
+                        cameraEntries[i] = "Back camera"
+                    }
+                    1 -> {
+                        cameraEntries[i] = "Front camera"
+                    }
+                    else -> {
+                        cameraEntries[i] = "Other camera no $i"
+                    }
+                }
+            }
+            listCameraNumber.entries = cameraEntries
+            listCameraNumber.entryValues = cameraEntryValues
+            listCameraNumber.setDefaultValue("0")
+
+            updateFrameSizes()
+        }
+    }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+        if (key == "camera_number") {
+            updateFrameSizes()
+        }
+        super.onSharedPreferenceChanged(sharedPreferences, key)
+    }
+
+    private fun updateFrameSizes() {
+        val ca = application as CredoApplication
+        val cs = ca.cameraSettings
+        if (cs != null) {
+
+            val listCameraNumber = findPreference("camera_number") as ListPreference
+            val cameraNumber =  listCameraNumber.value
+
+            if (cameraNumber != null) {
+                val sizes = cs.cameras[cameraNumber.toInt()].sizes
+                val listFrameSize = findPreference("frame_size") as ListPreference
+                val frameSizeEntries = arrayOfNulls<CharSequence>(sizes.size)
+                val frameSizeValues = arrayOfNulls<CharSequence>(sizes.size)
+
+                for (i in 0 until sizes.size) {
+                    val w = sizes[i].width
+                    val h = sizes[i].height
+                    frameSizeEntries[i] = "$w x $h"
+                    frameSizeValues[i] = "$i"
+                }
+
+                listFrameSize.entries = frameSizeEntries
+                listFrameSize.entryValues = frameSizeValues
+                listFrameSize.setDefaultValue("0")
+            }
         }
     }
 }

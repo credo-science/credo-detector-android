@@ -29,6 +29,18 @@
             android:title="@string/pref_full_frame_title"
             android:summary="@string/pref_full_frame_summary" />
 
+        <ListPreference
+            android:key="camera_number"
+            android:title="Camera number"
+            android:dialogTitle="Camera number"
+            android:summary="Select camera back, front or other" />
+
+        <ListPreference
+            android:key="frame_size"
+            android:title="Image size"
+            android:dialogTitle="Image size"
+            android:summary="Select camera resolution" />
+
         <EditTextPreference
             android:key="level"
             android:title="@string/pref_register_level_title"
