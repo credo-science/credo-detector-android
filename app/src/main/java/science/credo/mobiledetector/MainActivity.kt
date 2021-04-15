@@ -133,6 +133,10 @@ class MainActivity : AppCompatActivity(),
         }
 
         toggle.syncState()
+
+        if (credoApplication().cameraSettings == null) {
+            credoApplication().turnOnDetection(CredoApplication.DetectorMode.CHECK)
+        }
     }
 
     override fun onBackPressed() {

@@ -5,17 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.multidex.MultiDex
-import org.acra.ACRA
-import org.acra.annotation.AcraCore
-import org.acra.annotation.AcraHttpSender
-import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import science.credo.mobiledetector.database.ConfigurationWrapper
-import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.info.ConfigurationInfo
+import science.credo.mobiledetector.info.CameraSettings
+import science.credo.mobiledetector.services.HardwareCheckService
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AcraCore(buildConfigClass = BuildConfig::class)
@@ -23,7 +20,13 @@ import java.util.concurrent.atomic.AtomicBoolean
         httpMethod = HttpSender.Method.POST)
 class CredoApplication : Application() {
 
+    enum class DetectorMode(val value: Int) {
+        OFF(0), CHECK(1), CALIBRATION(2), DETECTION(3)
+    }
+
+    var cameraSettings: CameraSettings? = null
     val detectorRunning = AtomicBoolean(false)
+    var detectorMode: DetectorMode = DetectorMode.OFF
     var detectorState: DetectorStateEvent = DetectorStateEvent(false)
 
     protected override fun attachBaseContext(base: Context) {
@@ -44,15 +47,21 @@ class CredoApplication : Application() {
         }
     }
 
-    fun turnOnDetection() {
+    fun turnOnDetection(mode: DetectorMode = DetectorMode.DETECTION) {
         if (detectorRunning.compareAndSet(false, true)) {
-            startService(Intent(this, DetectorService::class.java))
+            detectorMode = DetectorMode.CHECK
+            if (mode == DetectorMode.CHECK) {
+                startService(Intent(this, HardwareCheckService::class.java))
+            } else if (mode == DetectorMode.DETECTION || mode == DetectorMode.CALIBRATION) {
+                startService(Intent(this, DetectorService::class.java))
+            }
         }
     }
 
     fun turnOffDetection() {
         stopService(Intent(this, DetectorService::class.java))
         detectorRunning.set(false)
+        detectorMode = DetectorMode.OFF
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

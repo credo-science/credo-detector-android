@@ -45,6 +45,11 @@
             android:enabled="true"
             android:exported="true" />
 
+        <service
+            android:name=".services.HardwareCheckService"
+            android:enabled="true"
+            android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
