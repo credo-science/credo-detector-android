@@ -62,7 +62,20 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
     protected fun updatePrefSummary(p: Preference) {
         if (p is ListPreference) {
             val listPref = p as ListPreference
-            p.setSummary(listPref.getEntry())
+            val entry = listPref.getEntry()
+            p.setSummary(entry)
+
+            /*when (p.titleRes) {
+                R.string.pref_camera_number_title -> {
+                    p.setSummary(getString(R.string.pref_camera_number_summary, entry))
+                }
+                R.string.pref_frame_size_title -> {
+                    p.setSummary(getString(R.string.pref_frame_size_summary, entry))
+                }
+                else -> {
+                    p.setSummary(entry)
+                }
+            }*/
         }
         if (p is EditTextPreference) {
 
@@ -92,7 +105,20 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
 
         if (p is ListPreference) {
             val listPref = p as ListPreference
-            p.setSummary(listPref.getEntry())
+            val entry = listPref.getEntry()
+            p.setSummary(entry)
+
+            /*when (p.titleRes) {
+                R.string.pref_camera_number_title -> {
+                    p.setSummary(getString(R.string.pref_camera_number_summary, entry))
+                }
+                R.string.pref_frame_size_title -> {
+                    p.setSummary(getString(R.string.pref_frame_size_summary, entry))
+                }
+                else -> {
+                    p.setSummary(entry)
+                }
+            }*/
         }
         if (p is EditTextPreference) {
             val v = sharedPreferences.getString(key,"")!!

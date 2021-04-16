@@ -33,8 +33,6 @@ class SettingsActivity : EnchPreferenceActivity() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences,
                 false)
         setupActionBar()
-        initSummary(preferenceScreen)
-
 
         val pref = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         val prefHash = pref.all
@@ -52,13 +50,13 @@ class SettingsActivity : EnchPreferenceActivity() {
                 cameraEntryValues[i] = "$i"
                 when (i) {
                     0 -> {
-                        cameraEntries[i] = "Back camera"
+                        cameraEntries[i] = getString(R.string.pref_camera_number_entity_back)
                     }
                     1 -> {
-                        cameraEntries[i] = "Front camera"
+                        cameraEntries[i] = getString(R.string.pref_camera_number_entity_front)
                     }
                     else -> {
-                        cameraEntries[i] = "Other camera no $i"
+                        cameraEntries[i] = getString(R.string.pref_camera_number_entity_other, i)
                     }
                 }
             }
@@ -68,6 +66,8 @@ class SettingsActivity : EnchPreferenceActivity() {
 
             updateFrameSizes()
         }
+
+        initSummary(preferenceScreen)
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

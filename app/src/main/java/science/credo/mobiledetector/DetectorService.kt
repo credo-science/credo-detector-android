@@ -16,15 +16,14 @@ import android.util.Log
 import android.view.SurfaceView
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.detection.CameraSurfaceHolder
 import science.credo.mobiledetector.events.BatteryEvent
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.PowerConnectionReceiver
-import java.util.concurrent.Executors
 
 
 class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeListener, SensorEventListener {
@@ -143,6 +142,8 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     }
 
     fun startCamera() {
+        val cw = ConfigurationWrapper(this)
+
         Log.d(TAG, "startCamera: " + count)
         if (!checkConditionsAndEmitState()) {
             Log.d(TAG, "startCamera: start not allowed")
@@ -156,7 +157,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         Log.d(TAG, "startCamera: starting camera")
         try {
             state.cameraOn = false
-            mCamera = Camera.open()
+            mCamera = Camera.open(cw.cameraNumber)
             state.cameraOn = true
         } catch (e: RuntimeException) {
             if (CredoApplication.isEmulator()) {
@@ -173,7 +174,7 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         parameters.setRecordingHint(true)
         val sizes = parameters.supportedPreviewSizes
         //val index = sizes.size/2 // ~medium resolution
-        val index = if (ConfigurationInfo(this).isFullFrame) 0 else sizes.size/2
+        val index = cw.frameSize // if (ConfigurationInfo(this).isFullFrame) 0 else sizes.size/2
         for (size in sizes) {
             Log.d(TAG, "width: ${size.width}, height: ${size.height}")
         }

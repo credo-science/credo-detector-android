@@ -23,23 +23,15 @@
             android:numeric="integer"
             android:summary="@string/pref_register_temperature_summary"/>
 
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="full_frame"
-            android:title="@string/pref_full_frame_title"
-            android:summary="@string/pref_full_frame_summary" />
-
         <ListPreference
             android:key="camera_number"
-            android:title="Camera number"
-            android:dialogTitle="Camera number"
-            android:summary="Select camera back, front or other" />
+            android:title="@string/pref_camera_number_title"
+            android:dialogTitle="Camera number" />
 
         <ListPreference
             android:key="frame_size"
-            android:title="Image size"
-            android:dialogTitle="Image size"
-            android:summary="Select camera resolution" />
+            android:title="@string/pref_frame_size_title"
+            android:dialogTitle="Image size" />
 
         <EditTextPreference
             android:key="level"

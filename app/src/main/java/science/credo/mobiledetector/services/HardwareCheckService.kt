@@ -7,8 +7,11 @@ import android.content.pm.PackageManager
 import android.hardware.Camera
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
 import science.credo.mobiledetector.CredoApplication
 import science.credo.mobiledetector.DetectorService
+import science.credo.mobiledetector.R
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.info.CameraSettings
 
 class HardwareCheckService : Service() {
@@ -30,6 +33,24 @@ class HardwareCheckService : Service() {
         ca.cameraSettings = cs
 
         Log.d(DetectorService.TAG,"Done of camera checking service...")
+
+        // Set default configuration when not set
+        val cw = ConfigurationWrapper(this)
+        if (cw.preferences.getString("frame_size", "-1") == "-1") {
+            cw.cameraNumber = 0
+            val sizes = cs.cameras[0].sizes
+            if (cw.preferences.getBoolean("full_frame", false)) {
+                if (sizes[0].height >= sizes.last().height) {
+                    cw.frameSize = 0
+                } else {
+                    cw.frameSize = sizes.size - 1
+                }
+            } else {
+                cw.frameSize = sizes.size / 2
+            }
+        }
+
+        Toast.makeText(this, getString(R.string.main_toast_initialized, cs.numberOfCameras), Toast.LENGTH_LONG).show()
 
         return START_NOT_STICKY
     }

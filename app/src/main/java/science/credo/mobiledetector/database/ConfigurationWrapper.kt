@@ -41,6 +41,22 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
             setBoolean("auto_run", v)
         }
 
+    var cameraNumber: Int
+        get() {
+            return preferences.getString("camera_number", "0")!!.toInt()
+        }
+        set(v) {
+            setString("camera_number", "$v")
+        }
+
+    var frameSize: Int
+        get() {
+            return preferences.getString("frame_size", "0")!!.toInt()
+        }
+        set(v) {
+            setString("frame_size", "$v")
+        }
+
     companion object {
         val defaultEndpoint = "https://api.credo.science/api/v2"
     }

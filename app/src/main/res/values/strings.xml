@@ -101,6 +101,16 @@
     <string name="pref_register_temperature_title">Max temperature [°C]</string>
     <string name="pref_register_temperature_summary">Stop detection when temperature is greater than max temperature, default: 60°C</string>
 
+    <string name="pref_camera_number_title">Used camera</string>
+    <string name="pref_camera_number_summary">Camera used to cosmic-ray detection:<br/>%1$s</string>
+
+    <string name="pref_camera_number_entity_back">Back camera (main camera)</string>
+    <string name="pref_camera_number_entity_front">Front camera (selfie camera)</string>
+    <string name="pref_camera_number_entity_other">Other camera no. %1$d</string>
+
+    <string name="pref_frame_size_title">Video resolution</string>
+    <string name="pref_frame_size_summary">Camera resolution used to capture image and looking for cosmic-ray hits:<br/>%1$s</string>
+
     <string name="pref_full_frame_title">Use max camera resolution</string>
     <string name="pref_full_frame_summary">Max camera resolution (usually FullHD) may be more drain battery and heating</string>
 
@@ -177,6 +187,7 @@
     <string name="main_action_settings">Settings</string>
     <string name="main_action_account">Account</string>
     <string name="main_action_logout">Logout</string>
+    <string name="main_toast_initialized">You have %1$d cameras</string>
 
     <!-- User account Activity -->
     <string name="user_title_activity">User account settings</string>
