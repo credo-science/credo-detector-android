@@ -5,6 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.multidex.MultiDex
+import org.acra.ACRA
+import org.acra.annotation.AcraCore
+import org.acra.annotation.AcraHttpSender
+import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
