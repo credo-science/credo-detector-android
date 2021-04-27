@@ -122,7 +122,7 @@
     <string name="settings_factors_name">Parametri algoritma detekcije</string>
 
     <string name="pref_register_crop_title">Crop size [px]</string>
-    <string name="pref_register_crop_summary">Veličina sloja slike koji prema zadanim postavkama sadrži otkriveni učinak: 20</string>
+    <string name="pref_register_crop_summary">Veličina sloja slike koji prema zadanim postavkama sadrži otkriveni učinak: 128</string>
 
     <string name="pref_register_max_title">Max factor [0–255]</string>
     <string name="pref_register_max_summary">Zanemari okviri za slike čija je najsvjetlija piksela je tamnija od maks. faktora, dosjetlivo: 120</string>

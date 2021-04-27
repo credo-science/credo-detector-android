@@ -99,7 +99,7 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
     <string name="settings_factors_name">Algorithm factors</string>
 
     <string name="pref_register_crop_title">Crop size [px]</string>
-    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 20</string>
+    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 128</string>
 
     <string name="pref_register_max_title">Max factor [0–255]</string>
     <string name="pref_register_max_summary">Ignore frame when any pixel is more bright than max factor, default: 120</string>
