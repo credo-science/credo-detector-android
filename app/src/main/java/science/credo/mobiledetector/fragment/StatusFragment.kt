@@ -23,6 +23,7 @@ import science.credo.mobiledetector.CredoApplication
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.UserInfoWrapper
+import science.credo.mobiledetector.detection.CameraPreviewCallbackNative
 import science.credo.mobiledetector.events.BatteryEvent
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.events.StatsEvent
@@ -171,6 +172,9 @@ class StatusFragment : Fragment() {
         level_text.text = "%d%%".format(batteryState.batteryPct)
         orientation_text.text = "%.2f°".format(detectorState.orientation)
         acc_text.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
+
+        benchmark_text.text = "%dms".format(CameraPreviewCallbackNative.benchmark)
+        fps_text.text = "%d".format(CameraPreviewCallbackNative.fps)
     }
 
     override fun onResume() {

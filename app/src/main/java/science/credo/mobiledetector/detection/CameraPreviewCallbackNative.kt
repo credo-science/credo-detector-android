@@ -18,6 +18,7 @@ import science.credo.mobiledetector.network.ServerInterface
 import science.credo.mobiledetector.network.messages.DetectionRequest
 import java.io.ByteArrayOutputStream
 import java.util.*
+import java.util.concurrent.atomic.AtomicInteger
 import kotlin.math.max
 import kotlin.math.min
 
@@ -28,15 +29,31 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
     private val mServerInterface = ServerInterface.getDefault(mContext)
     private val mLocationInfo: LocationInfo = LocationInfo.getInstance(mContext)
 
+
     companion object {
         val TAG = "CameraPreviewClbkNative"
         val aDataSize = 24
         var detectionStatsManager: DetectionStatsManager? = null
+
+        private var benchmarkSumMs: AtomicInteger = AtomicInteger(0)
+        private var benchmarkCount: AtomicInteger = AtomicInteger(0)
+        var benchmark: Int = 0
+
+        private var lastFpsSecond: Long = 0
+        private var lastFps: Int = 0
+        var fps: Int = 0
     }
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
 
         val timestamp = System.currentTimeMillis()
+        if (timestamp / 1000 != lastFpsSecond) {
+            lastFpsSecond = timestamp / 1000
+            fps = lastFps
+            lastFps = 0
+        } else {
+            lastFps++
+        }
 
         if (detectionStatsManager == null) {
             detectionStatsManager = DetectionStatsManager()
@@ -59,7 +76,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         val analysisData = LongArray(aDataSize)
 
         doAsync {
-
+            val benchmarkStart = System.currentTimeMillis()
 
             var loop = -1
             detectionStatsManager!!.frameAchieved(width, height)
@@ -139,6 +156,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                     }
                     break
                 }
+
             }
 
             uiThread {
@@ -163,6 +181,15 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                     Log.w(TAG, "Can't sent hit to server", e)
                 }
                 mDataManager.closeDb()
+            }
+
+            var bc = benchmarkCount.addAndGet(1)
+            var bs = benchmarkSumMs.addAndGet((System.currentTimeMillis() - benchmarkStart).toInt())
+
+            if (bc == 100) {
+                benchmark = bs / 100;
+                benchmarkCount = AtomicInteger(0)
+                benchmarkSumMs = AtomicInteger(0)
             }
         }
         doAutoCallibrationIfNeed()

@@ -39,7 +39,10 @@ class DetectionAdapter(
 
         val hit = holder.mItem!!.hit
 
-        holder.mHit.setImageBitmap(Bitmap.createScaledBitmap(img, img.width * scaleFactor, img.height * scaleFactor, false))
+        try {
+            holder.mHit.setImageBitmap(Bitmap.createScaledBitmap(img, img.width * scaleFactor, img.height * scaleFactor, false))
+        } catch (t: Throwable) {}
+
         holder.mSizeView.text = holder.mSizeView.context.getString(R.string.detections_item_size, img.width, img.height)
         holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, hit.mX, hit.mY)
         holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, hit.mMaxValue)

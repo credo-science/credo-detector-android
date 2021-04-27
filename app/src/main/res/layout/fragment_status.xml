@@ -226,7 +226,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:columnCount="4"
-            android:rowCount="6"
+            android:rowCount="7"
             android:layout_gravity="center"
             android:visibility="gone">
 
@@ -463,6 +463,40 @@
 
             <TextView
                 android:id="@+id/acc_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_benchmark"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/benchmark_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_fps"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/fps_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

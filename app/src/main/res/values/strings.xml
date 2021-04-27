@@ -247,6 +247,8 @@
     <string name="status_fragment_acc">Acc.:</string>
     <string name="status_fragment_hit">Hit:</string>
     <string name="status_fragment_black">Blacks:</string>
+    <string name="status_fragment_benchmark">Parsing:</string>
+    <string name="status_fragment_fps">FPS:</string>
 
     <!-- Preview activity -->
     <string name="preview_title_activity">Detections (last %1$d days)</string>
