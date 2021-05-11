@@ -45,11 +45,11 @@ class DetectionAdapter(
 
         holder.mSizeView.text = holder.mSizeView.context.getString(R.string.detections_item_size, img.width, img.height)
         holder.mPositionView.text = holder.mSizeView.context.getString(R.string.detections_item_pos, hit.mX, hit.mY)
-        holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, hit.mMaxValue)
-        holder.mAverageView.text = holder.mSizeView.context.getString(R.string.detections_item_average, hit.mAverage)
-        holder.mBlacksView.text = holder.mSizeView.context.getString(R.string.detections_item_blacks, hit.mBlacks, hit.mBlackThreshold)
-        holder.mAccView.text = holder.mSizeView.context.getString(R.string.detections_item_acc, hit.mAx, hit.mAy, hit.mAz)
-        holder.mOrientationView.text = holder.mSizeView.context.getString(R.string.detections_item_orientation, hit.mOrientation)
+        holder.mMaxView.text = holder.mSizeView.context.getString(R.string.detections_item_max, hit.mMetadata.mMaxValue)
+        holder.mAverageView.text = holder.mSizeView.context.getString(R.string.detections_item_average, hit.mMetadata.mAverage)
+        holder.mBlacksView.text = holder.mSizeView.context.getString(R.string.detections_item_blacks, hit.mMetadata.mBlacks, hit.mMetadata.mBlackThreshold)
+        holder.mAccView.text = holder.mSizeView.context.getString(R.string.detections_item_acc, hit.mMetadata.mAx, hit.mMetadata.mAy, hit.mMetadata.mAz)
+        holder.mOrientationView.text = holder.mSizeView.context.getString(R.string.detections_item_orientation, hit.mMetadata.mOrientation)
 
         holder.mView.setOnClickListener {
             mListener?.onListFragmentInteraction(holder.mItem)

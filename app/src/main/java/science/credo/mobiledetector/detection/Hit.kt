@@ -4,7 +4,36 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import ninja.sakib.pultusorm.annotations.AutoIncrement
+import ninja.sakib.pultusorm.annotations.Ignore
 import ninja.sakib.pultusorm.annotations.PrimaryKey
+
+class Metadata(
+    maxValue: Int,
+    average: Double,
+    blacks: Double,
+    blackThreshold: Int,
+    ax: Float,
+    ay: Float,
+    az: Float,
+    orientation: Float,
+    temperature: Int
+) {
+    val mMaxValue: Int = maxValue
+    val mAverage: Double = average
+    val mBlacks: Double = blacks
+    val mBlackThreshold: Int = blackThreshold
+    val mAx: Float = ax
+    val mAy: Float = ay
+    val mAz: Float = az
+    val mOrientation: Float = orientation
+    val mTemperature: Int = temperature
+
+    constructor() : this(0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
+
+    override fun toString(): String {
+        return "{\"max\": $mMaxValue, \"average\": $mAverage, \"blacks\": $mBlacks, \"black_threshold\": $mBlackThreshold, \"ax\": $mAx, \"ay\": $mAy, \"az\": $mAz, \"orientation\": $mOrientation, \"temperature\": $mTemperature}"
+    }
+}
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -22,15 +51,7 @@ class Hit (frameContent: String,
            height: Int,
            x: Int,
            y: Int,
-           maxValue: Int,
-           average: Double,
-           blacks: Double,
-           blackThreshold: Int,
-           ax: Float,
-           ay: Float,
-           az: Float,
-           orientation: Float,
-           temperature: Int
+           metadata: Metadata
            ){
     @PrimaryKey
     @AutoIncrement
@@ -58,24 +79,13 @@ class Hit (frameContent: String,
     val mX: Int = x
     @JsonProperty("y")
     val mY: Int = y
-    @JsonProperty("max")
-    val mMaxValue: Int = maxValue
-    @JsonProperty("average")
-    val mAverage: Double = average
-    @JsonProperty("blacks")
-    val mBlacks: Double = blacks
-    @JsonProperty("black_threshold")
-    val mBlackThreshold: Int = blackThreshold
-    @JsonProperty("ax")
-    val mAx: Float = ax
-    @JsonProperty("ay")
-    val mAy: Float = ay
-    @JsonProperty("az")
-    val mAz: Float = az
-    @JsonProperty("orientation")
-    val mOrientation: Float = orientation
-    @JsonProperty("temperature")
-    val mTemperature: Int = temperature
+
+    @JsonProperty("metadata")
+    val metadataJson = metadata.toString()
+
+    @JsonIgnore
+    @Ignore
+    val mMetadata = metadata
 
     @JsonIgnore
     var toSent = true
@@ -86,5 +96,5 @@ class Hit (frameContent: String,
     @JsonIgnore
     val detectionTimestamp = (System.currentTimeMillis() / 10000L).toInt() // PultusORM less condition walkaround
 
-    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
+    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, science.credo.mobiledetector.detection.Metadata()) {}
 }
