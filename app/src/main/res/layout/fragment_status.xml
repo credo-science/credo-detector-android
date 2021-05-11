@@ -505,6 +505,40 @@
                 android:layout_marginEnd="16dp"
                 android:textSize="8pt"
                 android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_temperature"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_crop"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/crop_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginEnd="16dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
         </GridLayout>
 
         <Button

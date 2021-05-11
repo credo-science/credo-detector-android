@@ -175,6 +175,8 @@ class StatusFragment : Fragment() {
 
         benchmark_text.text = "%dms".format(CameraPreviewCallbackNative.benchmark)
         fps_text.text = "%d".format(CameraPreviewCallbackNative.fps)
+        temperature.text = "%d".format(batteryState.temperature)
+        crop_size.text = "%d".format(ConfigurationInfo(context!!).cropSize)
     }
 
     override fun onResume() {
