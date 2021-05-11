@@ -247,6 +247,8 @@ class MainActivity : AppCompatActivity(),
         mSettingsFlag = false;
         disableDoze()
 
+        LauncherActivity.hasAllPermissionsGranted(this)
+
         doAsync {
             val db = DataManager.getDefault(this@MainActivity)
             val si = ServerInterface.getDefault(this@MainActivity)

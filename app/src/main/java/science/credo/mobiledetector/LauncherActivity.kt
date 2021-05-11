@@ -2,6 +2,7 @@ package science.credo.mobiledetector
 
 import android.Manifest
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -41,6 +42,33 @@ class LauncherActivity : AppCompatActivity() {
 
         private val REQUEST_PERMISSION_PHONE_STATE = 1
         private val ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 5469
+
+        /**
+         * Tells whether all the necessary permissions are granted to this app.
+         *
+         * @return True if all the required permissions are granted.
+         */
+        fun hasAllPermissionsGranted(context: AppCompatActivity): Boolean {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                for (permission in CAMERA_PERMISSIONS) {
+                    if (ActivityCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                        return false
+                    }
+                }
+
+                val packageName = context.packageName
+
+                // todo: found way to not need overlay in Android >=P
+                if (!Settings.canDrawOverlays(context)) {
+                    val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                        Uri.parse("package:$packageName"))
+                    context.startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE)
+                }
+
+            }
+
+            return true
+        }
     }
 
     var debugClicksCount = 0
@@ -97,7 +125,7 @@ class LauncherActivity : AppCompatActivity() {
 
     override fun onPostResume() {
         super.onPostResume()
-        if (hasAllPermissionsGranted()) {
+        if (hasAllPermissionsGranted(this)) {
             launchSpecificActivity()
             debugClicksCount = 0
             endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
@@ -145,31 +173,6 @@ class LauncherActivity : AppCompatActivity() {
         } else {
             ActivityCompat.requestPermissions(this, CAMERA_PERMISSIONS, REQUEST_PERMISSION_PHONE_STATE)
         }
-    }
-
-    /**
-     * Tells whether all the necessary permissions are granted to this app.
-     *
-     * @return True if all the required permissions are granted.
-     */
-    private fun hasAllPermissionsGranted(): Boolean {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            for (permission in CAMERA_PERMISSIONS) {
-                if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                    return false
-                }
-            }
-
-            // todo: found way to not need overlay in Android >=P
-            if (!Settings.canDrawOverlays(this)) {
-                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:$packageName"))
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE)
-            }
-
-        }
-
-        return true
     }
 
     /**
