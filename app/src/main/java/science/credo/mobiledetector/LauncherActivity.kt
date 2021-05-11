@@ -160,6 +160,7 @@ class LauncherActivity : AppCompatActivity() {
                 }
             }
 
+            // todo: found way to not need overlay in Android >=P
             if (!Settings.canDrawOverlays(this)) {
                 val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:$packageName"))
