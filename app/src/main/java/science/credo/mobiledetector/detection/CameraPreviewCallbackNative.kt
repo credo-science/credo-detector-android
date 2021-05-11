@@ -12,10 +12,8 @@ import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.DetectionStateWrapper
 import science.credo.mobiledetector.info.ConfigurationInfo
-import science.credo.mobiledetector.info.IdentityInfo
 import science.credo.mobiledetector.info.LocationInfo
 import science.credo.mobiledetector.network.ServerInterface
-import science.credo.mobiledetector.network.messages.DetectionRequest
 import java.io.ByteArrayOutputStream
 import java.util.*
 import java.util.concurrent.atomic.AtomicInteger
