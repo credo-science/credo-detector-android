@@ -81,6 +81,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
             var loop = -1
             detectionStatsManager!!.frameAchieved(width, height)
             val hits = LinkedList<Hit>()
+            var original: ByteArray? = null
 
             while (loop < MAX_HITS_ONE_FRAME) {
                 loop++
@@ -133,7 +134,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                             offsetY = height - config.cropSize
                         }
 
-                        val cropBitmap = ImageConversion.yuv2rgb(data, width, height, offsetX, offsetY, endX, endY)
+                        // lazy copy original for mark extracted hits
+                        if (original == null) {
+                            original = data.clone()
+                        }
+
+                        val cropBitmap = ImageConversion.yuv2rgb(original, width, height, offsetX, offsetY, endX, endY)
                         detectionStatsManager!!.hitRegistered()
                         val cropDataPNG = bitmap2png(cropBitmap)
                         val dataString = Base64.encodeToString(cropDataPNG, Base64.DEFAULT)
@@ -163,7 +169,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                         )
                         hits.add(hit)
 
-                        fillHited(data, width, height, maxIndex.toInt(), config.cropSize)
+                        fillHited(data, width, offsetX, offsetY, endX, endY)
                     } else {
                         break
                     }
@@ -253,7 +259,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         var zeros: Int = 0
         //var histogram = ByteArray(256)
 
-        for (i in 0..(width*height - 1)) {
+        for (i in 0 until width*height) {
             val byte = data[i].toPositiveInt()
             //histogram[byte]++
             if (byte > 0) {
@@ -277,36 +283,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
         return pngData.toByteArray()
     }
 
-    // FIXME: limit to ~5
-    fun fillHited(data: ByteArray, width: Int, height: Int, maxPosition: Int, sideLength: Int){
-
-        //Point (maxX,maxY) is center(brightest pixel) of hit
-        val maxX = maxPosition.rem(width)
-        val maxY = maxPosition / width
-
-        //Point (x,y) is upper-left corner of square with we want to fill
-        var x = maxX - sideLength / 2
-        var y = maxY - sideLength / 2
-
-
-        when {
-            x < 0 -> x = 0
-            x >= width - sideLength -> x = width - sideLength
-        }
-
-        when {
-        //We want to make sure that upper-left point of square is at least sideLength from bottom and right side of image
-            y < 0 -> y = 0
-            y >= height - sideLength -> y = height - sideLength
-        }
-
+    fun fillHited(data: ByteArray, width: Int, offsetX: Int, offsetY: Int, endX: Int, endY: Int){
         //Loops iterates from upper-left point sideLength times
-        for (i in y..y + sideLength - 1) {
-            for (j in x..x + sideLength - 1) {
+        for (i in offsetY until endY) {
+            for (j in offsetX until endX) {
                 data[i * width + j] = 0
             }
         }
-
     }
-
 }
