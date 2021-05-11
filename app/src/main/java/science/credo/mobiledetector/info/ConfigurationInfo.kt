@@ -38,7 +38,7 @@ class ConfigurationInfo (context: Context) {
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     val cropSize: Int
-        get() = parseIntPref(mContext, "crop2", 128) // in 1.2 changed default crop to 128, and change perf name to rest in previous installations
+        get() = parseIntPref(mContext, "crop2", 64) // in 1.2 changed default crop to 64, and change perf name to rest in previous installations
 
     @Deprecated("TODO: move config to ConfiguraionWrapper")
     var maxFactor: Int

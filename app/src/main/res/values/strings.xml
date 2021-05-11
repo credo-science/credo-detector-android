@@ -81,7 +81,7 @@
     <string name="pref_auto_run_summary">Run detection after start app automatically</string>
 
     <string name="pref_register_crop_title">Crop size [px]</string>
-    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 128</string>
+    <string name="pref_register_crop_summary">Size of margin of image that will be cut from camera frame, default: 64</string>
 
     <string name="pref_auto_calibration_title">Auto Calibration</string>
     <string name="pref_auto_calibration_summary">Perform auto calibration</string>

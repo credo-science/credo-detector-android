@@ -81,7 +81,7 @@
     <string name="pref_auto_run_summary">Ejecute la detección automáticamente después de iniciar la aplicación</string>
 
     <string name="pref_register_crop_title">Tamaño de recorte [px]</string>
-    <string name="pref_register_crop_summary">Tamaño del margen de la imagen que se cortará del fotograma de la cámara, predeterminado: 128</string>
+    <string name="pref_register_crop_summary">Tamaño del margen de la imagen que se cortará del fotograma de la cámara, predeterminado: 64</string>
 
     <string name="pref_auto_calibration_title">Calibración automática</string>
     <string name="pref_auto_calibration_summary">Realizar autocalibración</string>
