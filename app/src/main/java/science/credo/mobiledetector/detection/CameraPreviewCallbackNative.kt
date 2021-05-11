@@ -107,14 +107,31 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
 
                     if (brightestPixelCondition) {
 
-                        val centerX = maxIndex.rem(width).toInt()
-                        val centerY = (maxIndex / width).toInt()
+                        val centerX = maxIndex.rem(width)
+                        val centerY = (maxIndex / width)
 
                         val margin = config.cropSize / 2
-                        val offsetX = max(0, centerX - margin)
-                        val offsetY = max(0, centerY - margin)
-                        val endX = min(width, centerX + margin)
-                        val endY = min(height, centerY + margin)
+                        var offsetX = max(0, centerX - margin)
+                        var offsetY = max(0, centerY - margin)
+                        var endX = min(width, centerX + margin)
+                        var endY = min(height, centerY + margin)
+
+                        // form hits on edges move the crop window from over edge to edge
+                        if (offsetX == 0) {
+                            endX = config.cropSize
+                        }
+
+                        if (endX == width) {
+                            offsetX = width - config.cropSize
+                        }
+
+                        if (offsetY == 0) {
+                            endY = config.cropSize
+                        }
+
+                        if (endY == height) {
+                            offsetY = height - config.cropSize
+                        }
 
                         val cropBitmap = ImageConversion.yuv2rgb(data, width, height, offsetX, offsetY, endX, endY)
                         detectionStatsManager!!.hitRegistered()
