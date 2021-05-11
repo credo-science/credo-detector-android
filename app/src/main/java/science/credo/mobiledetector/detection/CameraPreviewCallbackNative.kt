@@ -155,7 +155,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 height,
                                 centerX,
                                 centerY,
-                                Metadata(max,
+                                max,
                                 average,
                                 blacks,
                                 config.blackFactor,
@@ -163,7 +163,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 sensorsState.accY,
                                 sensorsState.accZ,
                                 sensorsState.orientation,
-                                sensorsState.temperature)
+                                sensorsState.temperature
                         )
                         hits.add(hit)
 
