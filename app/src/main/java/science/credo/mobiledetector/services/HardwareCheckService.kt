@@ -38,15 +38,12 @@ class HardwareCheckService : Service() {
         val cw = ConfigurationWrapper(this)
         if (cw.preferences.getString("frame_size", "-1") == "-1") {
             cw.cameraNumber = 0
-            val sizes = cs.cameras[0].sizes
+            cs.cameras[0].computeMaxHalfRes()
+
             if (cw.preferences.getBoolean("full_frame", false)) {
-                if (sizes[0].height >= sizes.last().height) {
-                    cw.frameSize = 0
-                } else {
-                    cw.frameSize = sizes.size - 1
-                }
+                cw.frameSize = cs.cameras[0].maxRes ?: 0
             } else {
-                cw.frameSize = sizes.size / 2
+                cw.frameSize = cs.cameras[0].halfRes ?: 0
             }
         }
 
