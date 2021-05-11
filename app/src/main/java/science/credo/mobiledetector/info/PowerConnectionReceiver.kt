@@ -29,6 +29,8 @@ class PowerConnectionReceiver : BroadcastReceiver() {
 
             val level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
             val scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            battery.temperature = intent.getIntExtra(BatteryManager.EXTRA_TEMPERATURE, 0) / 10
+            Log.d(TAG, "temperature: ${battery.temperature}")
 
             battery.batteryPct = level * 100 / scale
 

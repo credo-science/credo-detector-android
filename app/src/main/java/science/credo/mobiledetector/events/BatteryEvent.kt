@@ -7,4 +7,5 @@ data class BatteryEvent(
         var usbCharge : Boolean = true,
         var acCharge : Boolean = true,
         var plugged : Boolean = true,
-        var batteryPct : Int = 0)
+        var batteryPct : Int = 0,
+        var temperature : Int = 0)

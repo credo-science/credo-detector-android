@@ -74,10 +74,10 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         batteryState = PowerConnectionReceiver.parseIntent(intent)
 
         mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+        //val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
         val accelerometerSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         val orientationSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ORIENTATION)
-        mSensorManager?.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
+        //mSensorManager?.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
         mSensorManager?.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL)
         mSensorManager?.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
@@ -241,11 +241,13 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
             state.accX = event.values[0]
             state.accY = event.values[1]
             state.accZ = event.values[2]
-        } else if (event?.sensor?.type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
+        /*} else if (event?.sensor?.type == Sensor.TYPE_AMBIENT_TEMPERATURE) {
             state.temperature = event.values[0].toInt()
+            Log.d(TAG,"TYPE_AMBIENT_TEMPERATURE: ${state.temperature}")*/
         } else if (event?.sensor?.type == Sensor.TYPE_ORIENTATION) {
             state.orientation = event.values[0]
         }
+
         //startStopOnConditionChange()
         //emitStateChange()
     }
@@ -253,6 +255,9 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     @Subscribe
     fun onBatteryEvent(batteryEvent: BatteryEvent) {
         batteryState = batteryEvent
+        if (batteryState.temperature != 0) {
+            state.temperature = batteryState.temperature
+        }
         startStopOnConditionChange()
     }
 }
