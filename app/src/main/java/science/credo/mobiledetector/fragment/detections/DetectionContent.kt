@@ -24,8 +24,16 @@ object DetectionContent {
         ITEMS.clear()
         ITEM_MAP.clear()
 
+        // view only 32 latest hits because a lot of memory consumption (todo: paginated/virtualized list view)
+        val maxView = 32
+        var justView = 0
+
         for ((number, hit) in hits.reversed().withIndex()) {
             addItem(createHitItem(hit, number + 1))
+            if (justView >= maxView) {
+                break
+            }
+            justView++
         }
     }
 
