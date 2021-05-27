@@ -21,12 +21,14 @@ import science.credo.mobiledetector.BlankActivity
 import science.credo.mobiledetector.CredoApplication
 
 import science.credo.mobiledetector.R
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.UserInfoWrapper
 import science.credo.mobiledetector.detection.CameraPreviewCallbackNative
 import science.credo.mobiledetector.events.BatteryEvent
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.events.StatsEvent
+import science.credo.mobiledetector.events.UiUpdateEvent
 import science.credo.mobiledetector.info.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -103,6 +105,7 @@ class StatusFragment : Fragment() {
 
     private fun fillInValuesOnPage() {
         val ui = UserInfoWrapper(context!!)
+        val cw = ConfigurationWrapper(context!!)
 
         name_text.text = ui.displayName
         email_text.text = ui.email
@@ -112,6 +115,13 @@ class StatusFragment : Fragment() {
         showDetectionButton(detectionButton())
         coverage_label.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
         blank_button.visibility = if (statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+        if (cw.localizationNeedUpdate > 0) {
+            update_location_label.visibility = View.VISIBLE
+            update_location_label_description.visibility = View.VISIBLE
+        } else {
+            update_location_label.visibility = View.GONE
+            update_location_label_description.visibility = View.GONE
+        }
 
         detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
 
@@ -142,6 +152,8 @@ class StatusFragment : Fragment() {
             dateFormat.format(statsEvent.lastHitTimestamp)
         else
             ""
+
+        coordinates_text.text = "%.4f %.4f".format(cw.localizationLongitude, cw.localizationLatitude)
 
         frame_size_text.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
 
@@ -262,6 +274,11 @@ class StatusFragment : Fragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBatteryEvent(batteryEvent: BatteryEvent) {
         batteryState = batteryEvent
+        fillInValuesOnPage()
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onUpdateUi(event: UiUpdateEvent) {
         fillInValuesOnPage()
     }
 

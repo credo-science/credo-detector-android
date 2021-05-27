@@ -219,6 +219,8 @@
     <string name="status_label_on">ON</string>
     <string name="status_label_hold">ON, ale zatrzymany bo:</string>
     <string name="status_fragment_coverage">Zasłoń kamerę!</string>
+    <string name="status_check_location">Zaktualizuj GPS</string>
+    <string name="status_check_location_description">Współrzędne z GPS wymagają aktualizacji. Włącz GPS i podejdź tam gdzie złapie zasięg. Lokalizacja zostanie zapisana i będzie można wrócić do budynku. Musimy wiedzieć, chociaż w przybliżeniu, gdzie na Ziemii znajduje się ten detektor, który wykrył promieniowanie kosmiczne.</string>
     <string name="status_label_working">Działa :)</string>
 
     <string name="status_button_on">Start!</string>

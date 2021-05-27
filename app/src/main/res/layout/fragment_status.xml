@@ -63,6 +63,28 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/update_location_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="32sp"
+            android:text="@string/status_check_location"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/update_location_label_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/holo_orange_light"
+            android:textSize="12sp"
+            android:text="@string/status_check_location_description"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/working_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,6 +180,21 @@
 
             <TextView
                 android:id="@+id/working_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_coordinates"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/coordinates_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

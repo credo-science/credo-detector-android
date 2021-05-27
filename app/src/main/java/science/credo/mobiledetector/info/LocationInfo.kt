@@ -3,6 +3,7 @@ package science.credo.mobiledetector.info
 import android.content.Context
 import android.location.Location
 import android.location.LocationManager
+import science.credo.mobiledetector.database.ConfigurationWrapper
 
 /**
  * Created by poznan on 25/08/2017.
@@ -21,10 +22,12 @@ class LocationInfo(mContext: Context) {
     ) {
     }
 
-    private var mLastLocation: Location? = null
+    private val mLastLocation: Location? = null
+    private val cw: ConfigurationWrapper
 
     init {
         mLocationManager = mContext.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        cw = ConfigurationWrapper(mContext)
     }
 
     fun getGpsLocation(): Location? {
@@ -40,15 +43,21 @@ class LocationInfo(mContext: Context) {
     fun getLocationData(): LocationData {
         val loc = getLocation()
         val time = System.currentTimeMillis()
-        return if (loc == null) LocationData(0.0, 0.0, 0.0, 0.0f, "none", time)
-        else LocationData(
-            loc.latitude,
-            loc.longitude,
-            loc.altitude,
-            loc.accuracy,
-            loc.provider,
-            time
-        )
+
+        if (loc != null) {
+            cw.localizationLatitude = loc.latitude
+            cw.localizationLongitude = loc.longitude
+            cw.localizationLatitude = loc.altitude
+            cw.localizationAccuracy = loc.accuracy
+            cw.localizationProvider = loc.provider
+            cw.localizationTimestamp = loc.time
+
+            if (loc.latitude != 0.0 && loc.longitude != 0.0) {
+                cw.localizationNeedUpdate = 0
+            }
+        }
+
+        return LocationData(cw.localizationLatitude, cw.localizationLongitude, cw.localizationLatitude, cw.localizationAccuracy, cw.localizationProvider, cw.localizationTimestamp)
     }
 
     fun getLocationString(): String = getLocationData().toString()

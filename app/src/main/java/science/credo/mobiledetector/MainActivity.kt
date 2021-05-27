@@ -1,12 +1,20 @@
 package science.credo.mobiledetector
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.Looper
+import android.os.PowerManager
 import android.preference.PreferenceManager
+import android.provider.Settings
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -16,21 +24,23 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
+import com.google.android.gms.location.*
+import kotlinx.android.synthetic.main.nav_header_status.*
+import kotlinx.android.synthetic.main.nav_header_status.view.*
+import org.greenrobot.eventbus.EventBus
+import org.jetbrains.anko.doAsync
+import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.DetectionStateWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
+import science.credo.mobiledetector.events.UiUpdateEvent
 import science.credo.mobiledetector.fragment.*
 import science.credo.mobiledetector.fragment.detections.DetectionContent
 import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.PowerConnectionReceiver
-import android.os.PowerManager
-import android.os.Build
-import android.provider.Settings
-import kotlinx.android.synthetic.main.nav_header_status.*
-import kotlinx.android.synthetic.main.nav_header_status.view.*
-import org.jetbrains.anko.doAsync
-import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.network.ServerInterface
+import java.util.*
 
 
 const val REQUEST_SIGNUP = 1
@@ -61,6 +71,12 @@ class MainActivity : AppCompatActivity(),
 
     var mSettingsFlag = false;
     val mReceiver: PowerConnectionReceiver = PowerConnectionReceiver()
+
+    private var mFusedLocationClient: FusedLocationProviderClient? = null
+    private var mLocationRequest: LocationRequest? = null
+    private var mLocationSettingsRequest: LocationSettingsRequest? = null
+    private var mLocationCallback: LocationCallback? = null
+    private var mCurrentLocation: Location? = null
 
     companion object {
         val TAG = "MainActivity"
@@ -137,6 +153,11 @@ class MainActivity : AppCompatActivity(),
         if (credoApplication().cameraSettings == null) {
             credoApplication().turnOnDetection(CredoApplication.DetectorMode.CHECK)
         }
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        createLocationCallback();
+        createLocationRequest();
+        buildLocationSettingsRequest();
     }
 
     override fun onBackPressed() {
@@ -263,6 +284,8 @@ class MainActivity : AppCompatActivity(),
             }
             db.closeDb()
         }
+
+        startLocationUpdates()
     }
 
     override fun onPause() {
@@ -291,4 +314,58 @@ class MainActivity : AppCompatActivity(),
     }
 
     private fun credoApplication() : CredoApplication = application as CredoApplication
+
+    private fun createLocationRequest() {
+        mLocationRequest = LocationRequest()
+        mLocationRequest!!.interval = 60000
+        mLocationRequest!!.fastestInterval = 10000
+        mLocationRequest!!.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    private fun createLocationCallback() {
+        val a = this
+        val cw = ConfigurationWrapper(this)
+        mLocationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                super.onLocationResult(locationResult)
+                mCurrentLocation = locationResult.lastLocation
+
+                if (mCurrentLocation != null) {
+                    cw.localizationLatitude = mCurrentLocation!!.latitude
+                    cw.localizationLongitude = mCurrentLocation!!.longitude
+                    cw.localizationLatitude = mCurrentLocation!!.altitude
+                    cw.localizationAccuracy = mCurrentLocation!!.accuracy
+                    cw.localizationProvider = mCurrentLocation!!.provider
+                    cw.localizationTimestamp = mCurrentLocation!!.time
+
+                    if (mCurrentLocation!!.latitude != 0.0 && mCurrentLocation!!.longitude != 0.0) {
+                        cw.localizationNeedUpdate = 0
+                    }
+                }
+
+                EventBus.getDefault().post(UiUpdateEvent(0))
+            }
+        }
+    }
+
+    private fun buildLocationSettingsRequest() {
+        val builder = LocationSettingsRequest.Builder()
+        builder.addLocationRequest(mLocationRequest!!)
+        mLocationSettingsRequest = builder.build()
+    }
+
+    private fun startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {} else {
+            mFusedLocationClient!!.requestLocationUpdates(mLocationRequest,
+                mLocationCallback,
+                Looper.getMainLooper())
+        }
+    }
 }

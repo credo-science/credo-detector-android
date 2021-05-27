@@ -210,6 +210,8 @@
     <string name="status_label_on">ON</string>
     <string name="status_label_hold">ON, but paused due to:</string>
     <string name="status_fragment_coverage">Cover camera!</string>
+    <string name="status_check_location">Update GPS</string>
+    <string name="status_check_location_description">GPS coordination need to update. Please turn on GPS and go to place where GPS signal is available. It is no necessary but there are better for science when detection data contains localization. When GPS have update you will be can come back to the inside of the building.</string>
     <string name="status_label_working">Working :)</string>
 
     <string name="status_button_on">Start detection!</string>
@@ -222,6 +224,7 @@
     <string name="status_fragment_team">Team:</string>
     <string name="status_fragment_no_team">no team</string>
     <string name="status_working_time">Working time:</string>
+    <string name="status_coordinates">GPS:</string>
     <string name="status_fragment_detections">Detections last %1$d days:</string>
     <string name="status_fragment_toggle">Toggle Detection</string>
     <string name="status_fragment_switched_off">SWITCHED OFF</string>

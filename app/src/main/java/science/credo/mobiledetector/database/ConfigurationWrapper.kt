@@ -57,6 +57,70 @@ class ConfigurationWrapper(context: Context) : SharedPreferencesWrapper(context)
             setString("frame_size", "$v")
         }
 
+    var localizationLatitude: Double
+        get() {
+            return preferences.getString("latitude", "0")!!.toDouble()
+        }
+        set(v) {
+            setString("latitude", "$v")
+        }
+
+    var localizationLongitude: Double
+        get() {
+            return preferences.getString("longitude", "0")!!.toDouble()
+        }
+        set(v) {
+            setString("longitude", "$v")
+        }
+
+    var localizationAltitude: Double
+        get() {
+            return preferences.getString("altitude", "0")!!.toDouble()
+        }
+        set(v) {
+            setString("altitude", "$v")
+        }
+
+    var localizationAccuracy: Float
+        get() {
+            return preferences.getString("accuracy", "0")!!.toFloat()
+        }
+        set(v) {
+            setString("accuracy", "$v")
+        }
+
+    var localizationProvider: String
+        get() {
+            return preferences.getString("provider", "")!!
+        }
+        set(v) {
+            setString("provider", v)
+        }
+
+    var localizationTimestamp: Long
+        get() {
+            return preferences.getString("timestamp", "0")!!.toLong()
+        }
+        set(v) {
+            setString("timestamp", "$v")
+        }
+
+    var localizationIP: String
+        get() {
+            return preferences.getString("ip", "")!!
+        }
+        set(v) {
+            setString("ip", v)
+        }
+
+    var localizationNeedUpdate: Int // 0 - ok, 1 - should, 2 - must
+        get() {
+            return preferences.getInt("location_need_update", 2)
+        }
+        set(v) {
+            setInt("location_need_update", v)
+        }
+
     companion object {
         val defaultEndpoint = "https://api.credo.science/api/v2"
     }

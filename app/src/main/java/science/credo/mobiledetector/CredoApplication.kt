@@ -14,9 +14,10 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.events.DetectorStateEvent
-import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.info.CameraSettings
+import science.credo.mobiledetector.info.ConfigurationInfo
 import science.credo.mobiledetector.services.HardwareCheckService
+import science.credo.mobiledetector.services.LocationCheckService
 import java.util.concurrent.atomic.AtomicBoolean
 
 @AcraCore(buildConfigClass = BuildConfig::class)
@@ -56,6 +57,7 @@ class CredoApplication : Application() {
             detectorMode = DetectorMode.CHECK
             if (mode == DetectorMode.CHECK) {
                 startService(Intent(this, HardwareCheckService::class.java))
+                startService(Intent(this, LocationCheckService::class.java))
             } else if (mode == DetectorMode.DETECTION || mode == DetectorMode.CALIBRATION) {
                 startService(Intent(this, DetectorService::class.java))
             }

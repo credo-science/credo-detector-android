@@ -113,7 +113,7 @@ class NetworkCommunication(val context: Context) {
             }
         }
 
-        private val client: OkHttpClient = OkHttpClient
+        val client: OkHttpClient = OkHttpClient
                 .Builder()
                 .sslSocketFactory(getSSLSocketFactory()!!, trustManager)
                 .build()
