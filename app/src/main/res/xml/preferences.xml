@@ -58,7 +58,7 @@
         android:title="@string/settings_factors_name">
 
         <EditTextPreference
-            android:key="crop2"
+            android:key="crop3"
             android:title="@string/pref_register_crop_title"
             android:numeric="integer"
             android:summary="@string/pref_register_crop_summary"
