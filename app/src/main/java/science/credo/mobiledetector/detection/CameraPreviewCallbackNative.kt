@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.hardware.Camera
 import android.util.Base64
 import android.util.Log
+import com.instacart.library.truetime.TrueTime
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.CredoApplication
@@ -45,6 +46,7 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
 
         val timestamp = System.currentTimeMillis()
+        val trueTime = TrueTime.now().time
         if (timestamp / 1000 != lastFpsSecond) {
             lastFpsSecond = timestamp / 1000
             fps = lastFps
@@ -163,7 +165,8 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
                                 sensorsState.accY,
                                 sensorsState.accZ,
                                 sensorsState.orientation,
-                                sensorsState.temperature
+                                sensorsState.temperature,
+                                trueTime
                         )
                         hits.add(hit)
 

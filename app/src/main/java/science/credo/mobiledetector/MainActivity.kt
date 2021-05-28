@@ -26,6 +26,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.gms.location.*
+import com.instacart.library.truetime.TrueTime
 import kotlinx.android.synthetic.main.nav_header_status.*
 import kotlinx.android.synthetic.main.nav_header_status.view.*
 import org.greenrobot.eventbus.EventBus

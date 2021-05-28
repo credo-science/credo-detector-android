@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
 import ninja.sakib.pultusorm.annotations.AutoIncrement
 import ninja.sakib.pultusorm.annotations.PrimaryKey
+import science.credo.mobiledetector.CredoApplication
 
 @JsonAutoDetect(
     fieldVisibility = JsonAutoDetect.Visibility.ANY,
@@ -31,7 +32,8 @@ class Hit (frameContent: String,
            ay: Float,
            az: Float,
            orientation: Float,
-           temperature: Int
+           temperature: Int,
+           trueTime: Long
            ){
     @PrimaryKey
     @AutoIncrement
@@ -87,10 +89,13 @@ class Hit (frameContent: String,
     @JsonIgnore
     val mTemperature: Int = temperature
 
+    @JsonIgnore
+    val mTrueTime: Long = trueTime
+
     @JsonGetter
     @JsonProperty("metadata")
     fun getMetadata(): String {
-        return "{\"max\": $mMaxValue, \"average\": $mAverage, \"blacks\": $mBlacks, \"black_threshold\": $mBlackThreshold, \"ax\": $mAx, \"ay\": $mAy, \"az\": $mAz, \"orientation\": $mOrientation, \"temperature\": $mTemperature}"
+        return "{\"app\": \"cd_orig\", \"version\": ${CredoApplication.versionCode}, \"max\": $mMaxValue, \"average\": $mAverage, \"blacks\": $mBlacks, \"black_threshold\": $mBlackThreshold, \"ax\": $mAx, \"ay\": $mAy, \"az\": $mAz, \"orientation\": $mOrientation, \"temperature\": $mTemperature, \"true_time\": $mTrueTime}"
     }
 
     @JsonIgnore
@@ -102,5 +107,5 @@ class Hit (frameContent: String,
     @JsonIgnore
     val detectionTimestamp = (System.currentTimeMillis() / 10000L).toInt() // PultusORM less condition walkaround
 
-    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0) {}
+    constructor() : this("", 0, 0.0, 0.0, 0.0, 0.0f, "", 0, 0, 0, 0, 0, 0.0, 0.0, 0, 0f, 0f, 0f, 0f, 0, 0) {}
 }

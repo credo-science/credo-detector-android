@@ -3,8 +3,10 @@ package science.credo.mobiledetector
 import android.app.Application
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.support.multidex.MultiDex
+import com.instacart.library.truetime.TrueTime
 import org.acra.ACRA
 import org.acra.annotation.AcraCore
 import org.acra.annotation.AcraHttpSender
@@ -12,6 +14,7 @@ import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.events.DetectorStateEvent
 import science.credo.mobiledetector.info.CameraSettings
@@ -50,6 +53,14 @@ class CredoApplication : Application() {
         if (ConfigurationInfo(this).isDetectionOn) {
             turnOnDetection()
         }
+
+        doAsync {
+            TrueTime.build().initialize();
+        }
+
+        val manager = this.packageManager
+        val info = manager.getPackageInfo(this.packageName, PackageManager.GET_ACTIVITIES)
+        versionCode = info.versionCode
     }
 
     fun turnOnDetection(mode: DetectorMode = DetectorMode.DETECTION) {
@@ -77,6 +88,8 @@ class CredoApplication : Application() {
     }
 
     companion object {
+        var versionCode: Int = 0
+
         fun isEmulator(): Boolean {
             return (Build.FINGERPRINT.startsWith("generic")
                     || Build.FINGERPRINT.startsWith("unknown")
