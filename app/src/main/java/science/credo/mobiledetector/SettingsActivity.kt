@@ -7,6 +7,7 @@ import android.preference.ListPreference
 import android.preference.PreferenceActivity
 import android.preference.PreferenceManager
 import android.util.Log
+import science.credo.mobiledetector.info.ConfigurationInfo
 
 
 /**
@@ -68,6 +69,9 @@ class SettingsActivity : EnchPreferenceActivity() {
         }
 
         initSummary(preferenceScreen)
+
+        ConfigurationInfo(this).isDetectionOn = false
+        (applicationContext as CredoApplication).turnOffDetection()
     }
 
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {

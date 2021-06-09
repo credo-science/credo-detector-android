@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import org.jetbrains.anko.doAsync
+import science.credo.mobiledetector.CredoApplication
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.detection.Hit
@@ -47,6 +48,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         if (context is OnFragmentInteractionListener) {
             mListener = context
+            ConfigurationInfo(context).isDetectionOn = false
+            (context.applicationContext as CredoApplication).turnOffDetection()
         } else {
             throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
         }
