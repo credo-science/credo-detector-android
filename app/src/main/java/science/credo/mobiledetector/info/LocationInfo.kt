@@ -49,7 +49,7 @@ class LocationInfo(mContext: Context) {
             cw.localizationLongitude = loc.longitude
             cw.localizationLatitude = loc.altitude
             cw.localizationAccuracy = loc.accuracy
-            cw.localizationProvider = loc.provider
+            cw.localizationProvider = loc.provider.toString()
             cw.localizationTimestamp = loc.time
 
             if (loc.latitude != 0.0 && loc.longitude != 0.0) {

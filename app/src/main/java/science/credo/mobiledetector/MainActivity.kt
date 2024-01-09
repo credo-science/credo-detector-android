@@ -336,7 +336,7 @@ class MainActivity : AppCompatActivity(),
                     cw.localizationLongitude = mCurrentLocation!!.longitude
                     cw.localizationAltitude = mCurrentLocation!!.altitude
                     cw.localizationAccuracy = mCurrentLocation!!.accuracy
-                    cw.localizationProvider = mCurrentLocation!!.provider
+                    cw.localizationProvider = mCurrentLocation!!.provider.toString()
                     cw.localizationTimestamp = mCurrentLocation!!.time
 
                     if (mCurrentLocation!!.latitude != 0.0 && mCurrentLocation!!.longitude != 0.0) {
