@@ -47,7 +47,7 @@ class LocationInfo(mContext: Context) {
         if (loc != null) {
             cw.localizationLatitude = loc.latitude
             cw.localizationLongitude = loc.longitude
-            cw.localizationLatitude = loc.altitude
+            cw.localizationAltitude = loc.altitude
             cw.localizationAccuracy = loc.accuracy
             cw.localizationProvider = loc.provider.toString()
             cw.localizationTimestamp = loc.time
