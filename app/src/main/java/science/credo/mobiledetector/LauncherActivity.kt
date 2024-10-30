@@ -20,6 +20,7 @@ import android.content.DialogInterface
 import android.os.Build
 import android.provider.Settings
 import android.support.v7.app.AlertDialog
+import android.util.Log
 
 
 const val REQUEST_MAIN = 1
@@ -34,8 +35,8 @@ class LauncherActivity : AppCompatActivity() {
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.READ_EXTERNAL_STORAGE,
+                //Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                //Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS
                 //Manifest.permission.WAKE_LOCK
         )
@@ -126,10 +127,12 @@ class LauncherActivity : AppCompatActivity() {
     override fun onPostResume() {
         super.onPostResume()
         if (hasAllPermissionsGranted(this)) {
+            Log.d("onPostResume", "true")
             launchSpecificActivity()
             debugClicksCount = 0
             endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
         } else {
+            Log.d("onPostResume", "false")
             requestPermissions()
         }
     }
@@ -157,7 +160,7 @@ class LauncherActivity : AppCompatActivity() {
         } else if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {
-                    Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Permission Granted!b", Toast.LENGTH_SHORT).show()
                 }
             }
         }

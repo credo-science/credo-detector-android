@@ -13,8 +13,9 @@ class StatsValueBuilder {
     fun toStatsValue() : StatsValue {
         val sv = StatsValue()
         sv.average = samples.average()
-        sv.max = samples.max() ?: 0.0
-        sv.min = samples.min() ?: 0.0
+        val samples = LinkedList<Double>()
+        sv.max = samples.maxOrNull() ?: 0.0
+        sv.min = samples.minOrNull() ?: 0.0
         sv.samples = samples.size
         return sv
     }

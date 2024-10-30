@@ -39,11 +39,10 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
     }
 
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences,
-                                           key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         Log.d(TAG, "onSharedPreferenceChanged: key: $key")
         val pref = findPreference(key)
-        if (pref != null) updatePrefSummary(pref, sharedPreferences, key)
+        if (pref != null) updatePrefSummary(pref, sharedPreferences!!, key!!)
     }
 
     protected fun initSummary(p: Preference) {
@@ -159,6 +158,4 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
         preferenceScreen.sharedPreferences
                 .unregisterOnSharedPreferenceChangeListener(this)
     }
-
-
 }

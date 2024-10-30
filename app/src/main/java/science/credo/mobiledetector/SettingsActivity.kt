@@ -74,7 +74,7 @@ class SettingsActivity : EnchPreferenceActivity() {
         (applicationContext as CredoApplication).turnOffDetection()
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
         if (key == "camera_number") {
             updateFrameSizes()
         }
