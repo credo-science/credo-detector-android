@@ -21,6 +21,8 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_status">Stan</string>
     <string name="title_statistics">Wykrycia</string>
+    <string name="title_charts">Statystyki</string>
+    <string name="title_links">Przydatne linki</string>
     <string name="title_login">Login</string>
     <string name="title_settings">Ustawienia</string>
     <string name="title_information">api.credo.science</string>
@@ -238,7 +240,8 @@
     <string name="status_fragment_switched_off">OFF</string>
     <string name="status_fragment_running">ON: Działa</string>
     <string name="status_fragment_hold">ON: Zatrzymany</string>
-    <string name="status_fragment_show_statistic">Statystyki dla nerdów</string> <!---Translate-->
+    <string name="status_fragment_show_statistic">Statystyki dla nerdów</string>
+    <string name="status_fragment_hide_statistic">Zwiń statystyki</string>
 
     <string name="status_fragment_start">Start:</string>
     <string name="status_fragment_latest">Działa:</string>
@@ -262,4 +265,26 @@
     <!-- Preview activity -->
     <string name="preview_title_activity">Wykrycia (ostatnie %1$d dni)"</string>
 
+    <string name="no_data_available">Brak dostępnych danych</string>
+
+    <string name="title_charts_temperature">Temperatura</string>
+    <string name="title_charts_detections">Wykrycia</string>
+    <string name="title_charts_working_time">Czas pracy</string>
+    <string name="title_charts_working_time_min">Czas pracy (min)</string>
+    <string name="no_detections_last_10_days">Brak wykryć w ostatnich 10 dniach</string>
+
+    <string name="links_title_manuals">Instrukcje i poradniki</string>
+    <string name="links_detector_tutorial">Samouczek detektora</string>
+    <string name="links_user_guide_pl">Instrukcja użytkownika (PL)</string>
+    <string name="links_user_guide_en">Instrukcja użytkownika (EN)</string>
+    <string name="links_community_guide_pl">Poradnik od użytkownika (PL)</string>
+    <string name="links_title_web">Portale internetowe</string>
+    <string name="links_credo_homepage">Strona główna CREDO</string>
+    <string name="links_detection_global">Podgląd detekcji (Globalny)</string>
+    <string name="links_my_detections">Moje detekcje</string>
+    <string name="links_title_contests">Konkursy</string>
+    <string name="links_contest_pl_schools">Konkurs dla polskich szkół</string>
+    <string name="links_contest_next_edition">Kolejna edycja: 4 kwartał 2026</string>
+    <string name="links_title_contact">Kontakt</string>
+    <string name="error_prefix">Błąd:</string>
 </resources>

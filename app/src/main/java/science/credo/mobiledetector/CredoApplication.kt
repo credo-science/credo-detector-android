@@ -14,6 +14,7 @@ import org.acra.sender.HttpSender
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import android.util.Log
 import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.events.DetectorStateEvent
@@ -46,6 +47,25 @@ class CredoApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Install default uncaught exception handler to capture crashes into app files for easier diagnosis
+        val defaultHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { t, e ->
+            try {
+                val trace = Log.getStackTraceString(e)
+                Log.e("CredoApplication", "Uncaught exception in thread ${t.name}: $trace")
+                try {
+                    openFileOutput("crash_log.txt", MODE_PRIVATE).use { fos ->
+                        fos.write(trace.toByteArray())
+                    }
+                } catch (ioe: Exception) {
+                    Log.w("CredoApplication", "Failed to write crash log to file", ioe)
+                }
+            } catch (t2: Throwable) {
+                // swallow to not lose the original behavior
+            }
+            // delegate to default handler (will terminate process)
+            defaultHandler?.uncaughtException(t, e)
+        }
         EventBus.getDefault().register(this)
         if (!ConfigurationWrapper(this).autoRun) {
             ConfigurationInfo(this).isDetectionOn = false
@@ -54,8 +74,13 @@ class CredoApplication : Application() {
             turnOnDetection()
         }
 
+        // Initialize TrueTime asynchronously to avoid blocking app startup
         doAsync {
-            TrueTime.build().initialize();
+            try {
+                TrueTime.build().initialize()
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to initialize TrueTime (async)", e)
+            }
         }
 
         val manager = this.packageManager
@@ -88,6 +113,7 @@ class CredoApplication : Application() {
     }
 
     companion object {
+        const val TAG = "CredoApplication"
         var versionCode: Int = 0
 
         fun isEmulator(): Boolean {

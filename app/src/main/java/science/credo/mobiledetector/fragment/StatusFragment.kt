@@ -154,6 +154,7 @@ class StatusFragment : Fragment() {
             ""
 
         coordinates_text.text = "%.4f %.4f".format(cw.localizationLongitude, cw.localizationLatitude)
+        temperature_login_info.text = "%d°C".format(detectorState.temperature)
 
         frame_size_text.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
 
@@ -187,7 +188,7 @@ class StatusFragment : Fragment() {
 
         benchmark_text.text = "%dms".format(CameraPreviewCallbackNative.benchmark)
         fps_text.text = "%d".format(CameraPreviewCallbackNative.fps)
-        temperature.text = "%d".format(batteryState.temperature)
+        temperature.text = "%d".format(detectorState.temperature)
         crop_size.text = "%d".format(ConfigurationInfo(context!!).cropSize)
     }
 
@@ -196,10 +197,14 @@ class StatusFragment : Fragment() {
 //        Log.d(TAG,"onResume")
         fillInValuesOnPage()
         //defaultSharedPreferences.registerOnSharedPreferenceChangeListener(this)
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        filter.addAction(Intent.ACTION_BATTERY_CHANGED)
         filter.addAction(Intent.ACTION_POWER_CONNECTED)
         filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        context!!.registerReceiver(mReceiver, filter)
+        val batteryIntent = context!!.registerReceiver(mReceiver, filter)
+        if (batteryIntent != null) {
+            batteryState = PowerConnectionReceiver.parseIntent(batteryIntent)
+        }
         super.onResume()
     }
 
@@ -233,10 +238,11 @@ class StatusFragment : Fragment() {
         v.show_statistic.setOnClickListener{
             if(detection_stats.visibility == View.GONE){
                 detection_stats.visibility = View.VISIBLE
-                show_statistic.visibility = View.GONE
+                v.show_statistic.setText(R.string.status_fragment_hide_statistic)
             }
             else{
                 detection_stats.visibility = View.GONE
+                v.show_statistic.setText(R.string.status_fragment_show_statistic)
             }
         }
         return v
@@ -273,7 +279,14 @@ class StatusFragment : Fragment() {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onBatteryEvent(batteryEvent: BatteryEvent) {
-        batteryState = batteryEvent
+        if (batteryEvent.temperature != 0 || batteryState.temperature == 0) {
+            batteryState = batteryEvent
+        } else {
+            // Keep previous temperature if new one is 0 (likely from power event without battery extras)
+            val oldTemp = batteryState.temperature
+            batteryState = batteryEvent
+            batteryState.temperature = oldTemp
+        }
         fillInValuesOnPage()
     }
 

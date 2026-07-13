@@ -57,7 +57,7 @@ class LocationInfo(mContext: Context) {
             }
         }
 
-        return LocationData(cw.localizationLatitude, cw.localizationLongitude, cw.localizationLatitude, cw.localizationAccuracy, cw.localizationProvider, cw.localizationTimestamp)
+        return LocationData(cw.localizationLatitude, cw.localizationLongitude, cw.localizationAltitude, cw.localizationAccuracy, cw.localizationProvider, cw.localizationTimestamp)
     }
 
     fun getLocationString(): String = getLocationData().toString()

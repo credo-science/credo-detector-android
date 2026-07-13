@@ -213,7 +213,8 @@
     <string name="status_fragment_switched_off">APAGADO</string>
     <string name="status_fragment_running">ENCENDIDO: EJECUTANDO</string>
     <string name="status_fragment_hold">ENCENDIDO: EN ESPERA</string>
-    <string name="status_fragment_show_statistic">Mostrar estadísticas</string> <!---Translate-->
+    <string name="status_fragment_show_statistic">Mostrar estadísticas</string>
+    <string name="status_fragment_hide_statistic">Ocultar estadísticas</string> <!---Translate-->
 
     <string name="status_fragment_start">Comienzo:</string>
     <string name="status_fragment_latest">Trabajando:</string>
@@ -236,4 +237,6 @@
 
     <!-- Preview activity -->
     <string name="preview_title_activity">Detecciones (últimos %1$d días)</string>
+
+    <string name="no_data_available">No hay datos disponibles aún</string>
 </resources>

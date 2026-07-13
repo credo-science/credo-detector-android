@@ -123,6 +123,14 @@ class DetectionStateWrapper(context: Context, val prefix: String) : SharedPrefer
             setStatsValue("${prefix}_max", v)
         }
 
+    var temperature: Int
+        get() {
+            return preferences.getInt("${prefix}_temperature", 0)
+        }
+        set(v) {
+            setInt("${prefix}_temperature", v)
+        }
+
     private fun getStatsValue(key: String) : StatsValue {
         return StatsValue(
                 preferences.getFloat("${key}_min", 0f).toDouble(),
@@ -153,6 +161,7 @@ class DetectionStateWrapper(context: Context, val prefix: String) : SharedPrefer
         blacksStats = StatsValue()
         averageStats = StatsValue()
         maxStats = StatsValue()
+        temperature = 0
     }
 
     fun merge(statsEvent: StatsEvent) {
@@ -168,5 +177,6 @@ class DetectionStateWrapper(context: Context, val prefix: String) : SharedPrefer
         blacksStats = blacksStats.merge(statsEvent.blacksStats)
         averageStats = averageStats.merge(statsEvent.averageStats)
         maxStats = maxStats.merge(statsEvent.maxStats)
+        temperature = statsEvent.temperature
     }
 }

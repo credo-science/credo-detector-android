@@ -3,6 +3,7 @@ package science.credo.mobiledetector.detection
 import android.content.Context
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
+import science.credo.mobiledetector.database.DataManager
 import science.credo.mobiledetector.database.DetectionStateWrapper
 import science.credo.mobiledetector.events.StatsEvent
 import science.credo.mobiledetector.info.IdentityInfo
@@ -92,16 +93,23 @@ class DetectionStatsManager {
         if (force || screenCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForScreen.flush(statsEvent, false)
+            statsEvent.temperature = (context.applicationContext as science.credo.mobiledetector.CredoApplication).detectorState.temperature
             EventBus.getDefault().post(statsEvent)
         }
 
         if (force || serverCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForServer.flush(statsEvent,  true)
+            statsEvent.temperature = (context.applicationContext as science.credo.mobiledetector.CredoApplication).detectorState.temperature
 
             val deviceInfo : IdentityInfo.IdentityData = IdentityInfo.getDefault(context).getIdentityData()
+            val pingRequest = build(System.currentTimeMillis(), deviceInfo, statsEvent)
+            
+            // Always store ping in local database for statistics
+            DataManager.getDefault(context).storePing(pingRequest)
+
             doAsync {
-                ServerInterface.getDefault(context).ping(build(System.currentTimeMillis(), deviceInfo, statsEvent))
+                ServerInterface.getDefault(context).ping(pingRequest)
             }
 
             DetectionStateWrapper.getLatestSession(context).merge(statsEvent)
@@ -110,6 +118,7 @@ class DetectionStatsManager {
         if (force || totalCondition) {
             val statsEvent = StatsEvent(width, height, startDetectionTimestamp)
             statsForTotal.flush(statsEvent,  true)
+            statsEvent.temperature = (context.applicationContext as science.credo.mobiledetector.CredoApplication).detectorState.temperature
             DetectionStateWrapper.getTotal(context).merge(statsEvent)
         }
     }

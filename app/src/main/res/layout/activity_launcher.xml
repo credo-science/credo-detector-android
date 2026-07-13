@@ -21,6 +21,8 @@
             android:layout_marginBottom="24dp"
             android:layout_gravity="center_horizontal" />
 
+                <!-- progress spinner removed: it appeared too late and provided no value -->
+
         <TextView android:id="@+id/activate_email_message"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -58,6 +60,7 @@
         <TextView android:id="@+id/remember_password_button"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_marginBottom="24dp"
             android:text="@string/launcher_button_remember_password"
             android:gravity="center"

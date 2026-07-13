@@ -32,7 +32,7 @@ class DataManager private constructor(val context: Context) {
     private val mAppPath: String = context.getFilesDir().getAbsolutePath()
 
     private val mDbFileName = "cache.db"
-    private val mDbSchema = "4"
+    private val mDbSchema = "5"
     private val mDb = PultusORM(mDbFileName, mAppPath)
 
     companion object {
@@ -90,12 +90,36 @@ class DataManager private constructor(val context: Context) {
     }
 
     fun storePing(message: PingRequest) {
+        message.isSynced = false
         mDb.save(message)
+        Log.d(TAG, "storePing: saved ping at ${message.timestamp}, count: ${getPingsCount()}")
+        trimPingsDb()
+    }
+
+    private fun updatePing(ping: PingRequest) {
+        val condition = PultusORMCondition.Builder().eq("id", ping.id).build()
+        val isSynced = if (ping.isSynced) 1 else 0
+        val updater = PultusORMUpdater.Builder()
+            .set("isSynced", isSynced)
+            .condition(condition)
+            .build()
+        mDb.update(ping, updater)
+    }
+
+    private fun trimPingsDb() {
+        // Keep pings for 30 days for statistics
+        val monthMs = 1000L * 3600 * 24 * 30
+        val threshold = (System.currentTimeMillis() - monthMs)
+        val condition: PultusORMCondition = PultusORMCondition.Builder()
+            .less("timestamp", threshold)
+            .build()
+        mDb.delete(PingRequest(), condition)
     }
 
     fun deletePing(ping: PingRequest) {
-        val condition = PultusORMCondition.Builder().eq("id", ping.id).build()
-        mDb.delete(ping, condition)
+        // We don't want to delete pings anymore, we want to keep them for stats
+        ping.isSynced = true
+        updatePing(ping)
     }
     /**
      * Retrieves detected hits from the database.
@@ -110,7 +134,7 @@ class DataManager private constructor(val context: Context) {
         }
     }
 
-    private fun getCachedPings(): MutableList<PingRequest> {
+    fun getPings(): MutableList<PingRequest> {
         return try {
             mDb.find(PingRequest()) as MutableList<PingRequest>
         } catch (e: NullPointerException) {
@@ -195,16 +219,23 @@ class DataManager private constructor(val context: Context) {
             return
         }
 
-        val pings = getCachedPings()
+        val condition = PultusORMCondition.Builder().eq("isSynced", 0).build()
+        val pings = try {
+            mDb.find(PingRequest(), condition) as MutableList<PingRequest>
+        } catch (e: Exception) {
+            LinkedList<PingRequest>()
+        }
 
         Log.i(TAG, "Try to flush ${pings.size} cached pings")
         for (ping in pings) {
             try {
                 si.pingRaw(ping)
-                deletePing(ping)
+                ping.isSynced = true
+                updatePing(ping)
             } catch (e: ServerException) {
                 if ((e.code != 401).and(e.code in 400..499)) {
-                    deletePing(ping)
+                    ping.isSynced = true
+                    updatePing(ping)
                 }
             }
         }

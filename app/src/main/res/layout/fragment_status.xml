@@ -11,7 +11,8 @@
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:layout_gravity="center">
+        android:paddingTop="60dp"
+        android:layout_gravity="top|center_horizontal">
 
         <TextView
             android:id="@+id/detection_label"
@@ -125,7 +126,7 @@
             android:layout_marginTop="16dp"
             android:layout_gravity="center"
             android:columnCount="2"
-            android:rowCount="3" >
+            android:rowCount="6" >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -195,6 +196,21 @@
 
             <TextView
                 android:id="@+id/coordinates_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginStart="8dp"
+                android:textSize="8pt"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/status_fragment_temperature"
+                android:textSize="8pt" />
+
+            <TextView
+                android:id="@+id/temperature_login_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"

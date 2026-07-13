@@ -55,7 +55,12 @@ data class PingRequest(
         var max_stats_min: Double = 0.0,
         var max_stats_max: Double = 0.0,
         var max_stats_average: Double = 0.0,
-        var max_stats_samples: Int = 0
+        var max_stats_samples: Int = 0,
+
+        var temperature: Int = 0,
+
+        @JsonIgnore
+        var isSynced: Boolean = false
 ) : BaseDeviceInfoRequest()
 
 fun build(timestamp: Long, deviceInfo: IdentityInfo.IdentityData, wrapper: DetectionStateWrapper) : PingRequest {
@@ -89,7 +94,8 @@ fun build(timestamp: Long, deviceInfo: IdentityInfo.IdentityData, wrapper: Detec
             wrapper.maxStats.min,
             wrapper.maxStats.max,
             wrapper.maxStats.average,
-            wrapper.maxStats.samples
+            wrapper.maxStats.samples,
+            wrapper.temperature
     )
 }
 
@@ -124,6 +130,7 @@ fun build(timestamp: Long, deviceInfo: IdentityInfo.IdentityData, stats: StatsEv
             stats.maxStats.min,
             stats.maxStats.max,
             stats.maxStats.average,
-            stats.maxStats.samples
+            stats.maxStats.samples,
+            stats.temperature
     )
 }

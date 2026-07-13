@@ -59,18 +59,37 @@ public class DetectionFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detection_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            DetectionContent.INSTANCE.initContent(getActivity());
-            recyclerView.setAdapter(new DetectionAdapter(DetectionContent.INSTANCE.getITEMS(), mListener));
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        View noDetectionsText = view.findViewById(R.id.no_detections_text);
+
+        Context context = view.getContext();
+        if (mColumnCount <= 1) {
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
         }
+        // Initialize detection content in background to avoid blocking UI
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DetectionContent.INSTANCE.initContent(getActivity());
+                final java.util.List<HitItem> items = DetectionContent.INSTANCE.getITEMS();
+                if (getActivity() == null) return;
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (items.isEmpty()) {
+                            recyclerView.setVisibility(View.GONE);
+                            noDetectionsText.setVisibility(View.VISIBLE);
+                        } else {
+                            recyclerView.setVisibility(View.VISIBLE);
+                            noDetectionsText.setVisibility(View.GONE);
+                            recyclerView.setAdapter(new DetectionAdapter(items, mListener));
+                        }
+                    }
+                });
+            }
+        }).start();
         return view;
     }
 

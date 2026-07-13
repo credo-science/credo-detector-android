@@ -10,10 +10,7 @@
             android:id="@+id/nav_register"
             android:icon="@drawable/ic_menu_login"
             android:title="@string/title_register" />
-        <item
-            android:id="@+id/nav_information"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/title_information" />
+        <!-- nav_information removed per request -->
         <item
             android:id="@+id/nav_status"
             android:icon="@drawable/ic_info_outline_black_24dp"
@@ -22,6 +19,18 @@
             android:id="@+id/nav_statistics"
             android:icon="@drawable/ic_menu_statistics"
             android:title="@string/title_statistics" />
+        <item
+            android:id="@+id/nav_charts"
+            android:icon="@drawable/ic_menu_statistics"
+            android:title="@string/title_charts" />
+        <item
+            android:id="@+id/nav_links"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/title_links" />
+        <item
+            android:id="@+id/nav_logs"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/title_logs" />
     </group>
 
 </menu>

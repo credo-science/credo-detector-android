@@ -126,6 +126,7 @@ class LauncherActivity : AppCompatActivity() {
 
     override fun onPostResume() {
         super.onPostResume()
+        // Keep progress visible until we actually launch the next activity
         if (hasAllPermissionsGranted(this)) {
             Log.d("onPostResume", "true")
             launchSpecificActivity()
@@ -146,6 +147,7 @@ class LauncherActivity : AppCompatActivity() {
         val pref = UserInfoWrapper(this)
 
         if (!pref.token.isEmpty()) {
+            // launch main
             startActivityForResult(Intent(this, MainActivity::class.java), REQUEST_MAIN)
         }
     }

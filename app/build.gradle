@@ -11,7 +11,7 @@ android {
         minSdkVersion 14
         targetSdk 34
         versionCode 34
-        versionName "1.3.4"
+        versionName "1.3.4-End"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
@@ -44,6 +44,9 @@ android {
     lintOptions {
         checkReleaseBuilds false
         abortOnError false
+    }
+    buildFeatures {
+        buildConfig = true
     }
     namespace 'science.credo.mobiledetector'
 }
@@ -92,4 +95,5 @@ dependencies {
 
     implementation 'com.github.instacart.truetime-android:library-extension-rx:3.5'
     implementation 'com.github.instacart.truetime-android:library:3.5'
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
 }

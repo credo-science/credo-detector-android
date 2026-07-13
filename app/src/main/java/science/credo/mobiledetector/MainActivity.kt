@@ -143,11 +143,8 @@ class MainActivity : AppCompatActivity(),
             startActivity(browserIntent)
         }*/
 
-        if (credoApplication().detectorRunning.get()) {
-            switchFragment(R.id.nav_status)
-        } else {
-            switchFragment(R.id.nav_information)
-        }
+        // default to register fragment (show register tab first after login)
+        switchFragment(R.id.nav_register)
 
         toggle.syncState()
 
@@ -235,17 +232,25 @@ class MainActivity : AppCompatActivity(),
                 mSettingsFlag = true
             }
             R.id.nav_register -> {
-                //startRegisterActivity()
-                mSettingsFlag = true
-           }
+                title = "$lead ${getString(R.string.title_information)}"
+                fragment = CredoFragment.newInstance()
+            }
             R.id.nav_statistics -> {
                 title = getString(R.string.preview_title_activity, DataManager.TRIM_PERIOD_HITS_DAYS)
                 fragment = DetectionFragment.newInstance(1)
             }
-            R.id.nav_information -> {
-                title = "$lead ${getString(R.string.title_information)}"
-                fragment = CredoFragment.newInstance()
-
+            R.id.nav_charts -> {
+                title = getString(R.string.title_charts)
+                fragment = StatisticsFragment.newInstance()
+            }
+            R.id.nav_links -> {
+                title = getString(R.string.title_links)
+                fragment = LinksFragment.newInstance()
+            }
+            // nav_information removed
+            R.id.nav_logs -> {
+                // open LogsActivity
+                startActivity(Intent(this, LogsActivity::class.java))
             }
         }
 

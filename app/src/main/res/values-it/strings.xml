@@ -66,6 +66,8 @@
     <string name="status_fragment_switched_off">SPENTO</string>
     <string name="status_fragment_running">ACCESO: OPERATIVO</string>
     <string name="status_fragment_hold">ACCESO: IN PAUSA</string>
+    <string name="status_fragment_show_statistic">Mostra statistiche</string>
+    <string name="status_fragment_hide_statistic">Nascondi statistiche</string>
 
     <!-- Need to translate! -->
     <string name="error_camera">Camera error: %1$s</string>
@@ -124,6 +126,6 @@
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
 
-
+    <string name="no_data_available">Nessun dato ancora disponibile</string>
 </resources>
 

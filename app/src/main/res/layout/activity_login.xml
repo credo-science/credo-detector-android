@@ -12,12 +12,6 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp">
 
-        <ImageView android:src="@drawable/logo_credo"
-            android:contentDescription="@string/launcher_text_logo"
-            android:layout_width="wrap_content"
-            android:layout_height="140dp"
-            android:layout_marginBottom="24dp"
-            android:layout_gravity="center_horizontal" />
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
@@ -44,6 +38,14 @@
                 android:inputType="textPassword"
                 android:hint="@string/login_input_password"/>
         </android.support.design.widget.TextInputLayout>
+
+        <CheckBox
+            android:id="@+id/show_password_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_password"
+            android:visibility="gone"
+            android:layout_marginTop="4dp" />
 
         <TextView
             android:id="@+id/error_text"

@@ -44,9 +44,12 @@ class CameraPreviewCallbackNative(private val mContext: Context) : Camera.Previe
     }
 
     override fun onPreviewFrame(data: ByteArray, hCamera: Camera) {
-
         val timestamp = System.currentTimeMillis()
-        val trueTime = TrueTime.now().time
+        if (timestamp % 1000 < 100) {
+            Log.d(TAG, "onPreviewFrame: processing frame at $timestamp")
+        }
+        // Use System.currentTimeMillis() for trueTime; TrueTime is optional and may not be initialized
+        val trueTime = timestamp
         if (timestamp / 1000 != lastFpsSecond) {
             lastFpsSecond = timestamp / 1000
             fps = lastFps

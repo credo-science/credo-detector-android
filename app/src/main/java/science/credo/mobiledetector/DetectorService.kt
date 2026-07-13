@@ -58,32 +58,46 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
-        mConfigurationInfo = ConfigurationInfo(baseContext)
-        //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO_LOCK")
-        //mWakeLock?.acquire()
+        try {
+            val powerManager = getSystemService(Context.POWER_SERVICE) as PowerManager
+            mConfigurationInfo = ConfigurationInfo(baseContext)
+            //mWakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "CREDO_LOCK")
+            //mWakeLock?.acquire()
 
-        startCamera()
-        Log.d(TAG,"onStartCommand " + count)
+            startCamera()
+            Log.d(TAG,"onStartCommand " + count)
 
-        val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        filter.addAction(Intent.ACTION_BATTERY_CHANGED)
-        filter.addAction(Intent.ACTION_POWER_CONNECTED)
-        filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
-        val intent: Intent = registerReceiver(mReceiver, filter)!!
-        batteryState = PowerConnectionReceiver.parseIntent(intent)
+            val filter = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+            filter.addAction(Intent.ACTION_BATTERY_CHANGED)
+            filter.addAction(Intent.ACTION_POWER_CONNECTED)
+            filter.addAction(Intent.ACTION_POWER_DISCONNECTED)
+            val recvIntent: Intent? = try {
+                registerReceiver(mReceiver, filter)
+            } catch (e: Exception) {
+                Log.w(TAG, "onStartCommand: registerReceiver failed", e)
+                null
+            }
+            if (recvIntent != null) {
+                batteryState = PowerConnectionReceiver.parseIntent(recvIntent)
+            }
 
-        mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        //val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
-        val accelerometerSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
-        val orientationSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ORIENTATION)
-        //mSensorManager?.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        mSensorManager?.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL)
-        mSensorManager?.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+            //val temperatureSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)
+            val accelerometerSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            val orientationSensor = mSensorManager?.getDefaultSensor(Sensor.TYPE_ORIENTATION)
+            //mSensorManager?.registerListener(this, temperatureSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager?.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL)
+            mSensorManager?.registerListener(this, orientationSensor, SensorManager.SENSOR_DELAY_NORMAL)
 
-        PreferenceManager.getDefaultSharedPreferences(applicationContext).registerOnSharedPreferenceChangeListener(this)
+            PreferenceManager.getDefaultSharedPreferences(applicationContext).registerOnSharedPreferenceChangeListener(this)
+        } catch (e: Exception) {
+            Log.e(TAG, "onStartCommand: unexpected error", e)
+            // Avoid crashing the service process; report error state and try to cleanup
+            try { stopCamera() } catch (ignored: Exception) { }
+            setState(DetectorStateEvent.StateType.Error, getString(R.string.error_camera, e.message))
+        }
 
-        return START_STICKY;
+        return START_STICKY
     }
 
     override fun onDestroy() {
@@ -201,10 +215,29 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         mCameraSurfaceHolder = CameraSurfaceHolder(mCamera!!, baseContext)
         mSurfaceView?.holder?.addCallback(mCameraSurfaceHolder)
 
-        mWindowManager?.addView(mSurfaceView, params)
-        mSurfaceView?.setZOrderOnTop(false)
-        mSurfaceView?.visibility = View.VISIBLE
-        setState(DetectorStateEvent.StateType.Normal, getString(R.string.status_fragment_running))
+        try {
+            mWindowManager?.addView(mSurfaceView, params)
+            mSurfaceView?.setZOrderOnTop(false)
+            mSurfaceView?.visibility = View.VISIBLE
+            setState(DetectorStateEvent.StateType.Normal, getString(R.string.status_fragment_running))
+        } catch (e: Exception) {
+            Log.e(TAG, "startCamera: failed to add SurfaceView to WindowManager", e)
+            // Try to cleanup camera to avoid service crash / restart loop
+            try {
+                mCamera?.stopPreview()
+            } catch (ignored: Exception) {
+                Log.w(TAG, "startCamera: stopPreview failed during cleanup", ignored)
+            }
+            try {
+                mCamera?.release()
+            } catch (ignored: Exception) {
+                Log.w(TAG, "startCamera: release failed during cleanup", ignored)
+            }
+            mCamera = null
+            state.cameraOn = false
+            setState(DetectorStateEvent.StateType.Error, getString(R.string.error_camera, e.message))
+            return
+        }
     }
 
     fun stopCamera() {
@@ -215,11 +248,33 @@ class DetectorService : Service(), SharedPreferences.OnSharedPreferenceChangeLis
         }
 
         state.cameraOn = false
-        mSurfaceView?.holder?.removeCallback(mCameraSurfaceHolder)
-        mWindowManager?.removeView(mSurfaceView)
-        mCamera?.stopPreview()
-        mCameraSurfaceHolder?.flush()
-        mCamera?.release()
+        try {
+            mSurfaceView?.holder?.removeCallback(mCameraSurfaceHolder)
+        } catch (e: Exception) {
+            Log.w(TAG, "stopCamera: removeCallback failed", e)
+        }
+        try {
+            // removeView may throw if view was not attached
+            mWindowManager?.removeView(mSurfaceView)
+        } catch (e: Exception) {
+            Log.w(TAG, "stopCamera: removeView failed (maybe not attached)", e)
+        }
+        try {
+            mCamera?.stopPreview()
+        } catch (e: Exception) {
+            Log.w(TAG, "stopCamera: stopPreview failed", e)
+        }
+        try {
+            mCameraSurfaceHolder?.flush()
+        } catch (e: Exception) {
+            Log.w(TAG, "stopCamera: flush failed", e)
+        }
+        try {
+            mCamera?.release()
+        } catch (e: Exception) {
+            Log.w(TAG, "stopCamera: release failed", e)
+        }
+        mCamera = null
         emitStateChange()
     }
 

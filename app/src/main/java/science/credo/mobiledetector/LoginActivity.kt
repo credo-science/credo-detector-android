@@ -41,6 +41,19 @@ class LoginActivity : AppCompatActivity() {
         // Login
         login_button.setOnClickListener { login() }
 
+        // show password checkbox (hidden until error)
+        show_password_checkbox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                // show password
+                password_input.transformationMethod = null
+            } else {
+                // hide password
+                password_input.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
+            }
+            // move cursor to end
+            password_input.setSelection(password_input.text.length)
+        }
+
         // Go to Forgot password Activity
         remember_password_button.setOnClickListener {
             val endpoint = ConfigurationWrapper(this@LoginActivity).endpoint.replace("/api/v2", "")
@@ -156,6 +169,11 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(baseContext, msg ?: getText(R.string.login_toast_login_failed), Toast.LENGTH_LONG).show()
         login_button.isEnabled = true
         error_text.text = msg
+        // show checkbox so user can reveal password and verify
+        try {
+            show_password_checkbox.visibility = android.view.View.VISIBLE
+        } catch (e: Exception) {
+        }
     }
 
     private fun validate(): Boolean {

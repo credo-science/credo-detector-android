@@ -18,4 +18,5 @@ data class StatsEvent(
 
         var blacksStats: StatsValue = StatsValue(),
         var averageStats: StatsValue = StatsValue(),
-        var maxStats: StatsValue = StatsValue())
+        var maxStats: StatsValue = StatsValue(),
+        var temperature: Int = 0)

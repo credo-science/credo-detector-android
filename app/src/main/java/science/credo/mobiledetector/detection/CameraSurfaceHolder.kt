@@ -18,14 +18,20 @@ class CameraSurfaceHolder(private val hCamera: Camera,
     private val TAG = "CameraSurfaceHolder"
 
     init {
-        val parameters = hCamera.parameters
-        val width = parameters.previewSize.width
-        val height = parameters.previewSize.height
-        val size = width * height + width * height / 2
+        var size = 0
+        try {
+            val parameters = hCamera.parameters
+            val width = parameters.previewSize.width
+            val height = parameters.previewSize.height
+            size = width * height + width * height / 2
+        } catch (e: Exception) {
+            Log.w(TAG, "CameraSurfaceHolder init: failed to get preview size, fallback to small buffer", e)
+            // fallback to small buffer to avoid crashes
+            size = 1024
+        }
         callbackBuffer1 = ByteArray(size)
         callbackBuffer2 = ByteArray(size)
         callbackBuffer3 = ByteArray(size)
-
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
@@ -39,13 +45,17 @@ class CameraSurfaceHolder(private val hCamera: Camera,
             return
         }
 
-        hCamera.addCallbackBuffer(callbackBuffer1)
-        hCamera.addCallbackBuffer(callbackBuffer2)
-        hCamera.addCallbackBuffer(callbackBuffer3)
+        try {
+            hCamera.addCallbackBuffer(callbackBuffer1)
+            hCamera.addCallbackBuffer(callbackBuffer2)
+            hCamera.addCallbackBuffer(callbackBuffer3)
 
-        hCamera.setPreviewCallbackWithBuffer(mCameraPreviewCallbackNative)
+            hCamera.setPreviewCallbackWithBuffer(mCameraPreviewCallbackNative)
 
-        hCamera.startPreview()
+            hCamera.startPreview()
+        } catch (e: Exception) {
+            Log.w(TAG, "surfaceCreated: failed to start preview or add buffers", e)
+        }
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
