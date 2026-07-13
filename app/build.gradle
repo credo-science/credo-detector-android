@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    compileSdk 34
+    compileSdk 36
     defaultConfig {
         applicationId "science.credo.mobiledetector"
         minSdkVersion 14
-        targetSdk 34
-        versionCode 34
-        versionName "1.3.4-End"
+        targetSdk 36
+        versionCode 36
+        versionName "1.3.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         renderscriptTargetApi 16
         renderscriptSupportModeEnabled true
