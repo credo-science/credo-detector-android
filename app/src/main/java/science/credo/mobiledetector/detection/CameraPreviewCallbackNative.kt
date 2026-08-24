@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.hardware.Camera
 import android.util.Base64
 import android.util.Log
-import com.instacart.library.truetime.TrueTime
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.CredoApplication

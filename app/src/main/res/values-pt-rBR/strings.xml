@@ -3,7 +3,7 @@
 	<string name="app_name">Detector CREDO</string>
 	<string name="app_name_short">Detector</string>
 	<string name="app_title">Observatório de Raios Cósmicos Extremamente Distribuído (CRED)</string>
-	<string name="app_description">O Projeto CREDO está à caça de cascatas de partículas do espaço sideral em um esforço para responder a algumas das perguntas fundamentais sobre nosso Universo. Suas detecções de partículas alimentarão diretamente essa nova área pioneira de pesquisa científica. Você também pode se dedicar à análise das detecções que você, seus amigos cidadãos cientistas e observatórios profissionais ao redor do fundo estão obtendo por meio do experimento do Dark Universe Welcome.</string>
+	<string name="app_description">O Projeto CREDO está à caça de cascatas de partículas do espaço sideral em um esforço para responder a algumas das perguntas fundamentais sobre nosso Universo. Suas detecções de partículas alimentarão diretamente essa nova área pioneira de pesquisa científica. Também pode participar na análise dos dados recolhidos — para isso, entre em contacto connosco através do endereço contact@credo.science</string>
 	<string name="app_homepage">Para saber mais, por favor, visite o site do CREDO em:</string>
 	<string name="navigation_drawer_open">Abrir gaveta de navegação</string>
 	<string name="navigation_drawer_close">Fechar gaveta de navegação</string>

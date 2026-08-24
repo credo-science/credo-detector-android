@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_login.*
+import science.credo.mobiledetector.databinding.ActivityLoginBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.database.ConfigurationWrapper
@@ -23,13 +23,18 @@ import java.util.concurrent.Future
 
 class LoginActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityLoginBinding
+
     private var loginTask: Future<Unit>? = null
     private var isClosed = false
     private var info : IdentityInfo.IdentityData? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
+
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         info = IdentityInfo.getDefault(this).getIdentityData()
 
         if (!UserInfoWrapper(this).token.isEmpty()) {
@@ -39,23 +44,23 @@ class LoginActivity : AppCompatActivity() {
         }
 
         // Login
-        login_button.setOnClickListener { login() }
+        binding.loginButton.setOnClickListener { login() }
 
         // show password checkbox (hidden until error)
-        show_password_checkbox.setOnCheckedChangeListener { _, isChecked ->
+        binding.showPasswordCheckbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 // show password
-                password_input.transformationMethod = null
+                binding.passwordInput.transformationMethod = null
             } else {
                 // hide password
-                password_input.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
+                binding.passwordInput.transformationMethod = android.text.method.PasswordTransformationMethod.getInstance()
             }
             // move cursor to end
-            password_input.setSelection(password_input.text.length)
+            binding.passwordInput.setSelection(binding.passwordInput.text.length)
         }
 
         // Go to Forgot password Activity
-        remember_password_button.setOnClickListener {
+        binding.rememberPasswordButton.setOnClickListener {
             val endpoint = ConfigurationWrapper(this@LoginActivity).endpoint.replace("/api/v2", "")
             val href = "$endpoint/web/password_reset/"
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
@@ -64,8 +69,8 @@ class LoginActivity : AppCompatActivity() {
 
         val pref = UserInfoWrapper(this)
         if (!pref.email.isBlank() && !pref.password.isBlank()) {
-            email_input.setText(pref.email)
-            password_input.setText(pref.password)
+            binding.emailInput.setText(pref.email)
+            binding.passwordInput.setText(pref.password)
         }
     }
 
@@ -83,7 +88,7 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        login_button.isEnabled = false
+        binding.loginButton.isEnabled = false
 
         // TODO: https://stackoverflow.com/questions/45373007/progressdialog-is-deprecated-what-is-the-alternate-one-to-use
         val progressDialog = ProgressDialog(this,
@@ -93,18 +98,18 @@ class LoginActivity : AppCompatActivity() {
         progressDialog.setMessage(getText(R.string.login_message_login_pending))
         progressDialog.show()
 
-        val inputText = email_input.text.toString()
+        val inputText = binding.emailInput.text.toString()
 
         val loginRequest = if ('@' in inputText) {
             LoginByEmailRequest.build(
                     inputText,
-                    password_input.text.toString(),
+                binding.passwordInput.text.toString(),
                     info!!
             )
         } else {
             LoginByUsernameRequest.build(
                     inputText,
-                    password_input.text.toString(),
+                binding.passwordInput.text.toString(),
                     info!!
             )
         }
@@ -167,11 +172,11 @@ class LoginActivity : AppCompatActivity() {
         val msg = translateMessage(baseContext, message, getText(R.string.login_toast_login_failed));
 
         Toast.makeText(baseContext, msg ?: getText(R.string.login_toast_login_failed), Toast.LENGTH_LONG).show()
-        login_button.isEnabled = true
-        error_text.text = msg
+        binding.loginButton.isEnabled = true
+        binding.errorText.text = msg
         // show checkbox so user can reveal password and verify
         try {
-            show_password_checkbox.visibility = android.view.View.VISIBLE
+            binding.showPasswordCheckbox.visibility = android.view.View.VISIBLE
         } catch (e: Exception) {
         }
     }
@@ -179,27 +184,27 @@ class LoginActivity : AppCompatActivity() {
     private fun validate(): Boolean {
         var valid = true
 
-        val emailStr = email_input.text.toString()
-        val passwordStr = password_input.text.toString()
+        val emailStr = binding.emailInput.text.toString()
+        val passwordStr = binding.passwordInput.text.toString()
 
         if (emailStr.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            if (emailStr.isEmpty() || email_input.length() < 3) {
-                email_input.error = getText(R.string.login_input_login_validation)
+            if (emailStr.isEmpty() ||binding.emailInput.length() < 3) {
+                binding.emailInput.error = getText(R.string.login_input_login_validation)
                 valid = false
             } else {
-                email_input.setError(null)
-                error_text.text = ""
+                binding.emailInput.setError(null)
+                binding.errorText.text = ""
             }
         } else {
-            email_input.error = null
-            error_text.text = ""
+            binding.emailInput.error = null
+            binding.errorText.text = ""
         }
 
-        if (passwordStr.isEmpty() || password_input.length() < 4) {
-            password_input.error = getText(R.string.login_input_password_validation)
+        if (passwordStr.isEmpty() || binding.passwordInput.length() < 4) {
+            binding.passwordInput.error = getText(R.string.login_input_password_validation)
             valid = false
         } else {
-            password_input.error = null
+            binding.passwordInput.error = null
         }
 
         return valid

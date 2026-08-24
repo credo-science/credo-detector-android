@@ -5,7 +5,7 @@ import android.app.Activity
 import android.app.ProgressDialog
 import android.widget.Toast
 
-import kotlinx.android.synthetic.main.activity_user.*
+import science.credo.mobiledetector.databinding.ActivityUserBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.database.UserInfoWrapper
@@ -19,23 +19,24 @@ import java.util.*
 import java.util.concurrent.Future
 
 class UserActivity : Activity() {
-
+    private lateinit var binding: ActivityUserBinding
     private var saveTask: Future<Unit>? = null
     private var isClosed = false
     private var info : IdentityInfo.IdentityData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_user)
+        binding = ActivityUserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         info = IdentityInfo.getDefault(this).getIdentityData()
 
         actionBar?.setDisplayHomeAsUpEnabled(true)
         val uiw = UserInfoWrapper(this)
-        display_name_input.setText(uiw.displayName)
-        team_input.setText(uiw.team)
-        //email_input.setText(uiw.email)
+        binding.displayNameInput.setText(uiw.displayName)
+        binding.teamInput.setText(uiw.team)
+        //binding.emailInput.setText(uiw.email)
 
-        save_button.setOnClickListener {
+        binding.saveButton.setOnClickListener {
             save()
         }
     }
@@ -51,8 +52,7 @@ class UserActivity : Activity() {
             onSaveFailed(getString(R.string.user_message_validation_failed))
             return
         }
-
-        save_button.isEnabled = false
+        binding.saveButton.isEnabled = false
 
         // TODO: https://stackoverflow.com/questions/45373007/progressdialog-is-deprecated-what-is-the-alternate-one-to-use
         val progressDialog = ProgressDialog(this,
@@ -63,8 +63,8 @@ class UserActivity : Activity() {
         progressDialog.show()
 
         val saveRequest = UserInfoRequest.build(
-                display_name_input.text.toString(),
-                team_input.text.toString(),
+            binding.displayNameInput.text.toString(),
+                binding.teamInput.text.toString(),
                 Locale.getDefault().language, //language_input.text.toString()
                 info!!
         )
@@ -113,13 +113,13 @@ class UserActivity : Activity() {
 
     private fun onSaveFailed(message: String?) {
         Toast.makeText(baseContext, message ?: getText(R.string.user_toast_save_failed), Toast.LENGTH_LONG).show()
-        save_button.isEnabled = true
-        display_name_input.error = message
+        binding.saveButton.isEnabled = true
+        binding.displayNameInput.error = message
     }
 
     private fun validate(): Boolean {
         var valid = true
-        display_name_input.error = null
+        binding.displayNameInput.error = null
         return valid
     }
 }

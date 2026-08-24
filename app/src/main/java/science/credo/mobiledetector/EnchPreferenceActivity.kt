@@ -7,10 +7,6 @@ import android.util.Log
 import android.view.MenuItem
 import android.preference.*
 
-/**
- * Created by poznan on 19/09/2017.
- *
- */
 
 open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -48,7 +44,7 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
     protected fun initSummary(p: Preference) {
         initPass = true
         if (p is PreferenceGroup) {
-            val pGrp = p as PreferenceGroup
+            val pGrp = p
             for (i in 0..pGrp.getPreferenceCount() - 1) {
                 initSummary(pGrp.getPreference(i))
             }
@@ -60,7 +56,7 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
 
     protected fun updatePrefSummary(p: Preference) {
         if (p is ListPreference) {
-            val listPref = p as ListPreference
+            val listPref = p
             val entry = listPref.getEntry()
             p.setSummary(entry)
 
@@ -79,13 +75,13 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
         if (p is EditTextPreference) {
 
             Log.d(TAG, "updatePrefSummary ${p.key} " + p.title.toString() + " : " + (p as EditTextPreference).text )
-            val editTextPref = p as EditTextPreference
+            val editTextPref = p
             if (initPass) summary[p] = p.summary.toString()
             if (editTextPref.text != null && editTextPref.text.length > 0) {
-                if (p.getTitle().toString().toLowerCase().contains("password")) {
+                if (p.title.toString().lowercase().contains("password")) {
                     p.setSummary("******")
                 } else {
-                    p.setSummary(editTextPref.getText())
+                    p.setSummary(editTextPref.text)
                 }
             } else {
                 p.setSummary(summary[p])
@@ -122,10 +118,9 @@ open class EnchPreferenceActivity : AppCompatPreferenceActivity(), SharedPrefere
         if (p is EditTextPreference) {
             val v = sharedPreferences.getString(key,"")!!
             Log.d(TAG, "updatePrefSummary ${p.key} " + p.title.toString() + " : " + (p as EditTextPreference).text )
-            val editTextPref = p as EditTextPreference
             if (initPass) summary[p] = p.summary.toString()
             if (v.length > 0) {
-                if (p.getTitle().toString().toLowerCase().contains("password")) {
+                if (p.title.toString().lowercase().contains("password")) {
                     p.setSummary("******")
                     p.text = v
                 } else {

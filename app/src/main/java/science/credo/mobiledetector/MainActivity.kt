@@ -26,9 +26,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.gms.location.*
-import com.instacart.library.truetime.TrueTime
-import kotlinx.android.synthetic.main.nav_header_status.*
-import kotlinx.android.synthetic.main.nav_header_status.view.*
 import org.greenrobot.eventbus.EventBus
 import org.jetbrains.anko.doAsync
 import science.credo.mobiledetector.database.ConfigurationWrapper
@@ -248,10 +245,12 @@ class MainActivity : AppCompatActivity(),
                 fragment = LinksFragment.newInstance()
             }
             // nav_information removed
-            R.id.nav_logs -> {
-                // open LogsActivity
-                startActivity(Intent(this, LogsActivity::class.java))
-            }
+        //    DLA TESTOW BY ZOBACZYC - na oficjalnej ukrywac
+        // odkomentowac tez w /src/main/res/menu/activity_main_drawer.xml
+//            R.id.nav_logs -> {
+//                // open LogsActivity
+//                startActivity(Intent(this, LogsActivity::class.java))
+//            }
         }
 
         if (fragment != null) {

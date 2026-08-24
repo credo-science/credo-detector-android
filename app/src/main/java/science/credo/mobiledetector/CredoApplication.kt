@@ -6,7 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.support.multidex.MultiDex
-import com.instacart.library.truetime.TrueTime
+//import com.instacart.library.truetime.TrueTime
 import org.acra.ACRA
 import org.acra.annotation.AcraCore
 import org.acra.annotation.AcraHttpSender
@@ -75,13 +75,14 @@ class CredoApplication : Application() {
         }
 
         // Initialize TrueTime asynchronously to avoid blocking app startup
-        doAsync {
-            try {
-                TrueTime.build().initialize()
-            } catch (e: Exception) {
-                Log.w(TAG, "Failed to initialize TrueTime (async)", e)
-            }
-        }
+//        usuniete 24.08.2026
+//        doAsync {
+//            try {
+//                TrueTime.build().initialize()
+//            } catch (e: Exception) {
+//                Log.w(TAG, "Failed to initialize TrueTime (async)", e)
+//            }
+//        }
 
         val manager = this.packageManager
         val info = manager.getPackageInfo(this.packageName, PackageManager.GET_ACTIVITIES)

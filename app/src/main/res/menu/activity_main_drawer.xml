@@ -27,10 +27,12 @@
             android:id="@+id/nav_links"
             android:icon="@drawable/ic_menu_send"
             android:title="@string/title_links" />
-        <item
-            android:id="@+id/nav_logs"
-            android:icon="@drawable/ic_menu_send"
-            android:title="@string/title_logs" />
+<!--        DLA TESTOW BY ZOBACZYC - na oficjalnej ukrywac-->
+<!--        odkomentowac tez w /src/main/java/science/credo/mobiledetector/MainActivity.kt -->
+        <!--        <item-->
+<!--            android:id="@+id/nav_logs"-->
+<!--            android:icon="@drawable/ic_menu_send"-->
+<!--            android:title="@string/title_logs" />-->
     </group>
 
 </menu>

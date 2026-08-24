@@ -12,8 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import kotlinx.android.synthetic.main.fragment_status.*
-import kotlinx.android.synthetic.main.fragment_status.view.*
+import science.credo.mobiledetector.databinding.FragmentStatusBinding
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -35,7 +34,8 @@ import java.util.*
 
 
 class StatusFragment : Fragment() {
-
+    private var _binding: FragmentStatusBinding? = null
+    private val binding get() = _binding!!
     private val DETECTION_OFF_LABEL = 0
     private val DETECTION_ON_LABEL = 1
     private val DETECTION_HOLD_LABEL = 2
@@ -70,21 +70,21 @@ class StatusFragment : Fragment() {
     private fun showStateLabel(nr: Int) {
         when(nr) {
             DETECTION_OFF_LABEL -> {
-                detection_off_label.visibility = View.VISIBLE
-                detection_on_label.visibility = View.GONE
-                detection_hold_label.visibility = View.GONE
+                binding.detectionOffLabel.visibility = View.VISIBLE
+                binding.detectionOnLabel.visibility = View.GONE
+                binding.detectionHoldLabel.visibility = View.GONE
             }
 
             DETECTION_ON_LABEL -> {
-                detection_off_label.visibility = View.GONE
-                detection_on_label.visibility = View.VISIBLE
-                detection_hold_label.visibility = View.GONE
+                binding.detectionOffLabel.visibility = View.GONE
+                binding.detectionOnLabel.visibility = View.VISIBLE
+                binding.detectionHoldLabel.visibility = View.GONE
             }
 
             DETECTION_HOLD_LABEL -> {
-                detection_off_label.visibility = View.GONE
-                detection_on_label.visibility = View.GONE
-                detection_hold_label.visibility = View.VISIBLE
+                binding.detectionOffLabel.visibility = View.GONE
+                binding.detectionOnLabel.visibility = View.GONE
+                binding.detectionHoldLabel.visibility = View.VISIBLE
             }
         }
     }
@@ -92,13 +92,13 @@ class StatusFragment : Fragment() {
     private fun showDetectionButton(nr: Int) {
         when(nr) {
             DETECTOR_BUTTON_ON -> {
-                start_button.visibility = View.VISIBLE
-                stop_button.visibility = View.GONE
+                binding.startButton.visibility = View.VISIBLE
+                binding.stopButton.visibility = View.GONE
             }
 
             DETECTOR_BUTTON_OFF -> {
-                start_button.visibility = View.GONE
-                stop_button.visibility = View.VISIBLE
+                binding.startButton.visibility = View.GONE
+                binding.stopButton.visibility = View.VISIBLE
             }
         }
     }
@@ -107,89 +107,89 @@ class StatusFragment : Fragment() {
         val ui = UserInfoWrapper(context!!)
         val cw = ConfigurationWrapper(context!!)
 
-        name_text.text = ui.displayName
-        email_text.text = ui.email
-        team_text.text = ui.team
+        binding.nameText.text = ui.displayName
+        binding.emailText.text = ui.email
+        binding.teamText.text = ui.team
 
         showStateLabel(detectionStateLabel())
         showDetectionButton(detectionButton())
-        coverage_label.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
-        blank_button.visibility = if (statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+        binding.coverageLabel.visibility = if (!statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
+        binding.blankButton.visibility = if (statsEvent.activeDetection && detectorState.running) View.VISIBLE else View.GONE
         if (cw.localizationNeedUpdate > 0) {
-            update_location_label.visibility = View.VISIBLE
-            update_location_label_description.visibility = View.VISIBLE
+            binding.updateLocationLabel.visibility = View.VISIBLE
+            binding.updateLocationLabelDescription.visibility = View.VISIBLE
         } else {
-            update_location_label.visibility = View.GONE
-            update_location_label_description.visibility = View.GONE
+            binding.updateLocationLabel.visibility = View.GONE
+            binding.updateLocationLabelDescription.visibility = View.GONE
         }
 
-        detections_label.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
+        binding.detectionsLabel.text = getString(R.string.status_fragment_detections, DataManager.TRIM_PERIOD_HITS_DAYS)
 
-        if (detection_stats.visibility == View.GONE && detectorState.running) {
-            show_statistic.visibility = View.VISIBLE
+        if (binding.detectionStats.visibility == View.GONE && detectorState.running) {
+            binding.showStatistic.visibility = View.VISIBLE
         }
 
-        working_text.text = timePeriodFormat(statsEvent.onTime, false)
+        binding.workingText.text = timePeriodFormat(statsEvent.onTime, false)
 
         val dm = DataManager.getDefault(context!!)
-        detections_text.text = dm.getHitsCount().toString()
+        binding.detectionsText.text = dm.getHitsCount().toString()
         dm.closeDb()
 
         val pm = PreferenceManager.getDefaultSharedPreferences(context)
-        points_info.text = pm.getInt("points_pm", 0).toString()
+        binding.pointsInfo.text = pm.getInt("points_pm", 0).toString()
 
-        start_text.text = if (statsEvent.startDetectionTimestamp > 0)
+        binding.startText.text = if (statsEvent.startDetectionTimestamp > 0)
             dateFormat.format(statsEvent.startDetectionTimestamp)
         else
             ""
 
-        latest_text.text = if (statsEvent.lastFrameAchievedTimestamp > 0)
+        binding.latestText.text = if (statsEvent.lastFrameAchievedTimestamp > 0)
             dateFormat.format(statsEvent.lastFrameAchievedTimestamp)
         else
             ""
 
-        hit_text.text = if (statsEvent.lastHitTimestamp > 0)
+        binding.hitText.text = if (statsEvent.lastHitTimestamp > 0)
             dateFormat.format(statsEvent.lastHitTimestamp)
         else
             ""
 
-        coordinates_text.text = "%.4f %.4f".format(cw.localizationLongitude, cw.localizationLatitude)
-        temperature_login_info.text = "%d°C".format(detectorState.temperature)
+        binding.coordinatesText.text = "%.4f %.4f".format(cw.localizationLongitude, cw.localizationLatitude)
+        binding.temperatureLoginInfo.text = "%d°C".format(detectorState.temperature)
 
-        frame_size_text.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
+        binding.frameSizeText.text = "${statsEvent.frameWidth}x${statsEvent.frameHeight}"
 
-        frame_count_text.text = statsEvent.allFrames.toString()
-        frame_performed_text.text = statsEvent.performedFrames.toString()
+        binding.frameCountText.text = statsEvent.allFrames.toString()
+        binding.framePerformedText.text = statsEvent.performedFrames.toString()
 
-        ontime_text.text = timePeriodFormat(statsEvent.onTime, false)
-        black_text.text = "%.0f‰".format(statsEvent.blacksStats.average)
+        binding.ontimeText.text = timePeriodFormat(statsEvent.onTime, false)
+        binding.blackText.text = "%.0f‰".format(statsEvent.blacksStats.average)
 
-        bright_text.text = "%.2f".format(statsEvent.averageStats.average)
-        max_text.text = statsEvent.maxStats.max.toString()
+        binding.brightText.text = "%.2f".format(statsEvent.averageStats.average)
+        binding.maxText.text = statsEvent.maxStats.max.toString()
 
         if (detectorState.type > DetectorStateEvent.StateType.Normal) {
-            error_text.visibility = View.VISIBLE
-            error_text.text = detectorState.status
+            binding.errorText.visibility = View.VISIBLE
+            binding.errorText.text = detectorState.status
         } else {
-            error_text.visibility = View.GONE
+            binding.errorText.visibility = View.GONE
         }
 
         when (batteryState.isCharging) {
             true -> when(batteryState.acCharge) {
-                true -> battery_text.text = getString(R.string.status_fragment_battery_charge)
-                false -> battery_text.text = getString(R.string.status_fragment_battery_slow)
+                true -> binding.batteryText.text = getString(R.string.status_fragment_battery_charge)
+                false -> binding.batteryText.text = getString(R.string.status_fragment_battery_slow)
             }
-            false -> battery_text.text = getString(R.string.status_fragment_battery_nocharge)
+            false -> binding.batteryText.text = getString(R.string.status_fragment_battery_nocharge)
         }
 
-        level_text.text = "%d%%".format(batteryState.batteryPct)
-        orientation_text.text = "%.2f°".format(detectorState.orientation)
-        acc_text.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
+        binding.levelText.text = "%d%%".format(batteryState.batteryPct)
+        binding.orientationText.text = "%.2f°".format(detectorState.orientation)
+        binding.accText.text = "X:%.1f Y:%.1f Z:%.1f".format(detectorState.accX, detectorState.accY, detectorState.accZ)
 
-        benchmark_text.text = "%dms".format(CameraPreviewCallbackNative.benchmark)
-        fps_text.text = "%d".format(CameraPreviewCallbackNative.fps)
-        temperature.text = "%d".format(detectorState.temperature)
-        crop_size.text = "%d".format(ConfigurationInfo(context!!).cropSize)
+        binding.benchmarkText.text = "%dms".format(CameraPreviewCallbackNative.benchmark)
+        binding.fpsText.text = "%d".format(CameraPreviewCallbackNative.fps)
+        binding.temperature.text = "%d".format(detectorState.temperature)
+        binding.cropSize.text = "%d".format(ConfigurationInfo(requireContext()).cropSize)
     }
 
     override fun onResume() {
@@ -220,32 +220,38 @@ class StatusFragment : Fragment() {
         Log.d(TAG,"onCreateView")
         detectorState = (context!!.applicationContext as CredoApplication).detectorState
         EventBus.getDefault().register(this)
-        val v = inflater.inflate(R.layout.fragment_status, container, false)
+        _binding = FragmentStatusBinding.inflate(inflater, container, false)
+        val v = binding.root
 
-        v.start_button.setOnClickListener {
+        binding.startButton.setOnClickListener {
             mListener!!.onStartDetection()
-            //show_statistic.visibility = View.VISIBLE
+            //binding.showStatistic.visibility = View.VISIBLE
         }
 
-        v.stop_button.setOnClickListener {
+        binding.stopButton.setOnClickListener {
             mListener!!.onStopDetection()
         }
 
-        v.blank_button.setOnClickListener {
+        binding.blankButton.setOnClickListener {
             startActivity(Intent(context, BlankActivity::class.java))
         }
 
-        v.show_statistic.setOnClickListener{
-            if(detection_stats.visibility == View.GONE){
-                detection_stats.visibility = View.VISIBLE
-                v.show_statistic.setText(R.string.status_fragment_hide_statistic)
+        binding.showStatistic.setOnClickListener{
+            if(binding.detectionStats.visibility == View.GONE){
+                binding.detectionStats.visibility = View.VISIBLE
+                binding.showStatistic.setText(R.string.status_fragment_hide_statistic)
             }
             else{
-                detection_stats.visibility = View.GONE
-                v.show_statistic.setText(R.string.status_fragment_show_statistic)
+                binding.detectionStats.visibility = View.GONE
+                binding.showStatistic.setText(R.string.status_fragment_show_statistic)
             }
         }
         return v
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onAttach(context: Context?) {

@@ -13,7 +13,7 @@ import android.text.Html
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_launcher.*
+import science.credo.mobiledetector.databinding.ActivityLauncherBinding
 import science.credo.mobiledetector.database.ConfigurationWrapper
 import science.credo.mobiledetector.database.UserInfoWrapper
 import android.content.DialogInterface
@@ -27,6 +27,8 @@ const val REQUEST_MAIN = 1
 const val REQUEST_SIGN = 2
 
 class LauncherActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityLauncherBinding
 
     companion object {
         private val CAMERA_PERMISSIONS = arrayOf(
@@ -77,37 +79,39 @@ class LauncherActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_launcher)
+
+        binding = ActivityLauncherBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         val toast = Toast.makeText(this, "", Toast.LENGTH_LONG)
 
-        login_button.setOnClickListener {
+        binding.loginButton.setOnClickListener {
             startActivityForResult(Intent(this@LauncherActivity, LoginActivity::class.java), REQUEST_SIGN)
-            activate_email_message.visibility = View.GONE
+            binding.activateEmailMessage.visibility = View.GONE
         }
 
-        register_button.setOnClickListener {
+        binding.registerButton.setOnClickListener {
             startActivityForResult(Intent(this@LauncherActivity, RegisterActivity::class.java), REQUEST_SIGN)
         }
 
-        remember_password_button.setOnClickListener {
+        binding.rememberPasswordButton.setOnClickListener {
             val endpoint = ConfigurationWrapper(this@LauncherActivity).endpoint.replace("/api/v2", "")
             val href = "$endpoint/web/password_reset/"
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(href))
             startActivity(browserIntent)
         }
 
-        debug_mode_off_button.setOnClickListener {
+        binding.debugModeOffButton.setOnClickListener {
             ConfigurationWrapper(this@LauncherActivity).endpoint = ConfigurationWrapper.defaultEndpoint
             debugClicksCount = 0
-            endpoint_layout.visibility = View.GONE
-            debug_mode_off_button.visibility = View.GONE
+            binding.endpointLayout.visibility = View.GONE
+            binding.debugModeOffButton.visibility = View.GONE
         }
 
-        logo_image.setOnClickListener {
+        binding.logoImage.setOnClickListener {
             debugClicksCount++
             if (debugClicksCount >= debugClicksToActivate) {
-                endpoint_layout.visibility = View.VISIBLE
-                debug_mode_off_button.visibility = View.VISIBLE
+                binding.endpointLayout.visibility = View.VISIBLE
+                binding.debugModeOffButton.visibility = View.VISIBLE
                 if (debugClicksCount == debugClicksToActivate) {
                     toast.setText(R.string.launcher_toast_debug_activated)
                     toast.show()
@@ -131,7 +135,7 @@ class LauncherActivity : AppCompatActivity() {
             Log.d("onPostResume", "true")
             launchSpecificActivity()
             debugClicksCount = 0
-            endpoint_input.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
+            binding.endpointInput.setText(ConfigurationWrapper(this).endpoint, TextView.BufferType.EDITABLE)
         } else {
             Log.d("onPostResume", "false")
             requestPermissions()
@@ -139,7 +143,7 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     override fun onPause() {
-        ConfigurationWrapper(this).endpoint = endpoint_input.text.toString()
+        ConfigurationWrapper(this).endpoint = binding.endpointInput.text.toString()
         super.onPause()
     }
 
@@ -158,7 +162,7 @@ class LauncherActivity : AppCompatActivity() {
                 finish()
             }
         } else if (requestCode == REQUEST_SIGN && resultCode == Activity.RESULT_FIRST_USER) {
-            activate_email_message.visibility = View.VISIBLE
+            binding.activateEmailMessage.visibility = View.VISIBLE
         } else if (requestCode == ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 if (Settings.canDrawOverlays(this)) {

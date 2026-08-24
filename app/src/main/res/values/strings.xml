@@ -2,7 +2,7 @@
     <string name="app_name">CREDO Detector</string>
     <string name="app_name_short">Detector</string>
     <string name="app_title">Cosmic-Ray Extremely Distributed Observatory (CREDO)</string>
-    <string name="app_description">The CREDO project is hunting for particle cascades from deep space in an effort to answer some of the fundamental questions about our Universe. Your particle detections will feed directly into this pioneering new area of scientific research. You can also engage in the analysis of the detections that you, your fellow citizen scientists and professional observatories from around the world are making though the Dark Universe Welcome experiment.</string>
+    <string name="app_description">The CREDO project is hunting for particle cascades from deep space in an effort to answer some of the fundamental questions about our Universe. Your particle detections will feed directly into this pioneering new area of scientific research. You can also take part in analysing the collected data - to do so, please contact us at contact@credo.science</string>
     <string name="app_homepage">To learn more please visit the CREDO website at:</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

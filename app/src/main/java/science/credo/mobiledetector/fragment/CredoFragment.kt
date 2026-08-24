@@ -8,22 +8,31 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.activity_launcher.*
-import kotlinx.android.synthetic.main.activity_launcher.view.*
-import kotlinx.android.synthetic.main.fragment_credo.view.*
+//import kotlinx.android.synthetic.main.activity_launcher.*
+//import kotlinx.android.synthetic.main.activity_launcher.view.*
+//import kotlinx.android.synthetic.main.fragment_credo.view.*
+import science.credo.mobiledetector.databinding.FragmentCredoBinding
 import science.credo.mobiledetector.R
 import science.credo.mobiledetector.database.ConfigurationWrapper
 
 
 class CredoFragment : Fragment() {
-
+    private var _binding: FragmentCredoBinding? = null
+    private val binding get() = _binding!!
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val v = inflater.inflate(R.layout.fragment_credo, container, false)
-        v.go_button.setOnClickListener { mListener!!.onGoToExperiment() }
-        v.go2_button.setOnClickListener { mListener!!.onGoToExperiment() }
-        return v
+        _binding = FragmentCredoBinding.inflate(inflater, container, false)
+
+        binding.goButton.setOnClickListener {
+            mListener!!.onGoToExperiment()
+        }
+
+        binding.go2Button.setOnClickListener {
+            mListener!!.onGoToExperiment()
+        }
+
+        return binding.root
     }
 
     override fun onAttach(context: Context?) {
@@ -39,7 +48,10 @@ class CredoFragment : Fragment() {
         super.onDetach()
         mListener = null
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
     interface OnFragmentInteractionListener {
         fun onGoToExperiment()
     }

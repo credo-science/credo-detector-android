@@ -2,14 +2,7 @@
     <string name="app_name">CREDO Detektor</string>
     <string name="app_name_short">Detektor</string>
     <string name="app_title">Ekstremalnie rozproszone obserwatorium promieniowania kosmicznego (CREDO)</string>
-    <string name="app_description">
-        Projekt CREDO ma na celu poszukiwanie kaskad cząstek kosmicznych w odpowiedzi na najbardziej
-        fundamentalne pytania o Wszechświat. Możecie Państwo wprost dołączyć do projektu, na
-        przykład poprzez użycie naszej aplikacji na telefon komórkowy. Dzięki zainstalowaniu
-        aplikacji na smartfonie, Państwa osobisty detektor cząstek będzie dostarczał informacje
-        bezpośrednio dla pionierskiego projektu naukowego. Możecie Państwo również wziąć udział
-        w analizie pozyskanych danych na stronach Dark Universe Welcome.
-    </string>
+    <string name="app_description">"Projekt CREDO ma na celu poszukiwanie kaskad cząstek kosmicznych w odpowiedzi na najbardziej fundamentalne pytania o Wszechświat. Możecie Państwo wprost dołączyć do projektu, na przykład poprzez użycie naszej aplikacji na telefon komórkowy. Dzięki zainstalowaniu aplikacji na smartfonie, Państwa osobisty detektor cząstek będzie dostarczał informacje bezpośrednio dla pionierskiego projektu naukowego. Możecie Państwo również wziąć udział w analizie pozyskanych danych - w tym celu prosimy o kontakt pod adresem contact@credo.science."</string>
     <string name="app_homepage">Więcej informacji o projekcie CREDO znajduje się pod adresem:</string>
 
     <string name="navigation_drawer_open">Otwórz panel nawigacyjny</string>

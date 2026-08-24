@@ -7,9 +7,8 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.util.Patterns
-import android.widget.Button
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_register.*
+import science.credo.mobiledetector.databinding.ActivityRegisterBinding
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import science.credo.mobiledetector.database.UserInfoWrapper
@@ -22,6 +21,7 @@ import java.util.*
 import java.util.concurrent.Future
 
 class RegisterActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityRegisterBinding
 
     private var registerTask: Future<Unit>? = null
     private var isClosed = false
@@ -29,14 +29,15 @@ class RegisterActivity : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+        binding = ActivityRegisterBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         info = IdentityInfo.getDefault(this@RegisterActivity).getIdentityData()
 
-        signup_button.setOnClickListener {
+        binding.signupButton.setOnClickListener {
             signup()
         }
 
-        view_rules_button.setOnClickListener {
+        binding.viewRulesButton.setOnClickListener {
             startActivity(Intent(this@RegisterActivity, RulesActivity::class.java))
         }
 
@@ -57,7 +58,7 @@ class RegisterActivity : AppCompatActivity() {
             return
         }
 
-        signup_button.setEnabled(false)
+        binding.signupButton.isEnabled = false
 
         // TODO: use i.e. button with progress bar instead progress dialog
         val progressDialog = ProgressDialog(this,
@@ -67,25 +68,25 @@ class RegisterActivity : AppCompatActivity() {
         progressDialog.setMessage(getText(R.string.register_message_register_pending))
         progressDialog.show()
 
-        val displayName = if (display_name_input.text.isBlank()) {
-            name_input.text.toString()
+        val displayName = if (binding.displayNameInput.text.isBlank()) {
+            binding.nameInput.text.toString()
         } else {
-            display_name_input.text.toString()
+            binding.displayNameInput.text.toString()
         }
 
         val registerRequest = RegisterDeviceInfoRequest.build(
-                email_input.text.toString(),
-                name_input.text.toString(),
+            binding.emailInput.text.toString(),
+            binding.nameInput.text.toString(),
                 displayName,
-                password_input.text.toString(),
-                team_input.text.toString(),
+            binding.passwordInput.text.toString(),
+            binding.teamInput.text.toString(),
                 Locale.getDefault().language, //language_input.text.toString()
                 info!!
         )
 
         val loginRequest = LoginByUsernameRequest.build(
-                name_input.text.toString(),
-                password_input.text.toString(),
+            binding.nameInput.text.toString(),
+            binding.passwordInput.text.toString(),
                 info!!
         )
 
@@ -146,61 +147,59 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun onSignupSuccess() {
-        val btn_signup = findViewById<Button>(R.id.signup_button)
-        btn_signup.setEnabled(true)
+        binding.signupButton.isEnabled = true
         setResult(Activity.RESULT_OK, null)
         finish()
     }
 
     private fun onSignupFailed(message:String?) {
         Toast.makeText(baseContext, message ?: getText(R.string.register_toast_register_failed), Toast.LENGTH_LONG).show()
-        val btn_signup = findViewById<Button>(R.id.signup_button)
-        btn_signup.setEnabled(true)
-        name_input.setError(message)
-        email_input.setError(message)
+        binding.signupButton.isEnabled = true
+        binding.nameInput.error = message
+        binding.emailInput.error = message
     }
 
     private fun validate(): Boolean {
         var valid = true
 
-        val nameStr = name_input.text.toString()
-        val emailStr = email_input.text.toString()
-        val passwordStr = password_input.text.toString()
-        val password2Str = password2_input.text.toString()
+        val nameStr = binding.nameInput.text.toString()
+        val emailStr = binding.emailInput.text.toString()
+        val passwordStr = binding.passwordInput.text.toString()
+        val password2Str = binding.password2Input.text.toString()
 
-        if (nameStr.isEmpty() || name_input.length() < 3) {
-            name_input.error = getText(R.string.register_input_login_validation)
+        if (nameStr.isEmpty() || binding.nameInput.length() < 3) {
+            binding.nameInput.error = getText(R.string.register_input_login_validation)
             valid = false
         } else {
-            name_input.error = null
+            binding.nameInput.error = null
         }
 
         if (emailStr.isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(emailStr).matches()) {
-            email_input.error = getText(R.string.register_input_email_validation)
+            binding.emailInput.error = getText(R.string.register_input_email_validation)
             valid = false
         } else {
-            email_input.error = null
+            binding.emailInput.error = null
         }
 
-        if (passwordStr.isEmpty() || password_input.length() < 4) {
-            password_input.error = getText(R.string.register_input_password_validation)
+        if (passwordStr.isEmpty() || binding.passwordInput.length() < 4) {
+            binding.passwordInput.error = getText(R.string.register_input_password_validation)
             valid = false
         } else {
-            password_input.error = null
+            binding.passwordInput.error = null
         }
 
         if (passwordStr != password2Str) {
-            password2_input.error = getText(R.string.register_input_password2_validation)
+            binding.password2Input.error = getText(R.string.register_input_password2_validation)
             valid = false
         } else {
-            password2_input.error = null
+            binding.password2Input.error = null
         }
 
-        if (!accept_rules_input.isChecked) {
-            accept_rules_input.error = getText(R.string.register_input_accept_rules_validation)
+        if (!binding.acceptRulesInput.isChecked) {
+            binding.acceptRulesInput.error = getText(R.string.register_input_accept_rules_validation)
             valid = false
         } else {
-            accept_rules_input.error = null
+            binding.acceptRulesInput.error = null
         }
 
         return valid
