@@ -117,4 +117,6 @@
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
 
+	<string name="links_older_devices">Se o aplicativo não funcionar corretamente no seu dispositivo antigo, você pode baixar abaixo uma versão especial para dispositivos mais antigos.</string>
+
 </resources>

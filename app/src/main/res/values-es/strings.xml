@@ -239,4 +239,6 @@
     <string name="preview_title_activity">Detecciones (últimos %1$d días)</string>
 
     <string name="no_data_available">No hay datos disponibles aún</string>
+
+    <string name="links_older_devices">Si la aplicación no funciona correctamente en tu dispositivo antiguo, puedes descargar a continuación una versión especial para dispositivos antiguos.</string>
 </resources>

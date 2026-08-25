@@ -93,6 +93,20 @@
                         android:text="https://mawmarecki.blogspot.com/2022/07/kilka-uwag-do-projektu-credo.html"
                         android:autoLink="web"
                         android:textColorLink="#4FC3F7"/>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/links_older_devices"
+                        android:textColor="#CCCCCC"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="https://credo.science/data/detector/credo-app-36.apk"
+                        android:autoLink="web"
+                        android:textColorLink="#4FC3F7"
+                        android:layout_marginBottom="12dp"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
 

@@ -280,4 +280,6 @@
     <string name="links_contest_next_edition">Kolejna edycja: 4 kwartał 2026</string>
     <string name="links_title_contact">Kontakt</string>
     <string name="error_prefix">Błąd:</string>
+
+    <string name="links_older_devices">Jeśli aplikacja nie działa poprawnie na Twoim starszym urządzeniu, możesz pobrać specjalną wersję przeznaczoną dla starszych urządzeń poniżej.</string>
 </resources>

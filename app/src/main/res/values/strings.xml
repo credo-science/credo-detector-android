@@ -290,4 +290,6 @@
     <string name="share_via">Share via</string>
     <string name="error_share_failed">Sharing logs failed</string>
     <string name="show_password">Show password</string>
+
+    <string name="links_older_devices">If the app does not work properly on your older device, you can download a special version for older devices below.</string>
 </resources>

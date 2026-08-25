@@ -125,6 +125,6 @@ Szeretnél többet megtudni? Látogasd meg az alábbi weboldalt:</string>
     <string name="pref_register_pause_time_title">Pause camera time [min]</string>
     <string name="pref_register_pause_time_summary">After pause time turn on camera again, default: 0min</string>
 
-
+    <string name="links_older_devices">Ha az alkalmazás nem működik megfelelően régebbi eszközödön, az alábbi linken letöltheted a régebbi eszközökhöz készült speciális verziót.</string>
 </resources>
 

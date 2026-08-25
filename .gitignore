@@ -4,3 +4,7 @@
 /build
 .externalNativeBuild
 .idea
+keystore.properties
+*.jks
+keystore.properties
+*.jks
